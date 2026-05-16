@@ -201,9 +201,9 @@ export default function DashboardPage() {
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
                     cx="50%"
-                    cy="45%"
-                    innerRadius={90}
-                    outerRadius={150}
+                    cy="42%"
+                    innerRadius={70}
+                    outerRadius={120}
                     dataKey="value"
                     nameKey="name"
                     label={false}
@@ -219,7 +219,12 @@ export default function DashboardPage() {
                     verticalAlign="bottom"
                     iconSize={8}
                     iconType="circle"
-                    wrapperStyle={{ fontSize: 11, lineHeight: '1.8', paddingTop: 8 }}
+                    wrapperStyle={{
+                      fontSize: 12,
+                      lineHeight: '2',
+                      paddingTop: 12,
+                      color: 'var(--text)',
+                    }}
                     formatter={(value: string) =>
                       value.length > 22 ? value.slice(0, 20) + '…' : value
                     }
