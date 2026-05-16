@@ -10,9 +10,9 @@ export const PROMQL = {
 } as const;
 
 export function queryMetric(query: string) {
-  return client.get<MetricResult>('/metrics/query', { params: { query } });
+  return client.get<MetricResult>('metrics/query', { params: { query } });
 }
 
 export function checkHealth() {
-  return client.get<{ status: string }>('/health');
+  return client.get<{ status: string }>('health');
 }
