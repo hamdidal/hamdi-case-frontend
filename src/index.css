@@ -611,7 +611,7 @@ input, select, textarea { font: inherit; color: inherit; }
 [data-sidebar="floating"] .side-brand { padding-top: 16px; }
 
 /* dashboard charts grid */
-.dash-charts { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+.dash-charts { display: flex !important; flex-direction: column !important; gap: 32px !important; margin-top: 16px; }
 
 /* ── Ant Design overrides ── */
 .ant-table-wrapper .ant-table-thead > tr > th,
