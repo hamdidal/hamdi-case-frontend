@@ -2,13 +2,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
-import {
-  IconMenu,
-  IconSettings, IconEye, IconLogout, IconChevronRight,
-} from '@/components/common/icons';
+import { IconMenu, IconChevronRight } from '@/components/common/icons';
 
 interface HeaderProps {
   collapsed: boolean;
@@ -35,25 +33,24 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
   const navigate = useNavigate();
   const { user, clearAuth } = useAuthStore();
   const crumbs = useBreadcrumbs();
+  const isAdmin = user?.role === 'admin';
+
   const getInitials = (name: string) =>
     name.split('.').map((p) => p[0]?.toUpperCase() ?? '').join('').slice(0, 2);
 
   const dropdownItems: MenuProps['items'] = [
-    {
-      key: 'profile',
-      label: t('common.profile'),
-      icon: <IconEye size={14} />,
-    },
-    {
-      key: 'settings',
-      label: t('nav.settings'),
-      icon: <IconSettings size={14} />,
-    },
-    { type: 'divider' },
+    ...(isAdmin ? [
+      {
+        key: 'settings',
+        label: t('nav.settings'),
+        icon: <SettingOutlined />,
+      },
+      { type: 'divider' as const },
+    ] : []),
     {
       key: 'logout',
       label: t('common.logout'),
-      icon: <IconLogout size={14} />,
+      icon: <LogoutOutlined />,
       danger: true,
     },
   ];
