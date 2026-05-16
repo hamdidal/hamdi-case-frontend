@@ -18,29 +18,53 @@ const ACTION_TAG: Record<AuditAction, string> = {
   login: '',
 };
 
-const PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 20;
 
 // ── Diff viewer ───────────────────────────────────────────────────────────────
 
-function DiffViewer({ changes }: { changes: Record<string, [unknown, unknown]> | undefined }) {
+function renderVal(v: unknown): string {
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+
+function DiffViewer({ changes }: { changes: Record<string, unknown> | undefined }) {
   const { t } = useTranslation();
   if (!changes || Object.keys(changes).length === 0) {
     return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
   }
+
+  // before/after structure (update / delete operations)
+  if ('before' in changes || 'after' in changes) {
+    const before = changes.before as Record<string, unknown> | undefined;
+    const after = changes.after as Record<string, unknown> | undefined;
+    const keys = Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})]));
+    return (
+      <div className="diff">
+        {keys.map((key) => {
+          const bVal = before?.[key];
+          const aVal = after?.[key];
+          if (bVal === aVal) return null;
+          return (
+            <div className="diff-line" key={key}>
+              <span className="diff-key">{key}</span>
+              {bVal !== undefined && <span className="diff-old">{renderVal(bVal)}</span>}
+              {bVal !== undefined && aVal !== undefined && <span className="diff-arr">→</span>}
+              {aVal !== undefined && <span className="diff-new">{renderVal(aVal)}</span>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Fallback: flat key → value pairs (e.g. seeded audit entries)
   return (
     <div className="diff">
-      {Object.entries(changes).map(([field, [before, after]]) => (
+      {Object.entries(changes).map(([field, val]) => (
         <div className="diff-line" key={field}>
           <span className="diff-key">{field}</span>
-          {before !== undefined && before !== null && (
-            <span className="diff-old">{String(before)}</span>
-          )}
-          {before !== undefined && before !== null && after !== undefined && after !== null && (
-            <span className="diff-arr">→</span>
-          )}
-          {after !== undefined && after !== null && (
-            <span className="diff-new">{String(after)}</span>
-          )}
+          <span className="diff-new">{renderVal(val)}</span>
         </div>
       ))}
     </div>
@@ -56,19 +80,20 @@ export default function AuditLogPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [loading, setLoading] = useState(false);
 
   const [filterAction, setFilterAction] = useState<AuditAction | undefined>();
   const [filterUsername, setFilterUsername] = useState('');
   const [filterRange, setFilterRange] = useState<RangeValue>(null);
 
-  const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters) => {
+  const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters, lim = pageSize) => {
     setLoading(true);
     try {
       const res = await getAuditLogs({
         ...filters,
-        limit: PAGE_SIZE,
-        offset: (pg - 1) * PAGE_SIZE,
+        limit: lim,
+        offset: (pg - 1) * lim,
       });
       setLogs(res.data.data ?? []);
       setTotal(res.data.total ?? 0);
@@ -105,7 +130,15 @@ export default function AuditLogPage() {
   };
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    setPage(pagination.current ?? 1);
+    const newPage = pagination.current ?? 1;
+    const newSize = pagination.pageSize ?? pageSize;
+    if (newSize !== pageSize) {
+      setPageSize(newSize);
+      setPage(1);
+      void fetchLogs(1, buildFilters(), newSize);
+    } else {
+      setPage(newPage);
+    }
   };
 
   const columns: TableColumnsType<AuditLog> = [
@@ -122,19 +155,7 @@ export default function AuditLogPage() {
       dataIndex: 'username',
       render: (v: string) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{
-            width: 26,
-            height: 26,
-            borderRadius: '50%',
-            background: 'var(--brand-500)',
-            color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 11,
-            fontWeight: 600,
-            flexShrink: 0,
-          }}>
+          <div className="user-avatar user-avatar-sm">
             {v[0]?.toUpperCase() ?? 'U'}
           </div>
           <span style={{ fontWeight: 500 }}>{v}</span>
@@ -170,7 +191,7 @@ export default function AuditLogPage() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div className="filter-bar">
         <Select<AuditAction>
           allowClear
           placeholder={t('audit.allActions')}
@@ -207,6 +228,7 @@ export default function AuditLogPage() {
           columns={columns}
           dataSource={logs}
           loading={loading}
+          scroll={{ x: 'max-content' }}
           expandable={{
             expandedRowRender: (record) => <DiffViewer changes={record.changes} />,
             rowExpandable: (record) =>
@@ -216,9 +238,10 @@ export default function AuditLogPage() {
           }}
           pagination={{
             current: page,
-            pageSize: PAGE_SIZE,
+            pageSize,
             total,
-            showSizeChanger: false,
+            showSizeChanger: true,
+            pageSizeOptions: [10, 50, 100],
             showTotal: (n) => `${n} ${t('audit.title').toLowerCase()}`,
           }}
           onChange={handleTableChange}

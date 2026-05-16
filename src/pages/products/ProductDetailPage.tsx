@@ -5,37 +5,20 @@ import {
   Form, Input, Select, DatePicker, Switch,
   Button, Drawer, Modal, InputNumber, Checkbox, Alert, App,
 } from 'antd';
-import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import { QRCodeSVG } from 'qrcode.react';
 import {
   getProduct, updateProduct,
   getProductVersions, getProductVersion,
-  getProductQRCodeUrl,
 } from '@/api/products';
 import { useAuthStore } from '@/store/useAuthStore';
-import type { Product, Material, ProductVersion } from '@/types';
+import type { Product, Material, ProductVersion, ProductEditForm } from '@/types';
+import { PRODUCT_CATEGORIES, WASH_OPTIONS, IRON_OPTIONS } from '@/utils/constants';
 import {
   IconChevronRight, IconTrash, IconDownload,
   IconHistory, IconCopy,
 } from '@/components/common/icons';
 import { formatDate, formatDateTime } from '@/utils/formatDate';
-
-const CATEGORIES = ['t-shirt', 'pantolon', 'ceket', 'ic-giyim', 'diger'] as const;
-const WASH_OPTIONS = ['30°C', '40°C', '60°C', 'El Yıkama', 'Yıkanamaz'];
-const IRON_OPTIONS = ['Uygun', 'Düşük Isı', 'Uygun Değil'];
-
-interface ProductEditForm {
-  name: string;
-  brand: string;
-  category: string;
-  country: string;
-  productionDate: Dayjs;
-  washTemperature?: string;
-  ironing?: string;
-  dryClean: boolean;
-  bleaching: boolean;
-  notes?: string;
-}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -52,8 +35,6 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
-
-  const [qrBlobUrl, setQrBlobUrl] = useState<string | null>(null);
 
   const [versionsOpen, setVersionsOpen] = useState(false);
   const [versions, setVersions] = useState<ProductVersion[]>([]);
@@ -91,26 +72,9 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [id, form, t]);
 
-  // Load QR code blob
-  useEffect(() => {
-    if (!id) return;
-    let blobUrl: string | null = null;
-    const token = useAuthStore.getState().token;
-
-    fetch(getProductQRCodeUrl(id), {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-      .then((r) => r.blob())
-      .then((blob) => {
-        blobUrl = URL.createObjectURL(blob);
-        setQrBlobUrl(blobUrl);
-      })
-      .catch(() => {});
-
-    return () => {
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
-    };
-  }, [id]);
+  const publicUrl = product
+    ? `${import.meta.env.VITE_PUBLIC_BASE_URL as string}/p/${product.uuid}`
+    : '';
 
   const handleSave = async () => {
     if (!id || !product) return;
@@ -277,7 +241,7 @@ export default function ProductDetailPage() {
                     label={t('editor.fields.category')}
                     rules={[{ required: true, message: t('common.required') }]}
                   >
-                    <Select options={CATEGORIES.map((c) => ({ label: c, value: c }))} />
+                    <Select options={PRODUCT_CATEGORIES.map((c) => ({ label: c, value: c }))} />
                   </Form.Item>
 
                   <Form.Item
@@ -459,8 +423,8 @@ export default function ProductDetailPage() {
                   border: '1px solid var(--border)',
                   lineHeight: 0,
                 }}>
-                  {qrBlobUrl ? (
-                    <img src={qrBlobUrl} alt="QR Code" width={160} height={160} />
+                  {publicUrl ? (
+                    <QRCodeSVG value={publicUrl} size={160} />
                   ) : (
                     <div className="skeleton" style={{ width: 160, height: 160 }} />
                   )}

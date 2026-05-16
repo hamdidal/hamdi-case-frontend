@@ -1,17 +1,23 @@
-export function formatDate(dateStr: string, locale = 'tr-TR'): string {
+import i18n from '@/i18n';
+
+function activeLocale(): string {
+  return i18n.language === 'tr' ? 'tr-TR' : 'en-US';
+}
+
+export function formatDate(dateStr: string, locale?: string): string {
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return dateStr;
-  return date.toLocaleDateString(locale, {
+  return date.toLocaleDateString(locale ?? activeLocale(), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
 }
 
-export function formatDateTime(dateStr: string, locale = 'tr-TR'): string {
+export function formatDateTime(dateStr: string, locale?: string): string {
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return dateStr;
-  return date.toLocaleString(locale, {
+  return date.toLocaleString(locale ?? activeLocale(), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',

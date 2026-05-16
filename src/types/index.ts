@@ -63,7 +63,7 @@ export interface AuditLog {
   action: AuditAction;
   entityId?: string;
   entityName?: string;
-  changes?: Record<string, [unknown, unknown]>;
+  changes?: Record<string, unknown>;
 }
 
 export interface PaginatedResponse<T> {
@@ -95,4 +95,29 @@ export interface AuditLogFilters {
   dateTo?: string;
   limit?: number;
   offset?: number;
+}
+
+// ── Form schemas ──────────────────────────────────────────────────────────────
+
+import type { Dayjs } from 'dayjs';
+
+export interface CreateProductForm {
+  name: string;
+  brand: string;
+  category: string;
+  country: string;
+  productionDate: Dayjs;
+}
+
+export interface ProductEditForm {
+  name: string;
+  brand: string;
+  category: string;
+  country: string;
+  productionDate: Dayjs;
+  washTemperature?: string;
+  ironing?: string;
+  dryClean: boolean;
+  bleaching: boolean;
+  notes?: string;
 }

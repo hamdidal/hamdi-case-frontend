@@ -10,9 +10,8 @@ import {
 import { getProducts } from '@/api/products';
 import type { Product } from '@/types';
 import { IconBox, IconTag, IconDashboard, IconActivity } from '@/components/common/icons';
-
-const PIE_COLORS = ['#2D6A4F', '#40916C', '#74C69D', '#B7E4C7', '#52B788', '#1B4332'];
-const TR_MONTHS = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+import { PIE_COLORS } from '@/utils/constants';
+import { getLast6Months } from '@/utils/formatters';
 
 // ── Data computations ─────────────────────────────────────────────────────────
 
@@ -44,13 +43,9 @@ function computeByMaterial(products: Product[]) {
   return Array.from(map.entries()).map(([name, value]) => ({ name, value: Math.round(value) }));
 }
 
-function computeByMonth(products: Product[]) {
+function computeByMonth(products: Product[], locale?: string) {
   if (!products || !Array.isArray(products) || products.length === 0) return [];
-  const now = new Date();
-  const months = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-    return { name: TR_MONTHS[d.getMonth()], count: 0, year: d.getFullYear(), month: d.getMonth() };
-  });
+  const months = getLast6Months(locale).map((m) => ({ ...m, count: 0 }));
   for (const p of products) {
     const d = new Date(p.createdAt);
     const idx = months.findIndex((m) => m.year === d.getFullYear() && m.month === d.getMonth());
@@ -105,7 +100,7 @@ function ChartSkeleton() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,10 +113,11 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
   }, [t]);
 
+  const locale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
   const stats = computeStats(products);
   const byCategory = computeByCategory(products);
   const byMaterial = computeByMaterial(products);
-  const byMonth = computeByMonth(products);
+  const byMonth = computeByMonth(products, locale);
 
   return (
     <div className="page">
@@ -174,7 +170,7 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byCategory')}</span>
           </div>
-          <div className="card-body" style={{ height: 220 }}>
+          <div className="card-body" style={{ height: 330 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (
@@ -196,25 +192,37 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMaterial')}</span>
           </div>
-          <div className="card-body" style={{ height: 220 }}>
+          <div className="card-body" style={{ height: 330 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
-                    innerRadius={60}
+                    cx="40%"
+                    innerRadius={55}
                     outerRadius={90}
                     dataKey="value"
                     nameKey="name"
+                    label={false}
                   >
                     {byMaterial.map((_, i) => (
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip content={<ChartTooltip />} />
-                  <Legend iconSize={10} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                  <Legend
+                    layout="vertical"
+                    align="right"
+                    verticalAlign="middle"
+                    iconSize={8}
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: 11, maxWidth: '45%', lineHeight: '1.8' }}
+                    formatter={(value: string) =>
+                      value.length > 18 ? value.slice(0, 16) + '…' : value
+                    }
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -226,7 +234,7 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMonth')}</span>
           </div>
-          <div className="card-body" style={{ height: 220 }}>
+          <div className="card-body" style={{ height: 330 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (

@@ -3,26 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Table, Input, Select, Button, Drawer, Form,
-  DatePicker, Popconfirm, App,
+  DatePicker, Modal, App,
 } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
-import type { Dayjs } from 'dayjs';
 import { UserOutlined } from '@ant-design/icons';
 import { getProducts, createProduct, deleteProduct } from '@/api/products';
 import { useAuthStore } from '@/store/useAuthStore';
-import type { Product } from '@/types';
+import type { Product, CreateProductForm } from '@/types';
+import { PRODUCT_CATEGORIES } from '@/utils/constants';
 import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/icons';
 import { formatDate } from '@/utils/formatDate';
-
-const CATEGORIES = ['t-shirt', 'pantolon', 'ceket', 'ic-giyim', 'diger'] as const;
-
-interface CreateForm {
-  name: string;
-  brand: string;
-  category: string;
-  country: string;
-  productionDate: Dayjs;
-}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -39,18 +29,19 @@ export default function ProductListPage() {
   const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<string | undefined>();
+  const [pageSize, setPageSize] = useState(20);
 
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [form] = Form.useForm<CreateForm>();
+  const [form] = Form.useForm<CreateProductForm>();
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchProducts = useCallback(async (pg: number, q: string, cat?: string) => {
+  const fetchProducts = useCallback(async (pg: number, q: string, lim = pageSize) => {
     setLoading(true);
     try {
-      const res = await getProducts({ page: pg, limit: 20, search: q || undefined, category: cat });
+      const res = await getProducts({ page: pg, limit: lim, search: q || undefined });
       setProducts(res.data.data ?? []);
       setTotal(res.data.total ?? 0);
     } catch {
@@ -61,38 +52,41 @@ export default function ProductListPage() {
   }, [message, t]);
 
   useEffect(() => {
-    void fetchProducts(page, search, category);
-  }, [fetchProducts, page, category]); // eslint-disable-line react-hooks/exhaustive-deps
+    void fetchProducts(page, search);
+  }, [fetchProducts, page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearchChange = (val: string) => {
     setSearch(val);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
       setPage(1);
-      void fetchProducts(1, val, category);
+      void fetchProducts(1, val);
     }, 300);
   };
 
-  const handleCategoryChange = (val: string | undefined) => {
-    setCategory(val);
-    setPage(1);
-  };
-
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    setPage(pagination.current ?? 1);
+    const newPage = pagination.current ?? 1;
+    const newSize = pagination.pageSize ?? pageSize;
+    if (newSize !== pageSize) {
+      setPageSize(newSize);
+      setPage(1);
+      void fetchProducts(1, search, newSize);
+    } else {
+      setPage(newPage);
+    }
   };
 
   const handleDelete = async (id: number) => {
     try {
       await deleteProduct(id);
       void message.success(t('products.deleteSuccess'));
-      void fetchProducts(page, search, category);
+      void fetchProducts(page, search);
     } catch {
       void message.error(t('common.error'));
     }
   };
 
-  const handleCreate = async (values: CreateForm) => {
+  const handleCreate = async (values: CreateProductForm) => {
     setCreating(true);
     try {
       await createProduct({
@@ -106,7 +100,7 @@ export default function ProductListPage() {
       setDrawerOpen(false);
       form.resetFields();
       setPage(1);
-      void fetchProducts(1, search, category);
+      void fetchProducts(1, search);
     } catch {
       void message.error(t('common.error'));
     } finally {
@@ -168,19 +162,13 @@ export default function ProductListPage() {
             </button>
           )}
           {isAdmin && (
-            <Popconfirm
-              title={t('products.deleteConfirm')}
-              onConfirm={() => handleDelete(record.id)}
-              okText={t('common.yes')}
-              cancelText={t('common.no')}
+            <button
+              className="btn btn-danger btn-icon btn-sm"
+              title={t('common.delete')}
+              onClick={() => setDeleteId(record.id)}
             >
-              <button
-                className="btn btn-danger btn-icon btn-sm"
-                title={t('common.delete')}
-              >
-                <IconTrash size={14} />
-              </button>
-            </Popconfirm>
+              <IconTrash size={14} />
+            </button>
           )}
         </div>
       ),
@@ -204,7 +192,7 @@ export default function ProductListPage() {
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-        <div className="search-input" style={{ flex: '1 1 280px', maxWidth: 360 }}>
+        <div className="search-input" style={{ width: '50%' }}>
           <IconSearch size={14} className="search-icon" />
           <input
             value={search}
@@ -212,14 +200,6 @@ export default function ProductListPage() {
             placeholder={t('products.searchPlaceholder')}
           />
         </div>
-        <Select
-          allowClear
-          placeholder={t('products.allCategories')}
-          style={{ width: 180 }}
-          value={category}
-          onChange={handleCategoryChange}
-          options={CATEGORIES.map((c) => ({ label: c, value: c }))}
-        />
       </div>
 
       {/* Table */}
@@ -229,19 +209,34 @@ export default function ProductListPage() {
           columns={columns}
           dataSource={products}
           loading={loading}
+          scroll={{ x: 'max-content' }}
           onRow={(record) => ({ onClick: () => navigate(`/products/${record.id}`) })}
           rowClassName={() => 'tbl-row-clickable'}
           pagination={{
             current: page,
-            pageSize: 20,
+            pageSize,
             total,
-            showSizeChanger: false,
+            showSizeChanger: true,
+            pageSizeOptions: [10, 50, 100],
             showTotal: (n) => `${n} ${t('products.title').toLowerCase()}`,
           }}
           onChange={handleTableChange}
           style={{ cursor: 'pointer' }}
         />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        open={deleteId !== null}
+        title={t('common.confirmDeletion')}
+        okText={t('common.delete')}
+        okButtonProps={{ danger: true }}
+        cancelText={t('common.cancel')}
+        onOk={async () => { if (deleteId !== null) { await handleDelete(deleteId); } setDeleteId(null); }}
+        onCancel={() => setDeleteId(null)}
+      >
+        <p>{t('common.deleteWarning')}</p>
+      </Modal>
 
       {/* Add Product Drawer */}
       <Drawer
@@ -292,7 +287,7 @@ export default function ProductListPage() {
           >
             <Select
               placeholder={t('editor.fields.category')}
-              options={CATEGORIES.map((c) => ({ label: c, value: c }))}
+              options={PRODUCT_CATEGORIES.map((c) => ({ label: c, value: c }))}
             />
           </Form.Item>
 

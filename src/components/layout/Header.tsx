@@ -7,7 +7,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import {
-  IconMenu, IconSearch, IconBell,
+  IconMenu, IconSearch,
   IconSettings, IconEye, IconLogout, IconChevronRight,
 } from '@/components/common/icons';
 
@@ -71,7 +71,7 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
   };
 
   return (
-    <div className="app-header">
+    <div className="header">
       {/* Sidebar toggle */}
       <span className="header-action" onClick={onToggle} role="button" aria-label="Toggle sidebar">
         <IconMenu size={17} style={{ transform: collapsed ? 'rotate(90deg)' : undefined, transition: 'transform 0.18s' }} />
@@ -99,12 +99,8 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
         />
       </div>
 
-      {/* Language + Theme + Notifications */}
+      {/* Language + Theme */}
       <LanguageSwitcher />
-
-      <span className="header-action" role="button" aria-label={t('common.notifications')}>
-        <IconBell size={17} />
-      </span>
 
       <ThemeToggle />
 
