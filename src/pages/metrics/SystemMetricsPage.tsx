@@ -5,7 +5,6 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import type { TooltipProps } from 'recharts';
 import { queryMetric, PROMQL } from '@/api/metrics';
 import { formatBytesPerSecond } from '@/utils/formatBytes';
 
@@ -44,14 +43,26 @@ function GaugeCard({ label, value, loading }: { label: string; value: number; lo
   );
 }
 
-function NetTooltip({ active, payload, label }: TooltipProps<number, string>) {
+interface NetPayloadItem {
+  name?: string;
+  value?: number;
+  color?: string;
+}
+
+interface NetTooltipProps {
+  active?: boolean;
+  payload?: NetPayloadItem[];
+  label?: string;
+}
+
+function NetTooltip({ active, payload, label }: NetTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
     <div className="card" style={{ padding: '8px 12px', fontSize: 12 }}>
       <div style={{ color: 'var(--text-soft)', marginBottom: 4 }}>{label}</div>
-      {payload.map((p) => (
-        <div key={p.name} style={{ color: p.color as string }}>
-          {p.name}: {formatBytesPerSecond((p.value as number) ?? 0)}
+      {payload.map((p, i) => (
+        <div key={i} style={{ color: p.color ?? 'var(--text)' }}>
+          {p.name}: {formatBytesPerSecond(p.value ?? 0)}
         </div>
       ))}
     </div>

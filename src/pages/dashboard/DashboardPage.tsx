@@ -7,7 +7,6 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import type { TooltipProps } from 'recharts';
 import { getProducts } from '@/api/products';
 import type { Product } from '@/types';
 import { IconBox, IconTag, IconDashboard, IconActivity } from '@/components/common/icons';
@@ -80,7 +79,13 @@ function StatCard({ label, value, icon, loading }: StatCardProps) {
   );
 }
 
-function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
+interface ChartTooltipProps {
+  active?: boolean;
+  payload?: Array<{ value?: number }>;
+  label?: string;
+}
+
+function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
     <div className="card" style={{ padding: '8px 12px', fontSize: 13, minWidth: 80 }}>

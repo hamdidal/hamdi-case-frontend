@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { queryMetric, PROMQL } from '@/api/metrics';
-import type { MetricResult } from '@/types';
 
 export interface MetricsSnapshot {
   cpu: number | null;
