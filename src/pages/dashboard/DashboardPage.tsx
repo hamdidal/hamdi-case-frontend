@@ -185,7 +185,7 @@ export default function DashboardPage() {
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <BarChart data={byCategory && byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
@@ -210,7 +210,7 @@ export default function DashboardPage() {
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
@@ -257,7 +257,7 @@ export default function DashboardPage() {
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <AreaChart data={byMonth && byMonth.length > 0 ? byMonth : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <defs>
                     <linearGradient id="dashGradient" x1="0" y1="0" x2="0" y2="1">
