@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'antd';
+import { Alert, Empty } from 'antd';
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -27,12 +27,14 @@ function computeStats(products: Product[]) {
 }
 
 function computeByCategory(products: Product[]) {
+  if (!products || !Array.isArray(products) || products.length === 0) return [];
   const map = new Map<string, number>();
   for (const p of products) map.set(p.category, (map.get(p.category) ?? 0) + 1);
   return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
 }
 
 function computeByMaterial(products: Product[]) {
+  if (!products || !Array.isArray(products) || products.length === 0) return [];
   const map = new Map<string, number>();
   for (const p of products) {
     for (const m of (p.materials ?? [])) {
@@ -43,6 +45,7 @@ function computeByMaterial(products: Product[]) {
 }
 
 function computeByMonth(products: Product[]) {
+  if (!products || !Array.isArray(products) || products.length === 0) return [];
   const now = new Date();
   const months = Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
@@ -110,7 +113,7 @@ export default function DashboardPage() {
   useEffect(() => {
     setLoading(true);
     getProducts({ limit: 1000 })
-      .then((res) => setProducts(res.data.data ?? []))
+      .then((res) => setProducts(res?.data?.data ?? []))
       .catch(() => setError(t('common.error')))
       .finally(() => setLoading(false));
   }, [t]);
@@ -162,6 +165,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts */}
+      {!loading && products.length === 0 ? (
+        <Empty style={{ padding: '60px 0' }} />
+      ) : (
       <div className="dash-charts">
         {/* Bar — by category */}
         <div className="card">
@@ -173,7 +179,7 @@ export default function DashboardPage() {
               <ChartSkeleton />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={byCategory} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
+                <BarChart data={byCategory && byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} allowDecimals={false} />
@@ -197,7 +203,7 @@ export default function DashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={byMaterial}
+                    data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
                     innerRadius={60}
                     outerRadius={90}
                     dataKey="value"
@@ -225,7 +231,7 @@ export default function DashboardPage() {
               <ChartSkeleton />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={byMonth} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
+                <AreaChart data={byMonth && byMonth.length > 0 ? byMonth : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <defs>
                     <linearGradient id="dashGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#2D6A4F" stopOpacity={0.15} />
@@ -249,6 +255,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
