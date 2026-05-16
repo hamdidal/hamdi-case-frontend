@@ -35,7 +35,7 @@ function computeByCategory(products: Product[]) {
 function computeByMaterial(products: Product[]) {
   const map = new Map<string, number>();
   for (const p of products) {
-    for (const m of p.materials) {
+    for (const m of (p.materials ?? [])) {
       map.set(m.name, (map.get(m.name) ?? 0) + m.percentage);
     }
   }
@@ -110,7 +110,7 @@ export default function DashboardPage() {
   useEffect(() => {
     setLoading(true);
     getProducts({ limit: 1000 })
-      .then((res) => setProducts(res.data.data))
+      .then((res) => setProducts(res.data.data ?? []))
       .catch(() => setError(t('common.error')))
       .finally(() => setLoading(false));
   }, [t]);

@@ -20,7 +20,7 @@ export default function UsersPage() {
   const fetchUsers = () => {
     setLoading(true);
     getUsers()
-      .then((res) => setUsers(res.data))
+      .then((res) => setUsers(res.data ?? []))
       .catch(() => void message.error(t('common.error')))
       .finally(() => setLoading(false));
   };

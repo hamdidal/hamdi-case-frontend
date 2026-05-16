@@ -160,7 +160,7 @@ export default function PublicPassportPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {product.materials.map((m, i) => (
+                  {(product.materials ?? []).map((m, i) => (
                     <tr key={i}>
                       <td>{m.name}</td>
                       <td>{m.percentage}%</td>

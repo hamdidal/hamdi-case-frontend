@@ -51,8 +51,8 @@ export default function ProductListPage() {
     setLoading(true);
     try {
       const res = await getProducts({ page: pg, limit: 20, search: q || undefined, category: cat });
-      setProducts(res.data.data);
-      setTotal(res.data.total);
+      setProducts(res.data.data ?? []);
+      setTotal(res.data.total ?? 0);
     } catch {
       void message.error(t('common.error'));
     } finally {

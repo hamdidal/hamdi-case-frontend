@@ -70,8 +70,8 @@ export default function AuditLogPage() {
         limit: PAGE_SIZE,
         offset: (pg - 1) * PAGE_SIZE,
       });
-      setLogs(res.data.data);
-      setTotal(res.data.total);
+      setLogs(res.data.data ?? []);
+      setTotal(res.data.total ?? 0);
     } catch {
       void message.error(t('common.error'));
     } finally {
