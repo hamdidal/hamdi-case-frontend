@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PrivateRoute } from '@/components/layout/PrivateRoute';
 import { useTranslation } from 'react-i18next';
+import LoginPage from '@/pages/auth/LoginPage';
+import RegisterPage from '@/pages/auth/RegisterPage';
 
 // ── Placeholder pages ─────────────────────────────────────────────────────────
 // Each will be replaced with the real page component in a subsequent step.
@@ -20,8 +22,6 @@ function PlaceholderPage({ name }: { name: string }) {
   );
 }
 
-function LoginPage()         { return <PlaceholderPage name="Login" />; }
-function RegisterPage()      { return <PlaceholderPage name="Register" />; }
 function PublicPassportPage(){ return <PlaceholderPage name="Public Passport" />; }
 function DashboardPage()     { return <PlaceholderPage name="Dashboard" />; }
 function ProductListPage()   { return <PlaceholderPage name="Products" />; }
