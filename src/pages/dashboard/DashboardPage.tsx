@@ -110,7 +110,7 @@ function PieTooltip({ active, payload }: PieTooltipProps) {
 }
 
 function ChartSkeleton() {
-  return <div className="skeleton" style={{ height: '100%', borderRadius: 8 }} />;
+  return <div className="skeleton" style={{ height: 450, width: '100%', borderRadius: 8 }} />;
 }
 
 export default function DashboardPage() {
@@ -181,11 +181,11 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byCategory')}</span>
           </div>
-          <div className="card-body" style={{ height: 450 }}>
+          <div className="card-body">
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+              <ResponsiveContainer width="100%" minWidth={0} debounce={100} aspect={2.5}>
                 <BarChart data={byCategory && byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
@@ -206,11 +206,11 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMaterial')}</span>
           </div>
-          <div className="card-body" style={{ height: 450 }}>
+          <div className="card-body">
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+              <ResponsiveContainer width="100%" minWidth={0} debounce={100} aspect={1.2}>
                 <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
@@ -253,11 +253,11 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMonth')}</span>
           </div>
-          <div className="card-body" style={{ height: 450 }}>
+          <div className="card-body">
             {loading ? (
               <ChartSkeleton />
             ) : (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+              <ResponsiveContainer width="100%" minWidth={0} debounce={100} aspect={2.5}>
                 <AreaChart data={byMonth && byMonth.length > 0 ? byMonth : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <defs>
                     <linearGradient id="dashGradient" x1="0" y1="0" x2="0" y2="1">

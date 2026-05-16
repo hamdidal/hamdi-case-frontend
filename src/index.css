@@ -612,7 +612,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* dashboard charts grid */
 .dash-charts { display: flex !important; flex-direction: column !important; gap: 32px !important; margin-top: 16px; }
-.dash-charts > div { min-width: 0; }
+.dash-charts > div { display: block !important; position: relative; width: 100% !important; height: 450px !important; overflow: hidden; min-width: 0; }
 
 /* ── Ant Design overrides ── */
 .ant-table-wrapper .ant-table-thead > tr > th,
