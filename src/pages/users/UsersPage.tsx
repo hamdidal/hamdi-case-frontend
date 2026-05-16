@@ -37,7 +37,6 @@ export default function UsersPage() {
     fetchUsers(page, pageSize);
   }, [fetchUsers, page, pageSize]);
 
-  // Pure state update — useEffect drives the fetch; explicit page-reset on size change
   const handleTableChange = (pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);

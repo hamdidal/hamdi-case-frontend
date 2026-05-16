@@ -69,12 +69,10 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
 
   return (
     <div className="header">
-      {/* Sidebar toggle */}
       <span className="header-action" onClick={onToggle} role="button" aria-label="Toggle sidebar">
         <IconMenu size={17} style={{ transform: collapsed ? 'rotate(90deg)' : undefined, transition: 'transform 0.18s' }} />
       </span>
 
-      {/* Breadcrumbs */}
       <div className="crumbs">
         {crumbs.map((crumb, i) => (
           <span key={i} style={{ display: 'contents' }}>
@@ -86,12 +84,10 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
 
       <div className="header-spacer" />
 
-      {/* Language + Theme */}
       <LanguageSwitcher />
 
       <ThemeToggle />
 
-      {/* Avatar dropdown */}
       <Dropdown
         menu={{ items: dropdownItems, onClick: handleMenuClick }}
         trigger={['click']}

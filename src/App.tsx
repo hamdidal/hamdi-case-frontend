@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ConfigProvider, App as AntApp } from 'antd';
+import { useThemeStore } from '@/store/useThemeStore';
+import { lightTheme, darkTheme } from '@/theme';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PrivateRoute } from '@/components/layout/PrivateRoute';
 import LoginPage from '@/pages/auth/LoginPage';
@@ -11,42 +15,43 @@ import SystemMetricsPage from '@/pages/metrics/SystemMetricsPage';
 import UsersPage from '@/pages/users/UsersPage';
 import AuditLogPage from '@/pages/audit/AuditLogPage';
 import SettingsPage from '@/pages/settings/SettingsPage';
-
-// ── Placeholder pages ─────────────────────────────────────────────────────────
-// Each will be replaced with the real page component in a subsequent step.
-
-// ── Router ────────────────────────────────────────────────────────────────────
-
 export default function App() {
+  const { theme } = useThemeStore();
+  const activeTheme = theme === 'dark' ? darkTheme : lightTheme;
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public routes — no layout */}
-        <Route path="/login"     element={<LoginPage />} />
-        <Route path="/register"  element={<RegisterPage />} />
-        <Route path="/p/:uuid"   element={<PublicPassportPage />} />
+    <ConfigProvider theme={activeTheme} componentSize="large">
+      <AntApp>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login"    element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/p/:uuid"  element={<PublicPassportPage />} />
 
-        {/* Protected routes — requires auth */}
-        <Route element={<PrivateRoute />}>
-          <Route element={<AppLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard"     element={<DashboardPage />} />
-            <Route path="/products"      element={<ProductListPage />} />
-            <Route path="/products/:id"  element={<ProductDetailPage />} />
-            <Route path="/metrics"       element={<SystemMetricsPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<AppLayout />}>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard"     element={<DashboardPage />} />
+                <Route path="/products"      element={<ProductListPage />} />
+                <Route path="/products/:id"  element={<ProductDetailPage />} />
+                <Route path="/metrics"       element={<SystemMetricsPage />} />
 
-            {/* Admin-only routes */}
-            <Route element={<PrivateRoute requiredRole="admin" />}>
-              <Route path="/users"    element={<UsersPage />} />
-              <Route path="/audit"    element={<AuditLogPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+                <Route element={<PrivateRoute requiredRole="admin" />}>
+                  <Route path="/users"    element={<UsersPage />} />
+                  <Route path="/audit"    element={<AuditLogPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                </Route>
+              </Route>
             </Route>
-          </Route>
-        </Route>
 
-        {/* Catch-all */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </BrowserRouter>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AntApp>
+    </ConfigProvider>
   );
 }

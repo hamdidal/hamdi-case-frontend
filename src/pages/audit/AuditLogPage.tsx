@@ -20,8 +20,6 @@ const ACTION_TAG: Record<AuditAction, string> = {
 
 const DEFAULT_PAGE_SIZE = 20;
 
-// ── Diff viewer ───────────────────────────────────────────────────────────────
-
 function renderVal(v: unknown): string {
   if (v === null || v === undefined) return '';
   if (typeof v === 'object') return JSON.stringify(v);
@@ -34,7 +32,6 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
   }
 
-  // before/after structure (update / delete operations)
   if ('before' in changes || 'after' in changes) {
     const before = changes.before as Record<string, unknown> | undefined;
     const after = changes.after as Record<string, unknown> | undefined;
@@ -63,7 +60,6 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     );
   }
 
-  // Fallback: flat key → value pairs (e.g. seeded audit entries)
   return (
     <div className="diff">
       {Object.entries(changes).map(([field, val]) => (
@@ -75,8 +71,6 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     </div>
   );
 }
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AuditLogPage() {
   const { t } = useTranslation();
@@ -92,7 +86,6 @@ export default function AuditLogPage() {
   const [filterUsername, setFilterUsername] = useState('');
   const [filterRange, setFilterRange] = useState<RangeValue>(null);
 
-  // lim is always explicit — no default — to avoid stale-closure bugs with useCallback
   const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters, lim: number) => {
     setLoading(true);
     try {
@@ -117,7 +110,6 @@ export default function AuditLogPage() {
     dateTo: filterRange?.[1]?.toISOString(),
   });
 
-  // Re-runs on page OR pageSize change; always passes current pageSize explicitly
   useEffect(() => {
     void fetchLogs(page, buildFilters(), pageSize);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,7 +128,6 @@ export default function AuditLogPage() {
     void fetchLogs(1, {}, pageSize);
   };
 
-  // Pure state update — useEffect drives the fetch; batched updates = one fetch
   const handleTableChange = (pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
@@ -193,7 +184,6 @@ export default function AuditLogPage() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="filter-bar">
         <Select<AuditAction>
           allowClear
@@ -224,7 +214,6 @@ export default function AuditLogPage() {
         <Button onClick={handleClear} style={{ flexShrink: 0 }}>{t('common.cancel')}</Button>
       </div>
 
-      {/* Table */}
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <Table<AuditLog>
           rowKey="id"

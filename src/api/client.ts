@@ -19,7 +19,6 @@ client.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch {
-      // ignore malformed storage entry
     }
   }
   return config;

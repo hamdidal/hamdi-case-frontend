@@ -15,8 +15,6 @@ import { capitalize } from '@/utils/formatters';
 
 const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL as string;
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
 function CareItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
@@ -38,8 +36,6 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function PublicPassportPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -89,7 +85,6 @@ export default function PublicPassportPage() {
   return (
     <ConfigProvider theme={lightTheme}>
       <div style={{ minHeight: '100vh', background: 'var(--bg-app)', fontFamily: 'var(--font-ui)' }}>
-        {/* Top bar */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -114,9 +109,7 @@ export default function PublicPassportPage() {
           <LanguageSwitcher />
         </div>
 
-        {/* Max-width container */}
         <div style={{ maxWidth: 680, margin: '0 auto' }}>
-          {/* Hero */}
           <div style={{ padding: '40px 32px 32px', borderBottom: '1px solid var(--border)' }}>
             <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--text)', margin: '0 0 12px' }}>
               {product.name}
@@ -127,7 +120,6 @@ export default function PublicPassportPage() {
             </div>
           </div>
 
-          {/* Info grid */}
           <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
@@ -148,7 +140,6 @@ export default function PublicPassportPage() {
             </div>
           </div>
 
-          {/* Materials */}
           <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
             <SectionHeading>{t('public.materials')}</SectionHeading>
             <div className="tbl-wrap">
@@ -179,7 +170,6 @@ export default function PublicPassportPage() {
             </div>
           </div>
 
-          {/* Care Instructions */}
           {care && (
             <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
               <SectionHeading>{t('public.care')}</SectionHeading>
@@ -217,7 +207,6 @@ export default function PublicPassportPage() {
             </div>
           )}
 
-          {/* QR Code */}
           <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)', textAlign: 'center' }}>
             <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
               <div style={{
@@ -235,7 +224,6 @@ export default function PublicPassportPage() {
             </div>
           </div>
 
-          {/* Footer */}
           <div style={{ padding: '20px 32px', textAlign: 'center', borderTop: '1px solid var(--border)' }}>
             <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>
               {t('public.poweredBy')}

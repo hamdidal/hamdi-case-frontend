@@ -77,7 +77,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Profile */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="card-head">
           <span className="card-title">{t('settings.profile.title')}</span>
@@ -110,7 +109,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Security */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div className="card-head">
           <span className="card-title">{t('settings.security.title')}</span>
@@ -167,7 +165,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Preferences */}
       <div className="card">
         <div className="card-head">
           <span className="card-title">{t('settings.preferences.title')}</span>

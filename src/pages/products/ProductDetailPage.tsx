@@ -21,8 +21,6 @@ import {
 import { formatDate, formatDateTime } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -47,7 +45,6 @@ export default function ProductDetailPage() {
 
   const [form] = Form.useForm<ProductEditForm>();
 
-  // Load product
   useEffect(() => {
     if (!id) return;
     setLoading(true);
@@ -192,7 +189,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="page">
-      {/* Page header */}
       <div className="page-head">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
@@ -209,11 +205,8 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Two-column editor grid */}
       <div className="editor-grid">
-        {/* ── LEFT COLUMN ── */}
         <div>
-          {/* Basic Info */}
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.basicInfo')}</span>
@@ -266,7 +259,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Materials */}
           <div className="card" style={{ marginTop: 20 }}>
             <div className="card-head">
               <span className="card-title">{t('editor.materials')}</span>
@@ -350,7 +342,6 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          {/* Care Instructions */}
           <div className="card" style={{ marginTop: 20 }}>
             <div className="card-head">
               <span className="card-title">{t('editor.care')}</span>
@@ -395,7 +386,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Save */}
           {isAdmin && (
             <Button
               type="primary"
@@ -409,14 +399,12 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* ── RIGHT COLUMN ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.publicPassport')}</span>
             </div>
             <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {/* QR Code */}
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{
                   background: '#fff',
@@ -436,19 +424,16 @@ export default function ProductDetailPage() {
                 {t('editor.qrHint')}
               </p>
 
-              {/* Copy link */}
               <button className="btn" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handleCopyLink}>
                 <IconCopy size={14} />
                 {t('editor.copyLink')}
               </button>
 
-              {/* Download PDF */}
               <button className="btn" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handlePDFDownload}>
                 <IconDownload size={14} />
                 {t('editor.downloadPdf')}
               </button>
 
-              {/* Version History */}
               <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handleOpenVersions}>
                 <IconHistory size={14} />
                 {t('editor.versionHistory')}
@@ -458,7 +443,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Version History Drawer */}
       <Drawer
         title={t('editor.versionHistory')}
         open={versionsOpen}
@@ -505,7 +489,6 @@ export default function ProductDetailPage() {
         )}
       </Drawer>
 
-      {/* Snapshot Modal */}
       <Modal
         open={snapshotOpen}
         onCancel={() => setSnapshotOpen(false)}

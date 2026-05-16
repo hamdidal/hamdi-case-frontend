@@ -13,8 +13,6 @@ import { IconBox, IconTag, IconDashboard, IconActivity } from '@/components/comm
 import { PIE_COLORS } from '@/utils/constants';
 import { getLast6Months, capitalize } from '@/utils/formatters';
 
-// ── Data computations ─────────────────────────────────────────────────────────
-
 function computeStats(products: DashboardStatItem[]) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   return {
@@ -56,8 +54,6 @@ function computeByMonth(products: DashboardStatItem[], locale?: string) {
   }
   return months.map(({ name, count }) => ({ name, count }));
 }
-
-// ── Sub-components ────────────────────────────────────────────────────────────
 
 interface StatCardProps {
   label: string;
@@ -117,8 +113,6 @@ function ChartSkeleton() {
   return <div className="skeleton" style={{ height: '100%', borderRadius: 8 }} />;
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
   const [products, setProducts] = useState<DashboardStatItem[]>([]);
@@ -152,7 +146,6 @@ export default function DashboardPage() {
         <Alert type="error" title={error} showIcon style={{ marginBottom: 20 }} />
       )}
 
-      {/* Stat cards */}
       <div className="stat-grid">
         <StatCard
           label={t('dashboard.totalProducts')}
@@ -180,12 +173,10 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Charts */}
       {!loading && products.length === 0 ? (
         <Empty style={{ padding: '60px 0' }} />
       ) : (
       <div className="dash-charts">
-        {/* Bar — by category */}
         <div className="card">
           <div className="card-head">
             <span className="card-title">{t('dashboard.byCategory')}</span>
@@ -211,7 +202,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Donut — by material */}
         <div className="card">
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMaterial')}</span>
@@ -259,7 +249,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Area — by month */}
         <div className="card">
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMonth')}</span>

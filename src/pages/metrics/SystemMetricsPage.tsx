@@ -141,14 +141,12 @@ export default function SystemMetricsPage() {
         <Alert type="warning" title={error} showIcon style={{ marginBottom: 20 }} />
       )}
 
-      {/* Gauge row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
         <GaugeCard label={t('metrics.cpu')} value={metrics.cpu} loading={loading} />
         <GaugeCard label={t('metrics.ram')} value={metrics.ram} loading={loading} />
         <GaugeCard label={t('metrics.disk')} value={metrics.disk} loading={loading} />
       </div>
 
-      {/* Network chart */}
       <div className="card" style={{ marginTop: 20 }}>
         <div className="card-head">
           <span className="card-title">{t('metrics.network')}</span>

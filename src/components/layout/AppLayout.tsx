@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ConfigProvider, App as AntApp } from 'antd';
-import { useThemeStore } from '@/store/useThemeStore';
-import { lightTheme, darkTheme } from '@/theme';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -17,16 +14,9 @@ function useIsMobile() {
 }
 
 export function AppLayout() {
-  const { theme } = useThemeStore();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useIsMobile();
-
-  const activeTheme = theme === 'dark' ? darkTheme : lightTheme;
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
 
   const handleToggle = () => {
     if (isMobile) {
@@ -37,29 +27,25 @@ export function AppLayout() {
   };
 
   return (
-    <ConfigProvider theme={activeTheme} componentSize="large">
-      <AntApp>
-        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-app)' }}>
-          <Sidebar
-            collapsed={collapsed}
-            isMobile={isMobile}
-            mobileOpen={mobileOpen}
-            onMobileClose={() => setMobileOpen(false)}
-          />
-          {isMobile && mobileOpen && (
-            <div
-              onClick={() => setMobileOpen(false)}
-              style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', zIndex: 99 }}
-            />
-          )}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <Header collapsed={collapsed} onToggle={handleToggle} />
-            <div style={{ flex: 1, overflow: 'auto' }}>
-              <Outlet />
-            </div>
-          </div>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-app)' }}>
+      <Sidebar
+        collapsed={collapsed}
+        isMobile={isMobile}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+      />
+      {isMobile && mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', zIndex: 99 }}
+        />
+      )}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <Header collapsed={collapsed} onToggle={handleToggle} />
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <Outlet />
         </div>
-      </AntApp>
-    </ConfigProvider>
+      </div>
+    </div>
   );
 }

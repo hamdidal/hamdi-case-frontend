@@ -108,7 +108,6 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
 
   return (
     <aside style={sidebarStyle}>
-      {/* Brand */}
       <div className="side-brand">
         <div className="side-brand-mark" />
         {!iconOnly && (
@@ -119,7 +118,6 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
         )}
       </div>
 
-      {/* Nav */}
       <nav className="side-nav">
         {sections.map((sec) => {
           if (sec.adminOnly && role !== 'admin') return null;
@@ -150,7 +148,6 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
         })}
       </nav>
 
-      {/* Footer */}
       <div className="side-foot" style={iconOnly ? { padding: '12px 8px' } : undefined}>
         <div className="side-foot-avatar">
           {getInitials(user?.username ?? 'user')}

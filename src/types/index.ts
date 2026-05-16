@@ -111,8 +111,6 @@ export interface AuditLogFilters {
   offset?: number;
 }
 
-// ── Form schemas ──────────────────────────────────────────────────────────────
-
 import type { Dayjs } from 'dayjs';
 
 export interface CreateProductForm {

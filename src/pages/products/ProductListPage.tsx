@@ -15,8 +15,6 @@ import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 export default function ProductListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -39,7 +37,6 @@ export default function ProductListPage() {
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // lim is always explicit — no default — to avoid stale-closure bugs with useCallback
   const fetchProducts = useCallback(async (pg: number, q: string, lim: number) => {
     setLoading(true);
     try {
@@ -53,7 +50,6 @@ export default function ProductListPage() {
     }
   }, [message, t]);
 
-  // Re-runs on page OR pageSize change; always passes current pageSize explicitly
   useEffect(() => {
     void fetchProducts(page, search, pageSize);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,10 +64,8 @@ export default function ProductListPage() {
     }, 300);
   };
 
-  // Pure state update — useEffect drives the fetch; batched updates = one fetch
   const handleTableChange = (pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
-    // Reset to page 1 whenever page size changes
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
     setPageSize(newSize);
     setPage(newPage);
@@ -192,7 +186,6 @@ export default function ProductListPage() {
 
   return (
     <div className="page">
-      {/* Page header */}
       <div className="page-head">
         <div>
           <h1 className="page-title">{t('products.title')}</h1>
@@ -205,7 +198,6 @@ export default function ProductListPage() {
         )}
       </div>
 
-      {/* Filters */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
         <div className="search-input" style={{ width: '50%' }}>
           <IconSearch size={14} className="search-icon" />
@@ -217,7 +209,6 @@ export default function ProductListPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         <Table<Product>
           rowKey="id"
@@ -240,7 +231,6 @@ export default function ProductListPage() {
         />
       </div>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         open={deleteId !== null}
         title={t('common.confirmDeletion')}
@@ -253,7 +243,6 @@ export default function ProductListPage() {
         <p>{t('common.deleteWarning')}</p>
       </Modal>
 
-      {/* Add Product Drawer */}
       <Drawer
         title={t('products.addNew')}
         open={drawerOpen}
