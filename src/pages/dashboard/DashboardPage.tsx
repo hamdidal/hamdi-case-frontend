@@ -197,12 +197,13 @@ export default function DashboardPage() {
               <ChartSkeleton />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
-                    cx="40%"
-                    innerRadius={75}
-                    outerRadius={120}
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={90}
+                    outerRadius={150}
                     dataKey="value"
                     nameKey="name"
                     label={false}
@@ -213,14 +214,14 @@ export default function DashboardPage() {
                   </Pie>
                   <Tooltip content={<ChartTooltip />} />
                   <Legend
-                    layout="vertical"
-                    align="right"
-                    verticalAlign="middle"
+                    layout="horizontal"
+                    align="center"
+                    verticalAlign="bottom"
                     iconSize={8}
                     iconType="circle"
-                    wrapperStyle={{ fontSize: 11, maxWidth: '45%', lineHeight: '1.8' }}
+                    wrapperStyle={{ fontSize: 11, lineHeight: '1.8', paddingTop: 8 }}
                     formatter={(value: string) =>
-                      value.length > 18 ? value.slice(0, 16) + '…' : value
+                      value.length > 22 ? value.slice(0, 20) + '…' : value
                     }
                   />
                 </PieChart>

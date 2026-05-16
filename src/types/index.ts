@@ -55,6 +55,13 @@ export interface ProductVersion {
   snapshot: Partial<Product>;
 }
 
+export interface AuditChangesSnapshot {
+  before?: Record<string, unknown>;
+  after?: Record<string, unknown>;
+}
+
+export type AuditChanges = AuditChangesSnapshot | Record<string, unknown>;
+
 export interface AuditLog {
   id: number;
   timestamp: string;
@@ -63,7 +70,7 @@ export interface AuditLog {
   action: AuditAction;
   entityId?: string;
   entityName?: string;
-  changes?: Record<string, unknown>;
+  changes?: AuditChanges;
 }
 
 export interface PaginatedResponse<T> {

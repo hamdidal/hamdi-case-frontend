@@ -112,6 +112,7 @@ export default function ProductListPage() {
     {
       title: t('products.columns.name'),
       dataIndex: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (name: string) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div className="prod-swatch" />
@@ -122,11 +123,13 @@ export default function ProductListPage() {
     {
       title: t('products.columns.brand'),
       dataIndex: 'brand',
+      sorter: (a, b) => a.brand.localeCompare(b.brand),
       render: (v: string) => <span style={{ color: 'var(--text-soft)' }}>{v}</span>,
     },
     {
       title: t('products.columns.category'),
       dataIndex: 'category',
+      sorter: (a, b) => a.category.localeCompare(b.category),
       render: (v: string) => <span className="tag brand">{v}</span>,
     },
     {
@@ -137,7 +140,18 @@ export default function ProductListPage() {
     {
       title: t('products.columns.date'),
       dataIndex: 'productionDate',
+      sorter: (a, b) => a.productionDate.localeCompare(b.productionDate),
       render: (v: string) => formatDate(v),
+    },
+    {
+      title: t('products.columns.status'),
+      dataIndex: 'status',
+      sorter: (a, b) => a.status.localeCompare(b.status),
+      render: (v: string) => (
+        <span className={`tag ${v === 'published' ? 'success' : ''}`}>
+          {t(`products.status.${v}`)}
+        </span>
+      ),
     },
     {
       title: t('products.columns.actions'),

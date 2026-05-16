@@ -4,7 +4,7 @@ import { Table, Select, Input, Button, DatePicker, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
 import type { Dayjs } from 'dayjs';
 import { getAuditLogs } from '@/api/auditLogs';
-import type { AuditLog, AuditAction, AuditLogFilters } from '@/types';
+import type { AuditLog, AuditAction, AuditLogFilters, AuditChanges } from '@/types';
 import { formatDateTime } from '@/utils/formatDate';
 
 const { RangePicker } = DatePicker;
@@ -28,7 +28,7 @@ function renderVal(v: unknown): string {
   return String(v);
 }
 
-function DiffViewer({ changes }: { changes: Record<string, unknown> | undefined }) {
+function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
   const { t } = useTranslation();
   if (!changes || Object.keys(changes).length === 0) {
     return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
@@ -38,13 +38,18 @@ function DiffViewer({ changes }: { changes: Record<string, unknown> | undefined 
   if ('before' in changes || 'after' in changes) {
     const before = changes.before as Record<string, unknown> | undefined;
     const after = changes.after as Record<string, unknown> | undefined;
-    const keys = Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})]));
+    const allKeys = Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})]));
+    const diffKeys = allKeys.filter((key) => before?.[key] !== after?.[key]);
+
+    if (diffKeys.length === 0) {
+      return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
+    }
+
     return (
       <div className="diff">
-        {keys.map((key) => {
+        {diffKeys.map((key) => {
           const bVal = before?.[key];
           const aVal = after?.[key];
-          if (bVal === aVal) return null;
           return (
             <div className="diff-line" key={key}>
               <span className="diff-key">{key}</span>

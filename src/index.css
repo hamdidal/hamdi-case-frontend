@@ -611,9 +611,7 @@ input, select, textarea { font: inherit; color: inherit; }
 [data-sidebar="floating"] .side-brand { padding-top: 16px; }
 
 /* dashboard charts grid */
-.dash-charts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
-@media (max-width: 1100px) { .dash-charts { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 768px)  { .dash-charts { grid-template-columns: 1fr; } }
+.dash-charts { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
 
 /* ── Ant Design overrides ── */
 .ant-table-wrapper .ant-table-thead > tr > th,
@@ -757,7 +755,7 @@ input, select, textarea { font: inherit; color: inherit; }
   .header { padding: 0 16px; }
   .page-title { font-size: 18px; }
   .stat-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .dash-charts { grid-template-columns: 1fr !important; }
+
   .public-hero { padding: 40px 16px 24px; }
   .public-section { padding: 32px 16px; }
   .editor-grid { grid-template-columns: 1fr !important; }

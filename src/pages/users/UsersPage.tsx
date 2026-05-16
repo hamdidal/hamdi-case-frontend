@@ -79,16 +79,19 @@ export default function UsersPage() {
     {
       title: t('users.columns.username'),
       dataIndex: 'username',
+      sorter: (a, b) => a.username.localeCompare(b.username),
       render: (v: string) => <span style={{ fontWeight: 500 }}>{v}</span>,
     },
     {
       title: t('users.columns.role'),
       dataIndex: 'role',
+      sorter: (a, b) => a.role.localeCompare(b.role),
       render: (_, record) => <RoleBadge role={record.role} />,
     },
     {
       title: t('users.columns.createdAt'),
       dataIndex: 'createdAt',
+      sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
       render: (v: string) => <span style={{ color: 'var(--text-soft)' }}>{formatDate(v)}</span>,
     },
     {
