@@ -19,6 +19,7 @@ import {
   IconHistory, IconCopy,
 } from '@/components/common/icons';
 import { formatDate, formatDateTime } from '@/utils/formatDate';
+import { capitalize } from '@/utils/formatters';
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -87,6 +88,7 @@ export default function ProductDetailPage() {
         category: values.category,
         country: values.country,
         productionDate: values.productionDate.format('YYYY-MM-DD'),
+        status: product.status,
         materials,
         careInstructions: {
           washTemperature: values.washTemperature,
@@ -241,7 +243,7 @@ export default function ProductDetailPage() {
                     label={t('editor.fields.category')}
                     rules={[{ required: true, message: t('common.required') }]}
                   >
-                    <Select options={PRODUCT_CATEGORIES.map((c) => ({ label: c, value: c }))} />
+                    <Select options={PRODUCT_CATEGORIES.map((c) => ({ label: capitalize(c), value: c }))} />
                   </Form.Item>
 
                   <Form.Item
@@ -516,7 +518,7 @@ export default function ProductDetailPage() {
             {([
               ['editor.fields.name', snapshot.name],
               ['editor.fields.brand', snapshot.brand],
-              ['editor.fields.category', snapshot.category],
+              ['editor.fields.category', snapshot.category ? capitalize(snapshot.category) : undefined],
               ['editor.fields.country', snapshot.country],
               ['editor.fields.date', snapshot.productionDate ? formatDate(snapshot.productionDate) : undefined],
             ] as [string, string | undefined][]).map(([key, val]) =>

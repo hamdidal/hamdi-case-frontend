@@ -11,6 +11,7 @@ import {
   IconGlobe, IconRecycle, IconWash, IconIron, IconDry, IconBleach,
 } from '@/components/common/icons';
 import { formatDate } from '@/utils/formatDate';
+import { capitalize } from '@/utils/formatters';
 
 const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL as string;
 
@@ -122,7 +123,7 @@ export default function PublicPassportPage() {
             </h1>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <span className="tag brand">{product.brand}</span>
-              <span className="tag">{product.category}</span>
+              <span className="tag">{capitalize(product.category)}</span>
             </div>
           </div>
 
