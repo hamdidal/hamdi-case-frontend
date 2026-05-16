@@ -1,0 +1,253 @@
+{
+  "nav": {
+    "section": {
+      "main": "MAIN",
+      "admin": "ADMINISTRATION",
+      "system": "SYSTEM"
+    },
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "metrics": "System Metrics",
+    "users": "Users",
+    "audit": "Audit Log",
+    "settings": "Settings"
+  },
+  "common": {
+    "search": "Search",
+    "filter": "Filter",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "actions": "Actions",
+    "theme": "Theme",
+    "language": "Language",
+    "logout": "Log out",
+    "profile": "Profile",
+    "confirm": "Confirm",
+    "loading": "Loading…",
+    "empty": "No records found",
+    "viewAll": "View all",
+    "copyLink": "Copy link",
+    "lastUpdated": "Last updated",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "close": "Close",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "required": "This field is required",
+    "notifications": "Notifications",
+    "quickSearch": "Quick search…"
+  },
+  "auth": {
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "welcome": "Welcome back",
+    "welcomeSub": "Sign in to access your passport panel",
+    "createTitle": "Create account",
+    "createSub": "Add a new DPP administrator for your company",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password",
+    "toSignup": "Don't have an account?",
+    "toSignin": "Already have an account?",
+    "signupCta": "Sign up for free",
+    "signinCta": "Sign in",
+    "posterTitle": "A digital passport for transparent textiles.",
+    "posterFoot": "VERIPASS · DPP MANAGEMENT PANEL",
+    "invalidCredentials": "Invalid username or password",
+    "registerSuccess": "Account created successfully. You can now sign in.",
+    "validation": {
+      "usernameRequired": "Username is required",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "confirmRequired": "Password confirmation is required"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Digital Product Passport control panel",
+    "totalProducts": "Total Products",
+    "totalBrands": "Total Brands",
+    "totalCategories": "Total Categories",
+    "recentlyAdded": "Last 7 Days",
+    "byCategory": "Products by category",
+    "byMaterial": "Material distribution",
+    "byMonth": "Products added per month",
+    "recentActivity": "Recent activity",
+    "noActivity": "No activity yet"
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Manage all product passports",
+    "addNew": "Add Product",
+    "searchPlaceholder": "Search product or brand…",
+    "allCategories": "All categories",
+    "columns": {
+      "name": "Product",
+      "brand": "Brand",
+      "category": "Category",
+      "country": "Country of Origin",
+      "date": "Production Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "deleteConfirm": "Are you sure you want to delete this product?",
+    "deleteSuccess": "Product deleted successfully",
+    "createSuccess": "Product created successfully",
+    "updateSuccess": "Product updated successfully"
+  },
+  "editor": {
+    "title": "Product Passport",
+    "basicInfo": "Basic Information",
+    "materials": "Materials",
+    "materialsHint": "Total percentage must equal 100",
+    "care": "Care Instructions",
+    "publicPassport": "Public Passport",
+    "qrHint": "Customers can scan this QR code with their phone to access the passport.",
+    "downloadPdf": "Download PDF",
+    "viewPublic": "View Passport",
+    "copyLink": "Copy Link",
+    "versionHistory": "Version History",
+    "fields": {
+      "name": "Product name",
+      "brand": "Brand",
+      "category": "Category",
+      "country": "Country of Origin",
+      "date": "Production Date"
+    },
+    "material": {
+      "name": "Material",
+      "percentage": "Percentage (%)",
+      "recycled": "Recycled",
+      "addRow": "Add material row",
+      "total": "Total",
+      "totalOk": "Total 100% — OK",
+      "totalBad": "Total {{value}}% — must be 100"
+    },
+    "careFields": {
+      "wash": "Washing temperature",
+      "iron": "Ironing",
+      "dryClean": "Dry cleaning",
+      "bleach": "Bleaching",
+      "notes": "Notes",
+      "notesPlaceholder": "Special care instructions…"
+    },
+    "versionLabel": "v{{number}}",
+    "versionBy": "by {{user}}",
+    "versionCurrent": "Current"
+  },
+  "public": {
+    "brand": "Brand",
+    "category": "Category",
+    "country": "Country of Origin",
+    "date": "Production Date",
+    "materials": "Material Composition",
+    "care": "Care Instructions",
+    "recycled": "Recycled",
+    "qrTitle": "Scan this passport with your phone",
+    "poweredBy": "Powered by VeriPass DPP",
+    "notFound": "Passport not found"
+  },
+  "metrics": {
+    "title": "System Metrics",
+    "subtitle": "Real-time infrastructure status via Prometheus",
+    "cpu": "CPU Usage",
+    "ram": "Memory Usage",
+    "disk": "Disk Usage",
+    "network": "Network Traffic",
+    "networkIn": "Inbound",
+    "networkOut": "Outbound",
+    "healthy": "Healthy",
+    "refreshing": "Refreshing…",
+    "autoRefresh": "Refreshes every 15 seconds",
+    "queryError": "Metric query failed"
+  },
+  "users": {
+    "title": "Users & Roles",
+    "subtitle": "Manage system users",
+    "invite": "Invite User",
+    "columns": {
+      "username": "Username",
+      "role": "Role",
+      "createdAt": "Created",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    },
+    "roles": {
+      "admin": "Admin",
+      "auditor": "Auditor"
+    },
+    "changeRole": "Change role",
+    "deleteConfirm": "Are you sure you want to delete this user?",
+    "cannotDeleteSelf": "You cannot delete your own account",
+    "cannotDemoteSelf": "You cannot demote your own role",
+    "updateSuccess": "User role updated",
+    "deleteSuccess": "User deleted"
+  },
+  "audit": {
+    "title": "Audit Log",
+    "subtitle": "All actions performed in the system",
+    "columns": {
+      "time": "Time",
+      "user": "User",
+      "action": "Action",
+      "entity": "Entity",
+      "changes": "Changes"
+    },
+    "actions": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "login": "Login"
+    },
+    "filterByAction": "Filter by action",
+    "filterByUser": "Filter by user",
+    "allActions": "All actions",
+    "expandChanges": "Show changes",
+    "noChanges": "No change record"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Profile",
+      "description": "Update your account information",
+      "username": "Username",
+      "email": "Email",
+      "saveSuccess": "Profile updated"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Change your password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "saveSuccess": "Password updated"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "description": "Default theme and language",
+      "defaultTheme": "Default theme",
+      "defaultLanguage": "Default language",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "saveSuccess": "Preferences saved"
+    }
+  },
+  "errors": {
+    "accessDenied": "Access denied",
+    "accessDeniedDesc": "You need the admin role to view this page.",
+    "goHome": "Go to dashboard",
+    "notFound": "Page not found",
+    "serverError": "Server error"
+  }
+}

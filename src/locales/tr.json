@@ -1,0 +1,253 @@
+{
+  "nav": {
+    "section": {
+      "main": "ANA",
+      "admin": "YÖNETİM",
+      "system": "SİSTEM"
+    },
+    "dashboard": "Anasayfa",
+    "products": "Ürünler",
+    "metrics": "Sistem Metrikleri",
+    "users": "Kullanıcılar",
+    "audit": "Denetim Kaydı",
+    "settings": "Ayarlar"
+  },
+  "common": {
+    "search": "Ara",
+    "filter": "Filtrele",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "add": "Ekle",
+    "actions": "İşlemler",
+    "theme": "Tema",
+    "language": "Dil",
+    "logout": "Çıkış yap",
+    "profile": "Profil",
+    "confirm": "Onayla",
+    "loading": "Yükleniyor…",
+    "empty": "Kayıt bulunamadı",
+    "viewAll": "Tümünü gör",
+    "copyLink": "Bağlantıyı kopyala",
+    "lastUpdated": "Son güncelleme",
+    "error": "Bir hata oluştu",
+    "retry": "Tekrar dene",
+    "close": "Kapat",
+    "back": "Geri",
+    "yes": "Evet",
+    "no": "Hayır",
+    "required": "Bu alan zorunludur",
+    "notifications": "Bildirimler",
+    "quickSearch": "Hızlı ara…"
+  },
+  "auth": {
+    "signin": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "welcome": "Tekrar hoş geldiniz",
+    "welcomeSub": "Pasaport panelinize erişmek için giriş yapın",
+    "createTitle": "Hesap oluştur",
+    "createSub": "Şirketiniz için yeni bir DPP yöneticisi ekleyin",
+    "username": "Kullanıcı adı",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi onayla",
+    "rememberMe": "Beni hatırla",
+    "forgotPassword": "Şifremi unuttum",
+    "toSignup": "Hesabınız yok mu?",
+    "toSignin": "Zaten hesabınız var mı?",
+    "signupCta": "Ücretsiz kaydolun",
+    "signinCta": "Giriş yapın",
+    "posterTitle": "Şeffaf bir tekstil için dijital pasaport.",
+    "posterFoot": "VERIPASS · DPP YÖNETİM PANELİ",
+    "invalidCredentials": "Kullanıcı adı veya şifre hatalı",
+    "registerSuccess": "Hesap başarıyla oluşturuldu. Giriş yapabilirsiniz.",
+    "validation": {
+      "usernameRequired": "Kullanıcı adı zorunludur",
+      "passwordRequired": "Şifre zorunludur",
+      "passwordMin": "Şifre en az 8 karakter olmalıdır",
+      "passwordMismatch": "Şifreler eşleşmiyor",
+      "confirmRequired": "Şifre onayı zorunludur"
+    }
+  },
+  "dashboard": {
+    "title": "Anasayfa",
+    "subtitle": "Dijital Ürün Pasaportu kontrol paneli",
+    "totalProducts": "Toplam Ürün",
+    "totalBrands": "Toplam Marka",
+    "totalCategories": "Toplam Kategori",
+    "recentlyAdded": "Son 7 Gün",
+    "byCategory": "Kategoriye göre ürünler",
+    "byMaterial": "Malzeme dağılımı",
+    "byMonth": "Aylık eklenen ürünler",
+    "recentActivity": "Son etkinlik",
+    "noActivity": "Henüz etkinlik yok"
+  },
+  "products": {
+    "title": "Ürünler",
+    "subtitle": "Tüm ürün pasaportlarını yönetin",
+    "addNew": "Ürün Ekle",
+    "searchPlaceholder": "Ürün veya marka ara…",
+    "allCategories": "Tüm kategoriler",
+    "columns": {
+      "name": "Ürün",
+      "brand": "Marka",
+      "category": "Kategori",
+      "country": "Üretim Ülkesi",
+      "date": "Üretim Tarihi",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "status": {
+      "published": "Yayında",
+      "draft": "Taslak"
+    },
+    "deleteConfirm": "Bu ürünü silmek istediğinize emin misiniz?",
+    "deleteSuccess": "Ürün başarıyla silindi",
+    "createSuccess": "Ürün başarıyla oluşturuldu",
+    "updateSuccess": "Ürün başarıyla güncellendi"
+  },
+  "editor": {
+    "title": "Ürün Pasaportu",
+    "basicInfo": "Temel Bilgiler",
+    "materials": "Malzemeler",
+    "materialsHint": "Toplam yüzde 100 olmalıdır",
+    "care": "Bakım Talimatları",
+    "publicPassport": "Kamuya Açık Pasaport",
+    "qrHint": "Müşteriler bu QR kodu telefonlarıyla okutarak pasaporta erişebilir.",
+    "downloadPdf": "PDF İndir",
+    "viewPublic": "Pasaportu Görüntüle",
+    "copyLink": "Bağlantıyı Kopyala",
+    "versionHistory": "Sürüm Geçmişi",
+    "fields": {
+      "name": "Ürün adı",
+      "brand": "Marka",
+      "category": "Kategori",
+      "country": "Üretim Ülkesi",
+      "date": "Üretim Tarihi"
+    },
+    "material": {
+      "name": "Malzeme",
+      "percentage": "Yüzde (%)",
+      "recycled": "Geri dönüştürülmüş",
+      "addRow": "Malzeme satırı ekle",
+      "total": "Toplam",
+      "totalOk": "Toplam %100 — tamam",
+      "totalBad": "Toplam {{value}}% — 100 olmalı"
+    },
+    "careFields": {
+      "wash": "Yıkama sıcaklığı",
+      "iron": "Ütüleme",
+      "dryClean": "Kuru temizleme",
+      "bleach": "Ağartma",
+      "notes": "Notlar",
+      "notesPlaceholder": "Özel bakım talimatları…"
+    },
+    "versionLabel": "v{{number}}",
+    "versionBy": "{{user}} tarafından",
+    "versionCurrent": "Güncel"
+  },
+  "public": {
+    "brand": "Marka",
+    "category": "Kategori",
+    "country": "Üretim Ülkesi",
+    "date": "Üretim Tarihi",
+    "materials": "Malzeme Kompozisyonu",
+    "care": "Bakım Talimatları",
+    "recycled": "Geri dönüştürülmüş",
+    "qrTitle": "Bu pasaportu telefonunuzla tarayın",
+    "poweredBy": "VeriPass DPP tarafından desteklenmektedir",
+    "notFound": "Pasaport bulunamadı"
+  },
+  "metrics": {
+    "title": "Sistem Metrikleri",
+    "subtitle": "Prometheus üzerinden gerçek zamanlı altyapı durumu",
+    "cpu": "İşlemci Kullanımı",
+    "ram": "Bellek Kullanımı",
+    "disk": "Disk Kullanımı",
+    "network": "Ağ Trafiği",
+    "networkIn": "Gelen",
+    "networkOut": "Giden",
+    "healthy": "Sağlıklı",
+    "refreshing": "Yenileniyor…",
+    "autoRefresh": "Her 15 saniyede bir yenilenir",
+    "queryError": "Metrik sorgusu başarısız"
+  },
+  "users": {
+    "title": "Kullanıcılar ve Roller",
+    "subtitle": "Sistem kullanıcılarını yönetin",
+    "invite": "Kullanıcı Davet Et",
+    "columns": {
+      "username": "Kullanıcı Adı",
+      "role": "Rol",
+      "createdAt": "Oluşturulma",
+      "lastLogin": "Son Giriş",
+      "actions": "İşlemler"
+    },
+    "roles": {
+      "admin": "Admin",
+      "auditor": "Denetçi"
+    },
+    "changeRole": "Rolü değiştir",
+    "deleteConfirm": "Bu kullanıcıyı silmek istediğinize emin misiniz?",
+    "cannotDeleteSelf": "Kendi hesabınızı silemezsiniz",
+    "cannotDemoteSelf": "Kendi rolünüzü düşüremezsiniz",
+    "updateSuccess": "Kullanıcı rolü güncellendi",
+    "deleteSuccess": "Kullanıcı silindi"
+  },
+  "audit": {
+    "title": "Denetim Kaydı",
+    "subtitle": "Sistemde gerçekleştirilen tüm işlemler",
+    "columns": {
+      "time": "Zaman",
+      "user": "Kullanıcı",
+      "action": "İşlem",
+      "entity": "Varlık",
+      "changes": "Değişiklikler"
+    },
+    "actions": {
+      "create": "Oluşturma",
+      "update": "Güncelleme",
+      "delete": "Silme",
+      "login": "Giriş"
+    },
+    "filterByAction": "İşleme göre filtrele",
+    "filterByUser": "Kullanıcıya göre filtrele",
+    "allActions": "Tüm işlemler",
+    "expandChanges": "Değişiklikleri göster",
+    "noChanges": "Değişiklik kaydı yok"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "profile": {
+      "title": "Profil",
+      "description": "Hesap bilgilerinizi güncelleyin",
+      "username": "Kullanıcı adı",
+      "email": "E-posta",
+      "saveSuccess": "Profil güncellendi"
+    },
+    "security": {
+      "title": "Güvenlik",
+      "description": "Şifrenizi değiştirin",
+      "currentPassword": "Mevcut şifre",
+      "newPassword": "Yeni şifre",
+      "confirmPassword": "Yeni şifre (tekrar)",
+      "saveSuccess": "Şifre güncellendi"
+    },
+    "preferences": {
+      "title": "Tercihler",
+      "description": "Varsayılan tema ve dil seçimi",
+      "defaultTheme": "Varsayılan tema",
+      "defaultLanguage": "Varsayılan dil",
+      "themeLight": "Açık",
+      "themeDark": "Koyu",
+      "saveSuccess": "Tercihler kaydedildi"
+    }
+  },
+  "errors": {
+    "accessDenied": "Erişim engellendi",
+    "accessDeniedDesc": "Bu sayfayı görüntülemek için admin rolü gerekir.",
+    "goHome": "Anasayfaya dön",
+    "notFound": "Sayfa bulunamadı",
+    "serverError": "Sunucu hatası"
+  }
+}
