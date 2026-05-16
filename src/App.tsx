@@ -1,35 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PrivateRoute } from '@/components/layout/PrivateRoute';
-import { useTranslation } from 'react-i18next';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import ProductListPage from '@/pages/products/ProductListPage';
 import ProductDetailPage from '@/pages/products/ProductDetailPage';
 import PublicPassportPage from '@/pages/products/PublicPassportPage';
+import SystemMetricsPage from '@/pages/metrics/SystemMetricsPage';
+import UsersPage from '@/pages/users/UsersPage';
+import AuditLogPage from '@/pages/audit/AuditLogPage';
+import SettingsPage from '@/pages/settings/SettingsPage';
 
 // ── Placeholder pages ─────────────────────────────────────────────────────────
 // Each will be replaced with the real page component in a subsequent step.
-
-function PlaceholderPage({ name }: { name: string }) {
-  const { t } = useTranslation();
-  return (
-    <div className="page">
-      <div className="page-head">
-        <div>
-          <h1 className="page-title">{name}</h1>
-          <p className="page-subtitle">{t('common.loading')}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MetricsPage()       { return <PlaceholderPage name="System Metrics" />; }
-function UsersPage()         { return <PlaceholderPage name="Users & Roles" />; }
-function AuditLogPage()      { return <PlaceholderPage name="Audit Log" />; }
-function SettingsPage()      { return <PlaceholderPage name="Settings" />; }
 
 // ── Router ────────────────────────────────────────────────────────────────────
 
@@ -49,7 +33,7 @@ export default function App() {
             <Route path="/dashboard"     element={<DashboardPage />} />
             <Route path="/products"      element={<ProductListPage />} />
             <Route path="/products/:id"  element={<ProductDetailPage />} />
-            <Route path="/metrics"       element={<MetricsPage />} />
+            <Route path="/metrics"       element={<SystemMetricsPage />} />
 
             {/* Admin-only routes */}
             <Route element={<PrivateRoute requiredRole="admin" />}>

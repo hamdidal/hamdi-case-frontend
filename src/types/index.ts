@@ -89,7 +89,10 @@ export interface ProductFilters {
 export interface AuditLogFilters {
   entityId?: string;
   userId?: number;
+  username?: string;
   action?: AuditAction;
+  dateFrom?: string;
+  dateTo?: string;
   limit?: number;
   offset?: number;
 }
