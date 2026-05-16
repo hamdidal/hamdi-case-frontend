@@ -87,11 +87,10 @@ export default function LoginPage() {
           {error && (
             <Alert
               type="error"
+              title={error}
               showIcon
               style={{ marginBottom: 20 }}
-            >
-              {error}
-            </Alert>
+            />
           )}
 
           <Form

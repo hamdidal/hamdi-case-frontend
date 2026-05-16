@@ -6,6 +6,8 @@ import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import ProductListPage from '@/pages/products/ProductListPage';
+import ProductDetailPage from '@/pages/products/ProductDetailPage';
+import PublicPassportPage from '@/pages/products/PublicPassportPage';
 
 // ── Placeholder pages ─────────────────────────────────────────────────────────
 // Each will be replaced with the real page component in a subsequent step.
@@ -24,8 +26,6 @@ function PlaceholderPage({ name }: { name: string }) {
   );
 }
 
-function PublicPassportPage(){ return <PlaceholderPage name="Public Passport" />; }
-function ProductDetailPage() { return <PlaceholderPage name="Product Detail" />; }
 function MetricsPage()       { return <PlaceholderPage name="System Metrics" />; }
 function UsersPage()         { return <PlaceholderPage name="Users & Roles" />; }
 function AuditLogPage()      { return <PlaceholderPage name="Audit Log" />; }

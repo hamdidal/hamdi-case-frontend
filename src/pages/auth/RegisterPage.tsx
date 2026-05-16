@@ -68,11 +68,10 @@ export default function RegisterPage() {
           {error && (
             <Alert
               type="error"
+              title={error}
               showIcon
               style={{ marginBottom: 20 }}
-            >
-              {error}
-            </Alert>
+            />
           )}
 
           <Form

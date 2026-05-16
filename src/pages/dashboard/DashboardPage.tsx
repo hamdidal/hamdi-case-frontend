@@ -125,9 +125,7 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <Alert type="error" showIcon style={{ marginBottom: 20 }}>
-          {error}
-        </Alert>
+        <Alert type="error" title={error} showIcon style={{ marginBottom: 20 }} />
       )}
 
       {/* Stat cards */}
