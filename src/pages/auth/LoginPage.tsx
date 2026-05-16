@@ -87,12 +87,11 @@ export default function LoginPage() {
           {error && (
             <Alert
               type="error"
-              message={error}
               showIcon
-              closable
-              onClose={() => setError(null)}
               style={{ marginBottom: 20 }}
-            />
+            >
+              {error}
+            </Alert>
           )}
 
           <Form

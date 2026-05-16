@@ -4,6 +4,8 @@ import { PrivateRoute } from '@/components/layout/PrivateRoute';
 import { useTranslation } from 'react-i18next';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
+import DashboardPage from '@/pages/dashboard/DashboardPage';
+import ProductListPage from '@/pages/products/ProductListPage';
 
 // ── Placeholder pages ─────────────────────────────────────────────────────────
 // Each will be replaced with the real page component in a subsequent step.
@@ -23,8 +25,6 @@ function PlaceholderPage({ name }: { name: string }) {
 }
 
 function PublicPassportPage(){ return <PlaceholderPage name="Public Passport" />; }
-function DashboardPage()     { return <PlaceholderPage name="Dashboard" />; }
-function ProductListPage()   { return <PlaceholderPage name="Products" />; }
 function ProductDetailPage() { return <PlaceholderPage name="Product Detail" />; }
 function MetricsPage()       { return <PlaceholderPage name="System Metrics" />; }
 function UsersPage()         { return <PlaceholderPage name="Users & Roles" />; }

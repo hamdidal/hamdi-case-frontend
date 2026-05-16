@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ConfigProvider, Layout } from 'antd';
+import { ConfigProvider, Layout, App as AntApp } from 'antd';
 import { useThemeStore } from '@/store/useThemeStore';
 import { lightTheme, darkTheme } from '@/theme';
 import { Sidebar } from './Sidebar';
@@ -22,6 +22,7 @@ export function AppLayout() {
 
   return (
     <ConfigProvider theme={activeTheme}>
+      <AntApp>
       <Layout style={{ height: '100vh', overflow: 'hidden' }}>
         <Sider
           width={240}
@@ -50,6 +51,7 @@ export function AppLayout() {
           </Content>
         </Layout>
       </Layout>
+      </AntApp>
     </ConfigProvider>
   );
 }

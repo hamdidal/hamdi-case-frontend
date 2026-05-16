@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Form, Input, Button, Alert, message } from 'antd';
+import { Form, Input, Button, Alert, App } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { register } from '@/api/auth';
 
@@ -14,6 +14,7 @@ interface RegisterFormValues {
 export default function RegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { message } = App.useApp();
   const [form] = Form.useForm<RegisterFormValues>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +24,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(values.username, values.password);
-      message.success(t('auth.registerSuccess'));
+      void message.success(t('auth.registerSuccess'));
       navigate('/login', { replace: true });
     } catch {
       setError(t('errors.serverError', 'Kayıt işlemi başarısız. Lütfen tekrar deneyin.'));
@@ -67,12 +68,11 @@ export default function RegisterPage() {
           {error && (
             <Alert
               type="error"
-              message={error}
               showIcon
-              closable
-              onClose={() => setError(null)}
               style={{ marginBottom: 20 }}
-            />
+            >
+              {error}
+            </Alert>
           )}
 
           <Form
