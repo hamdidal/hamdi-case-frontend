@@ -73,6 +73,13 @@ export interface AuditLog {
   changes?: AuditChanges;
 }
 
+export interface DashboardStatItem {
+  category: string;
+  brand: string;
+  createdAt: string;
+  materials: Array<{ name: string; percentage: number }>;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;

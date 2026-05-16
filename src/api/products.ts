@@ -1,5 +1,5 @@
 import client from './client';
-import type { Product, PaginatedResponse, ProductVersion, ProductFilters } from '@/types';
+import type { Product, PaginatedResponse, ProductVersion, ProductFilters, DashboardStatItem } from '@/types';
 
 export function getProducts(filters?: ProductFilters) {
   return client.get<PaginatedResponse<Product>>('products', { params: filters });
@@ -35,6 +35,10 @@ export function getProductVersions(id: number | string) {
 
 export function getProductVersion(id: number | string, versionNumber: number) {
   return client.get<ProductVersion>(`products/${id}/versions/${versionNumber}`);
+}
+
+export function getDashboardStats() {
+  return client.get<{ data: DashboardStatItem[] }>('dashboard/stats');
 }
 
 export function getPublicPassport(uuid: string) {

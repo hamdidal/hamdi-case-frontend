@@ -7,15 +7,15 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
-import { getProducts } from '@/api/products';
-import type { Product } from '@/types';
+import { getDashboardStats } from '@/api/products';
+import type { DashboardStatItem } from '@/types';
 import { IconBox, IconTag, IconDashboard, IconActivity } from '@/components/common/icons';
 import { PIE_COLORS } from '@/utils/constants';
 import { getLast6Months, capitalize } from '@/utils/formatters';
 
 // ── Data computations ─────────────────────────────────────────────────────────
 
-function computeStats(products: Product[]) {
+function computeStats(products: DashboardStatItem[]) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   return {
     total: products.length,
@@ -25,7 +25,7 @@ function computeStats(products: Product[]) {
   };
 }
 
-function computeByCategory(products: Product[]) {
+function computeByCategory(products: DashboardStatItem[]) {
   if (!products || !Array.isArray(products) || products.length === 0) return [];
   const map = new Map<string, number>();
   for (const p of products) {
@@ -35,7 +35,7 @@ function computeByCategory(products: Product[]) {
   return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
 }
 
-function computeByMaterial(products: Product[]) {
+function computeByMaterial(products: DashboardStatItem[]) {
   if (!products || !Array.isArray(products) || products.length === 0) return [];
   const map = new Map<string, number>();
   for (const p of products) {
@@ -46,7 +46,7 @@ function computeByMaterial(products: Product[]) {
   return Array.from(map.entries()).map(([name, value]) => ({ name, value: Math.round(value) }));
 }
 
-function computeByMonth(products: Product[], locale?: string) {
+function computeByMonth(products: DashboardStatItem[], locale?: string) {
   if (!products || !Array.isArray(products) || products.length === 0) return [];
   const months = getLast6Months(locale).map((m) => ({ ...m, count: 0 }));
   for (const p of products) {
@@ -121,13 +121,13 @@ function ChartSkeleton() {
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<DashboardStatItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
-    getProducts({ limit: 1000 })
+    getDashboardStats()
       .then((res) => setProducts(res?.data?.data ?? []))
       .catch(() => setError(t('common.error')))
       .finally(() => setLoading(false));

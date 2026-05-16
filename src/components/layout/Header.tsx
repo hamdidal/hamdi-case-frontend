@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Dropdown } from 'antd';
@@ -7,7 +6,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import {
-  IconMenu, IconSearch,
+  IconMenu,
   IconSettings, IconEye, IconLogout, IconChevronRight,
 } from '@/components/common/icons';
 
@@ -36,8 +35,6 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
   const navigate = useNavigate();
   const { user, clearAuth } = useAuthStore();
   const crumbs = useBreadcrumbs();
-  const [searchVal, setSearchVal] = useState('');
-
   const getInitials = (name: string) =>
     name.split('.').map((p) => p[0]?.toUpperCase() ?? '').join('').slice(0, 2);
 
@@ -88,16 +85,6 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
       </div>
 
       <div className="header-spacer" />
-
-      {/* Search */}
-      <div className="search-input">
-        <IconSearch size={14} className="search-icon" />
-        <input
-          value={searchVal}
-          onChange={(e) => setSearchVal(e.target.value)}
-          placeholder={t('common.quickSearch')}
-        />
-      </div>
 
       {/* Language + Theme */}
       <LanguageSwitcher />
