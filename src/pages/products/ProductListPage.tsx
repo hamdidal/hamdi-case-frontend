@@ -13,6 +13,7 @@ import type { Product, CreateProductForm } from '@/types';
 import { PRODUCT_CATEGORIES } from '@/utils/constants';
 import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/icons';
 import { formatDate } from '@/utils/formatDate';
+import { capitalize } from '@/utils/formatters';
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -130,7 +131,7 @@ export default function ProductListPage() {
       title: t('products.columns.category'),
       dataIndex: 'category',
       sorter: (a, b) => a.category.localeCompare(b.category),
-      render: (v: string) => <span className="tag brand">{v}</span>,
+      render: (v: string) => <span className="tag brand">{capitalize(v)}</span>,
     },
     {
       title: t('products.columns.country'),
@@ -301,7 +302,7 @@ export default function ProductListPage() {
           >
             <Select
               placeholder={t('editor.fields.category')}
-              options={PRODUCT_CATEGORIES.map((c) => ({ label: c, value: c }))}
+              options={PRODUCT_CATEGORIES.map((c) => ({ label: capitalize(c), value: c }))}
             />
           </Form.Item>
 

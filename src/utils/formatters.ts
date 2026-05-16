@@ -1,5 +1,10 @@
 import i18n from '@/i18n';
 
+export function capitalize(s: string): string {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export function getActiveLocale(): string {
   return i18n.language === 'tr' ? 'tr-TR' : 'en-US';
 }

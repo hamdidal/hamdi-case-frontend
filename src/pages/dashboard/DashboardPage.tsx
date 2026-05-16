@@ -11,7 +11,7 @@ import { getProducts } from '@/api/products';
 import type { Product } from '@/types';
 import { IconBox, IconTag, IconDashboard, IconActivity } from '@/components/common/icons';
 import { PIE_COLORS } from '@/utils/constants';
-import { getLast6Months } from '@/utils/formatters';
+import { getLast6Months, capitalize } from '@/utils/formatters';
 
 // ── Data computations ─────────────────────────────────────────────────────────
 
@@ -28,7 +28,10 @@ function computeStats(products: Product[]) {
 function computeByCategory(products: Product[]) {
   if (!products || !Array.isArray(products) || products.length === 0) return [];
   const map = new Map<string, number>();
-  for (const p of products) map.set(p.category, (map.get(p.category) ?? 0) + 1);
+  for (const p of products) {
+    const cat = capitalize(p.category);
+    map.set(cat, (map.get(cat) ?? 0) + 1);
+  }
   return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
 }
 
@@ -89,6 +92,23 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
     <div className="card" style={{ padding: '8px 12px', fontSize: 13, minWidth: 80 }}>
       <div style={{ color: 'var(--text-soft)', marginBottom: 2 }}>{label}</div>
       <div style={{ color: 'var(--text)', fontWeight: 600 }}>{payload[0]?.value}</div>
+    </div>
+  );
+}
+
+interface PieTooltipProps {
+  active?: boolean;
+  payload?: Array<{ name?: string; value?: number; percent?: number }>;
+}
+
+function PieTooltip({ active, payload }: PieTooltipProps) {
+  if (!active || !payload?.length) return null;
+  const { name, value, percent } = payload[0];
+  return (
+    <div className="card" style={{ padding: '8px 14px', fontSize: 13, minWidth: 140 }}>
+      <div style={{ color: 'var(--text)', fontWeight: 600, marginBottom: 4 }}>{name}</div>
+      <div style={{ color: 'var(--text-soft)', marginBottom: 2 }}>{value} units</div>
+      <div style={{ color: 'var(--text-muted)', fontSize: 11 }}>{Math.round((percent ?? 0) * 100)}%</div>
     </div>
   );
 }
@@ -178,7 +198,11 @@ export default function DashboardPage() {
                 <BarChart data={byCategory && byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} allowDecimals={false} />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                    allowDecimals={false}
+                    domain={[0, (dataMax: number) => Math.ceil(dataMax * 2)]}
+                  />
                   <Tooltip content={<ChartTooltip />} />
                   <Bar dataKey="count" fill="#2D6A4F" activeBar={{ fill: '#40916C' }} radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -212,7 +236,7 @@ export default function DashboardPage() {
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip content={<ChartTooltip />} />
+                  <Tooltip content={<PieTooltip />} />
                   <Legend
                     layout="horizontal"
                     align="center"
