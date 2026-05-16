@@ -581,10 +581,10 @@ input, select, textarea { font: inherit; color: inherit; }
 .dropdown-item:hover { background: var(--bg-hover); }
 .dropdown-item.danger { color: var(--semantic-danger); }
 
-/* search input header */
+/* search input — wrapper controls width, input always fills it */
 .search-input { position: relative; }
 .search-input input {
-  width: 220px; padding: 7px 11px 7px 32px; border-radius: var(--radius);
+  width: 100%; padding: 7px 11px 7px 32px; border-radius: var(--radius);
   border: 1px solid var(--border-strong); background: var(--bg-surface);
   font-size: 13px;
 }

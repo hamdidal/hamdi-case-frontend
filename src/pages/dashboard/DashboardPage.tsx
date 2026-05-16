@@ -170,7 +170,7 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byCategory')}</span>
           </div>
-          <div className="card-body" style={{ height: 330 }}>
+          <div className="card-body" style={{ height: 450 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (
@@ -192,7 +192,7 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMaterial')}</span>
           </div>
-          <div className="card-body" style={{ height: 330 }}>
+          <div className="card-body" style={{ height: 450 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (
@@ -201,8 +201,8 @@ export default function DashboardPage() {
                   <Pie
                     data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
                     cx="40%"
-                    innerRadius={55}
-                    outerRadius={90}
+                    innerRadius={75}
+                    outerRadius={120}
                     dataKey="value"
                     nameKey="name"
                     label={false}
@@ -234,7 +234,7 @@ export default function DashboardPage() {
           <div className="card-head">
             <span className="card-title">{t('dashboard.byMonth')}</span>
           </div>
-          <div className="card-body" style={{ height: 330 }}>
+          <div className="card-body" style={{ height: 450 }}>
             {loading ? (
               <ChartSkeleton />
             ) : (

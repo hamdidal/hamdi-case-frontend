@@ -87,7 +87,8 @@ export default function AuditLogPage() {
   const [filterUsername, setFilterUsername] = useState('');
   const [filterRange, setFilterRange] = useState<RangeValue>(null);
 
-  const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters, lim = pageSize) => {
+  // lim is always explicit — no default — to avoid stale-closure bugs with useCallback
+  const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters, lim: number) => {
     setLoading(true);
     try {
       const res = await getAuditLogs({
@@ -104,11 +105,6 @@ export default function AuditLogPage() {
     }
   }, [message, t]);
 
-  useEffect(() => {
-    void fetchLogs(page, buildFilters());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
   const buildFilters = (): AuditLogFilters => ({
     action: filterAction,
     username: filterUsername || undefined,
@@ -116,9 +112,15 @@ export default function AuditLogPage() {
     dateTo: filterRange?.[1]?.toISOString(),
   });
 
+  // Re-runs on page OR pageSize change; always passes current pageSize explicitly
+  useEffect(() => {
+    void fetchLogs(page, buildFilters(), pageSize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, pageSize]);
+
   const handleSearch = () => {
     setPage(1);
-    void fetchLogs(1, buildFilters());
+    void fetchLogs(1, buildFilters(), pageSize);
   };
 
   const handleClear = () => {
@@ -126,19 +128,15 @@ export default function AuditLogPage() {
     setFilterUsername('');
     setFilterRange(null);
     setPage(1);
-    void fetchLogs(1, {});
+    void fetchLogs(1, {}, pageSize);
   };
 
+  // Pure state update — useEffect drives the fetch; batched updates = one fetch
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    const newPage = pagination.current ?? 1;
     const newSize = pagination.pageSize ?? pageSize;
-    if (newSize !== pageSize) {
-      setPageSize(newSize);
-      setPage(1);
-      void fetchLogs(1, buildFilters(), newSize);
-    } else {
-      setPage(newPage);
-    }
+    const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
+    setPageSize(newSize);
+    setPage(newPage);
   };
 
   const columns: TableColumnsType<AuditLog> = [
@@ -197,7 +195,7 @@ export default function AuditLogPage() {
           placeholder={t('audit.allActions')}
           value={filterAction}
           onChange={(v) => setFilterAction(v)}
-          style={{ width: 160 }}
+          style={{ width: 160, flexShrink: 0 }}
           options={[
             { label: t('audit.actions.create'), value: 'create' },
             { label: t('audit.actions.update'), value: 'update' },
@@ -209,16 +207,16 @@ export default function AuditLogPage() {
           placeholder={t('audit.filterByUser')}
           value={filterUsername}
           onChange={(e) => setFilterUsername(e.target.value)}
-          style={{ width: 200 }}
+          style={{ flex: '1 1 160px', minWidth: 120 }}
           allowClear
         />
         <RangePicker
           value={filterRange}
           onChange={(v) => setFilterRange(v as RangeValue)}
-          style={{ width: 280 }}
+          style={{ flex: '2 1 260px', minWidth: 200 }}
         />
-        <Button type="primary" onClick={handleSearch}>{t('common.filter')}</Button>
-        <Button onClick={handleClear}>{t('common.cancel')}</Button>
+        <Button type="primary" onClick={handleSearch} style={{ flexShrink: 0 }}>{t('common.filter')}</Button>
+        <Button onClick={handleClear} style={{ flexShrink: 0 }}>{t('common.cancel')}</Button>
       </div>
 
       {/* Table */}

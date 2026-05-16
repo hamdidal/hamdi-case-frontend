@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Table, Select, Modal, Tooltip, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
@@ -21,7 +21,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const fetchUsers = (pg = page, lim = pageSize) => {
+  const fetchUsers = useCallback((pg: number, lim: number) => {
     setLoading(true);
     getUsers({ page: pg, limit: lim })
       .then((res) => {
@@ -30,16 +30,17 @@ export default function UsersPage() {
       })
       .catch(() => void message.error(t('common.error')))
       .finally(() => setLoading(false));
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message, t]);
 
   useEffect(() => {
     fetchUsers(page, pageSize);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize]);
+  }, [fetchUsers, page, pageSize]);
 
+  // Pure state update — useEffect drives the fetch; explicit page-reset on size change
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    const newPage = pagination.current ?? 1;
     const newSize = pagination.pageSize ?? pageSize;
+    const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
     setPage(newPage);
     setPageSize(newSize);
   };

@@ -38,7 +38,8 @@ export default function ProductListPage() {
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchProducts = useCallback(async (pg: number, q: string, lim = pageSize) => {
+  // lim is always explicit — no default — to avoid stale-closure bugs with useCallback
+  const fetchProducts = useCallback(async (pg: number, q: string, lim: number) => {
     setLoading(true);
     try {
       const res = await getProducts({ page: pg, limit: lim, search: q || undefined });
@@ -51,36 +52,35 @@ export default function ProductListPage() {
     }
   }, [message, t]);
 
+  // Re-runs on page OR pageSize change; always passes current pageSize explicitly
   useEffect(() => {
-    void fetchProducts(page, search);
-  }, [fetchProducts, page]); // eslint-disable-line react-hooks/exhaustive-deps
+    void fetchProducts(page, search, pageSize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchProducts, page, pageSize]);
 
   const handleSearchChange = (val: string) => {
     setSearch(val);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
       setPage(1);
-      void fetchProducts(1, val);
+      void fetchProducts(1, val, pageSize);
     }, 300);
   };
 
+  // Pure state update — useEffect drives the fetch; batched updates = one fetch
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    const newPage = pagination.current ?? 1;
     const newSize = pagination.pageSize ?? pageSize;
-    if (newSize !== pageSize) {
-      setPageSize(newSize);
-      setPage(1);
-      void fetchProducts(1, search, newSize);
-    } else {
-      setPage(newPage);
-    }
+    // Reset to page 1 whenever page size changes
+    const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
+    setPageSize(newSize);
+    setPage(newPage);
   };
 
   const handleDelete = async (id: number) => {
     try {
       await deleteProduct(id);
       void message.success(t('products.deleteSuccess'));
-      void fetchProducts(page, search);
+      void fetchProducts(page, search, pageSize);
     } catch {
       void message.error(t('common.error'));
     }
@@ -100,7 +100,7 @@ export default function ProductListPage() {
       setDrawerOpen(false);
       form.resetFields();
       setPage(1);
-      void fetchProducts(1, search);
+      void fetchProducts(1, search, pageSize);
     } catch {
       void message.error(t('common.error'));
     } finally {
