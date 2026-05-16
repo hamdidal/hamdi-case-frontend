@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { App as AntApp } from 'antd';
+import './index.css';
 import './i18n';
 import App from './App';
 

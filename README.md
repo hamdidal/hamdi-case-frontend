@@ -1,4 +1,4 @@
-# VeriPass DPP Frontend
+# Kobe DPP Frontend
 
 Digital Product Passport management panel for textile products — built with React 19 + TypeScript + Ant Design v6.
 
@@ -19,7 +19,7 @@ Digital Product Passport management panel for textile products — built with Re
 
 ## Design System
 
-Custom forest-green brand (`#2D6A4F`) derived from the VeriPass Claude Design files.
+Custom forest-green brand (`#2D6A4F`) derived from the Kobe Claude Design files.
 
 - **CSS custom properties** — all design tokens live in `src/index.css` (`--brand-*`, `--bg-*`, `--text-*`, `--semantic-*`, `--shadow-*`, `--radius-*`)
 - **Dark / Light mode** — toggled via a `data-theme` attribute on `<html>`; Ant Design algorithm switches via `ConfigProvider`
@@ -56,8 +56,8 @@ npm run lint           # eslint
 Build and run a production image (nginx serving the static bundle):
 
 ```bash
-docker build -t veripass-frontend .
-docker run -p 3001:80 veripass-frontend
+docker build -t Kobe-frontend .
+docker run -p 3001:80 Kobe-frontend
 ```
 
 The image uses a two-stage build — Node 20 Alpine for the build, nginx Alpine for serving. The nginx config handles SPA routing (`try_files … /index.html`) and enables gzip compression.
@@ -67,7 +67,7 @@ The image uses a two-stage build — Node 20 Alpine for the build, nginx Alpine 
 > docker build \
 >   --build-arg VITE_API_BASE_URL=http://your-api:8080/api/v1 \
 >   --build-arg VITE_PUBLIC_BASE_URL=http://your-host:3001 \
->   -t veripass-frontend .
+>   -t Kobe-frontend .
 > ```
 
 ## Port Reference

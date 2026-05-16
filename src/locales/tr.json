@@ -39,7 +39,9 @@
     "no": "Hayır",
     "required": "Bu alan zorunludur",
     "notifications": "Bildirimler",
-    "quickSearch": "Hızlı ara…"
+    "quickSearch": "Hızlı ara…",
+    "confirmDeletion": "Silme Onayı",
+    "deleteWarning": "Bu öğeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
   },
   "auth": {
     "signin": "Giriş Yap",
@@ -58,7 +60,7 @@
     "signupCta": "Ücretsiz kaydolun",
     "signinCta": "Giriş yapın",
     "posterTitle": "Şeffaf bir tekstil için dijital pasaport.",
-    "posterFoot": "VERIPASS · DPP YÖNETİM PANELİ",
+    "posterFoot": "Kobe · DPP YÖNETİM PANELİ",
     "invalidCredentials": "Kullanıcı adı veya şifre hatalı",
     "registerSuccess": "Hesap başarıyla oluşturuldu. Giriş yapabilirsiniz.",
     "validation": {
@@ -155,7 +157,7 @@
     "care": "Bakım Talimatları",
     "recycled": "Geri dönüştürülmüş",
     "qrTitle": "Bu pasaportu telefonunuzla tarayın",
-    "poweredBy": "VeriPass DPP tarafından desteklenmektedir",
+    "poweredBy": "Kobe DPP tarafından desteklenmektedir",
     "notFound": "Pasaport bulunamadı"
   },
   "metrics": {

@@ -11,6 +11,26 @@ interface RegisterFormValues {
   confirmPassword: string;
 }
 
+function AuthPoster() {
+  const { t } = useTranslation();
+  const title: string = t('auth.posterTitle', 'Şeffaf bir tekstil için dijital pasaport.');
+  const words = title.split(' ');
+  const lastWord = words.pop();
+  const rest = words.join(' ');
+  return (
+    <div className="auth-poster">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="side-brand-mark" style={{ width: 32, height: 32 }} />
+        <div style={{ fontWeight: 600, fontSize: 15, color: '#fff' }}>Kobe</div>
+      </div>
+      <div className="poster-mark">
+        {rest} <em>{lastWord}</em>
+      </div>
+      <div className="poster-foot">{t('auth.posterFoot', 'Kobe · DPP YÖNETİM PANELİ')}</div>
+    </div>
+  );
+}
+
 export default function RegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -35,40 +55,17 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-wrap">
-      {/* Left poster */}
-      <div className="auth-poster">
-        <div className="auth-poster-brand">
-          <div className="auth-poster-mark" />
-          <div>
-            <div className="auth-poster-title">VeriPass</div>
-            <div className="auth-poster-sub">DPP Panel</div>
-          </div>
-        </div>
-        <div className="auth-poster-body">
-          <div className="auth-poster-headline">
-            {t('auth.posterHeadline', 'Tekstil ürünlerinizin\ndijital pasaportu')}
-          </div>
-          <div className="auth-poster-caption">
-            {t('auth.posterCaption', 'Sürdürülebilirlik verilerini yönetin, QR kodlar oluşturun ve ürün geçmişini takip edin.')}
-          </div>
-          <div className="auth-poster-dots">
-            <div className="auth-poster-dot active" />
-            <div className="auth-poster-dot" />
-            <div className="auth-poster-dot" />
-          </div>
-        </div>
-      </div>
+      <AuthPoster />
 
-      {/* Right form */}
       <div className="auth-form-wrap">
         <div className="auth-form">
-          <div className="auth-title">{t('auth.createAccount', 'Hesap Oluştur')}</div>
-          <div className="auth-sub">{t('auth.registerSubtitle', 'Yeni bir hesap oluşturun')}</div>
+          <h1 className="auth-title">{t('auth.createTitle')}</h1>
+          <p className="auth-sub">{t('auth.createSub', 'Şirketiniz için yeni bir DPP yöneticisi ekleyin')}</p>
 
           {error && (
             <Alert
               type="error"
-              title={error}
+              message={error}
               showIcon
               style={{ marginBottom: 20 }}
             />
@@ -137,7 +134,7 @@ export default function RegisterPage() {
               />
             </Form.Item>
 
-            <Form.Item style={{ marginBottom: 0 }}>
+            <Form.Item style={{ marginBottom: 16 }}>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -145,10 +142,20 @@ export default function RegisterPage() {
                 loading={loading}
                 size="large"
               >
-                {t('auth.register')}
+                {t('auth.signup')}
               </Button>
             </Form.Item>
           </Form>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 8 }}>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('auth.toSignin')}</span>
+            <a
+              onClick={() => navigate('/login')}
+              style={{ cursor: 'pointer', color: 'var(--brand-600)', fontWeight: 500, fontSize: 13 }}
+            >
+              {t('auth.signinCta')}
+            </a>
+          </div>
         </div>
       </div>
     </div>

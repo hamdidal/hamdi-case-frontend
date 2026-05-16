@@ -1,56 +1,64 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ConfigProvider, Layout, App as AntApp } from 'antd';
+import { ConfigProvider, App as AntApp } from 'antd';
 import { useThemeStore } from '@/store/useThemeStore';
 import { lightTheme, darkTheme } from '@/theme';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
-const { Sider, Content } = Layout;
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return isMobile;
+}
 
 export function AppLayout() {
   const { theme } = useThemeStore();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isMobile = useIsMobile();
 
-  const sidebarBg  = theme === 'dark' ? '#0A1813' : '#102A20';
   const activeTheme = theme === 'dark' ? darkTheme : lightTheme;
 
-  // Sync data-theme attribute for CSS variable overrides
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  return (
-    <ConfigProvider theme={activeTheme}>
-      <AntApp>
-      <Layout style={{ height: '100vh', overflow: 'hidden' }}>
-        <Sider
-          width={240}
-          collapsedWidth={64}
-          collapsed={collapsed}
-          trigger={null}
-          style={{
-            background: sidebarBg,
-            borderRight: '1px solid rgba(255,255,255,0.06)',
-            overflow: 'hidden',
-          }}
-        >
-          <Sidebar collapsed={collapsed} />
-        </Sider>
+  const handleToggle = () => {
+    if (isMobile) {
+      setMobileOpen((o) => !o);
+    } else {
+      setCollapsed((o) => !o);
+    }
+  };
 
-        <Layout
-          className="main-content"
-          style={{ background: 'var(--bg-app)' }}
-        >
-          <Header
+  return (
+    <ConfigProvider theme={activeTheme} componentSize="large">
+      <AntApp>
+        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-app)' }}>
+          <Sidebar
             collapsed={collapsed}
-            onToggle={() => setCollapsed((c) => !c)}
+            isMobile={isMobile}
+            mobileOpen={mobileOpen}
+            onMobileClose={() => setMobileOpen(false)}
           />
-          <Content className="scroll-area">
-            <Outlet />
-          </Content>
-        </Layout>
-      </Layout>
+          {isMobile && mobileOpen && (
+            <div
+              onClick={() => setMobileOpen(false)}
+              style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', zIndex: 99 }}
+            />
+          )}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <Header collapsed={collapsed} onToggle={handleToggle} />
+            <div style={{ flex: 1, overflow: 'auto' }}>
+              <Outlet />
+            </div>
+          </div>
+        </div>
       </AntApp>
     </ConfigProvider>
   );

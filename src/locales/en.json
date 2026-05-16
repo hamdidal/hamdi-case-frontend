@@ -39,7 +39,9 @@
     "no": "No",
     "required": "This field is required",
     "notifications": "Notifications",
-    "quickSearch": "Quick search…"
+    "quickSearch": "Quick search…",
+    "confirmDeletion": "Confirm Deletion",
+    "deleteWarning": "Are you sure you want to delete this item? This action cannot be undone."
   },
   "auth": {
     "signin": "Sign In",
@@ -58,7 +60,7 @@
     "signupCta": "Sign up for free",
     "signinCta": "Sign in",
     "posterTitle": "A digital passport for transparent textiles.",
-    "posterFoot": "VERIPASS · DPP MANAGEMENT PANEL",
+    "posterFoot": "Kobe · DPP MANAGEMENT PANEL",
     "invalidCredentials": "Invalid username or password",
     "registerSuccess": "Account created successfully. You can now sign in.",
     "validation": {
@@ -155,7 +157,7 @@
     "care": "Care Instructions",
     "recycled": "Recycled",
     "qrTitle": "Scan this passport with your phone",
-    "poweredBy": "Powered by VeriPass DPP",
+    "poweredBy": "Powered by Kobe DPP",
     "notFound": "Passport not found"
   },
   "metrics": {

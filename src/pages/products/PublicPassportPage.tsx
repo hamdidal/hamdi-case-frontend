@@ -106,7 +106,7 @@ export default function PublicPassportPage() {
               flexShrink: 0,
             }} />
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>VeriPass</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>Kobe</div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>DPP</div>
             </div>
           </div>
