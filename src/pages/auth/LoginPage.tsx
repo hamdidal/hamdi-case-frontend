@@ -45,7 +45,6 @@ function AuthPoster() {
       <div className="poster-mark">
         {rest} <em>{lastWord}</em>
       </div>
-      <div className="poster-foot">{t('auth.posterFoot', 'Kobe · DPP YÖNETİM PANELİ')}</div>
     </div>
   );
 }
@@ -83,7 +82,7 @@ export default function LoginPage() {
         <div className="auth-form">
           <h1 className="auth-title">{t('auth.welcome')}</h1>
           <p className="auth-sub">{t('auth.welcomeSub', 'Pasaport panelinize erişmek için giriş yapın')}</p>
-
+          
           {error && (
             <Alert
               type="error"

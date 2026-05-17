@@ -29,7 +29,6 @@ function AuthPoster() {
       <div className="poster-mark">
         {rest} <em>{lastWord}</em>
       </div>
-      <div className="poster-foot">{t('auth.posterFoot', 'Kobe · DPP YÖNETİM PANELİ')}</div>
     </div>
   );
 }
