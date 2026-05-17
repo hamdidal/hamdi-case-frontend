@@ -27,7 +27,7 @@ export function AppLayout() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg-app)' }}>
+    <div className="app-shell">
       <Sidebar
         collapsed={collapsed}
         isMobile={isMobile}
@@ -35,14 +35,11 @@ export function AppLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
       {isMobile && mobileOpen && (
-        <div
-          onClick={() => setMobileOpen(false)}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', zIndex: 99 }}
-        />
+        <div className="app-backdrop" onClick={() => setMobileOpen(false)} />
       )}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <Header collapsed={collapsed} onToggle={handleToggle} />
-        <div style={{ flex: 1, overflow: 'auto' }}>
+      <div className="app-main">
+        <Header onToggle={handleToggle} />
+        <div className="app-content">
           <Outlet />
         </div>
       </div>

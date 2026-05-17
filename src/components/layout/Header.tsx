@@ -9,7 +9,6 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { IconMenu, IconChevronRight } from '@/components/common/icons';
 
 interface HeaderProps {
-  collapsed: boolean;
   onToggle: () => void;
 }
 
@@ -28,7 +27,7 @@ function useBreadcrumbs(): string[] {
   return [];
 }
 
-export function Header({ collapsed, onToggle }: HeaderProps) {
+export function Header({ onToggle }: HeaderProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, clearAuth } = useAuthStore();
@@ -67,12 +66,12 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
   return (
     <div className="header">
       <span className="header-action" onClick={onToggle} role="button" aria-label="Toggle sidebar">
-        <IconMenu size={17} style={{ transform: collapsed ? 'rotate(90deg)' : undefined, transition: 'transform 0.18s' }} />
+        <IconMenu size={17} />
       </span>
 
       <div className="crumbs">
         {crumbs.map((crumb, i) => (
-          <span key={i} style={{ display: 'contents' }}>
+          <span key={i} className="crumb-fragment">
             {i > 0 && <IconChevronRight size={13} className="crumb-sep" />}
             <span className={i === crumbs.length - 1 ? 'crumb-current' : ''}>{crumb}</span>
           </span>
@@ -94,7 +93,7 @@ export function Header({ collapsed, onToggle }: HeaderProps) {
           <div className="header-user-avatar">
             {getInitials(user?.username ?? 'U')}
           </div>
-          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>
+          <span className="header-username">
             {user?.username?.split('.')[0] ?? 'User'}
           </span>
         </div>

@@ -172,7 +172,7 @@ export default function ProductDetailPage() {
       <div className="page">
         <div className="stat-grid">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="skeleton" style={{ height: 112, borderRadius: 12 }} />
+            <div key={i} className="skeleton skeleton-card-h" />
           ))}
         </div>
       </div>
@@ -190,13 +190,12 @@ export default function ProductDetailPage() {
   return (
     <div className="page">
       <div className="page-head">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="page-head-left">
           <button
-            className="btn btn-ghost btn-icon"
+            className="btn btn-ghost btn-icon flex-none"
             onClick={() => navigate(-1)}
-            style={{ flexShrink: 0 }}
           >
-            <IconChevronRight size={16} style={{ transform: 'rotate(180deg)' }} />
+            <IconChevronRight size={16} className="icon-flip-h" />
           </button>
           <div>
             <h1 className="page-title">{product.name}</h1>
@@ -218,7 +217,7 @@ export default function ProductDetailPage() {
                     name="name"
                     label={t('editor.fields.name')}
                     rules={[{ required: true, message: t('common.required') }]}
-                    style={{ gridColumn: '1 / -1' }}
+                    className="span-full"
                   >
                     <Input />
                   </Form.Item>
@@ -252,17 +251,17 @@ export default function ProductDetailPage() {
                     label={t('editor.fields.date')}
                     rules={[{ required: true, message: t('common.required') }]}
                   >
-                    <DatePicker style={{ width: '100%' }} />
+                    <DatePicker className="w-full" />
                   </Form.Item>
                 </div>
               </Form>
             </div>
           </div>
 
-          <div className="card" style={{ marginTop: 20 }}>
+          <div className="card card-mt">
             <div className="card-head">
               <span className="card-title">{t('editor.materials')}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="card-head-actions">
                 <div className={`total-chip ${totalPct === 100 ? 'ok' : 'bad'}`}>
                   {totalPct === 100
                     ? t('editor.material.totalOk')
@@ -275,9 +274,9 @@ export default function ProductDetailPage() {
                 <thead>
                   <tr>
                     <th>{t('editor.material.name')}</th>
-                    <th style={{ width: 120 }}>{t('editor.material.percentage')}</th>
-                    <th style={{ width: 100 }}>{t('editor.material.recycled')}</th>
-                    {isAdmin && <th style={{ width: 48 }} />}
+                    <th className="col-w-120">{t('editor.material.percentage')}</th>
+                    <th className="col-w-100">{t('editor.material.recycled')}</th>
+                    {isAdmin && <th className="col-w-48" />}
                   </tr>
                 </thead>
                 <tbody>
@@ -300,7 +299,7 @@ export default function ProductDetailPage() {
                           onChange={(val) => updateMaterial(i, { percentage: val ?? 0 })}
                           disabled={!isAdmin}
                           variant="borderless"
-                          style={{ width: '100%' }}
+                          className="w-full"
                           suffix="%"
                         />
                       </td>
@@ -325,7 +324,7 @@ export default function ProductDetailPage() {
                   ))}
                   {materials.length === 0 && (
                     <tr>
-                      <td colSpan={isAdmin ? 4 : 3} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '20px 0' }}>
+                      <td colSpan={isAdmin ? 4 : 3} className="tbl-empty-cell">
                         {t('common.empty')}
                       </td>
                     </tr>
@@ -334,7 +333,7 @@ export default function ProductDetailPage() {
               </table>
             </div>
             {isAdmin && (
-              <div style={{ padding: '12px 16px' }}>
+              <div className="mat-add-row">
                 <button className="btn btn-ghost btn-sm" onClick={addMaterial}>
                   + {t('editor.material.addRow')}
                 </button>
@@ -342,7 +341,7 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <div className="card" style={{ marginTop: 20 }}>
+          <div className="card card-mt">
             <div className="card-head">
               <span className="card-title">{t('editor.care')}</span>
             </div>
@@ -374,7 +373,7 @@ export default function ProductDetailPage() {
                   <Form.Item
                     name="notes"
                     label={t('editor.careFields.notes')}
-                    style={{ gridColumn: '1 / -1' }}
+                    className="span-full"
                   >
                     <Input.TextArea
                       rows={3}
@@ -392,49 +391,41 @@ export default function ProductDetailPage() {
               block
               loading={saving}
               onClick={handleSave}
-              style={{ marginTop: 16 }}
+              className="mt-16"
             >
               {t('common.save')}
             </Button>
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="sidebar-col">
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.publicPassport')}</span>
             </div>
-            <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div style={{
-                  background: '#fff',
-                  padding: 12,
-                  borderRadius: 8,
-                  border: '1px solid var(--border)',
-                  lineHeight: 0,
-                }}>
+            <div className="card-body card-body-col">
+              <div className="qr-center">
+                <div className="qr-box">
                   {publicUrl ? (
                     <QRCodeSVG value={publicUrl} size={160} />
                   ) : (
-                    <div className="skeleton" style={{ width: 160, height: 160 }} />
+                    <div className="skeleton skeleton-qr" />
                   )}
                 </div>
               </div>
-              <p style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', margin: 0 }}>
-                {t('editor.qrHint')}
-              </p>
+              <p className="qr-hint">{t('editor.qrHint')}</p>
 
-              <button className="btn" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handleCopyLink}>
+              <button className="btn btn-full" onClick={handleCopyLink}>
                 <IconCopy size={14} />
                 {t('editor.copyLink')}
               </button>
 
-              <button className="btn" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handlePDFDownload}>
+              <button className="btn btn-full" onClick={handlePDFDownload}>
                 <IconDownload size={14} />
                 {t('editor.downloadPdf')}
               </button>
 
-              <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', gap: 8 }} onClick={handleOpenVersions}>
+              <button className="btn btn-ghost btn-full" onClick={handleOpenVersions}>
                 <IconHistory size={14} />
                 {t('editor.versionHistory')}
               </button>
@@ -450,39 +441,30 @@ export default function ProductDetailPage() {
         width={480}
       >
         {versionsLoading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="ver-loading">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="skeleton" style={{ height: 52, borderRadius: 8 }} />
+              <div key={i} className="skeleton skeleton-ver-item" />
             ))}
           </div>
         ) : versions.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: 40 }}>{t('common.empty')}</p>
+          <p className="ver-empty">{t('common.empty')}</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className="ver-list">
             {versions.map((v) => (
               <div
                 key={v.versionNumber}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '12px 14px',
-                  borderRadius: 8,
-                  border: '1px solid var(--border)',
-                  cursor: 'pointer',
-                  background: 'var(--bg-surface)',
-                }}
+                className="ver-item"
                 onClick={() => handleVersionClick(v)}
               >
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 13 }}>
+                  <div className="ver-title">
                     {t('editor.versionLabel', { number: v.versionNumber })}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  <div className="ver-meta">
                     {t('editor.versionBy', { user: v.createdBy })} · {formatDateTime(v.createdAt)}
                   </div>
                 </div>
-                <IconChevronRight size={14} style={{ color: 'var(--text-muted)' }} />
+                <IconChevronRight size={14} className="muted" />
               </div>
             ))}
           </div>
@@ -497,7 +479,7 @@ export default function ProductDetailPage() {
         width={560}
       >
         {snapshot && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="snap-body">
             {([
               ['editor.fields.name', snapshot.name],
               ['editor.fields.brand', snapshot.brand],
@@ -506,15 +488,15 @@ export default function ProductDetailPage() {
               ['editor.fields.date', snapshot.productionDate ? formatDate(snapshot.productionDate) : undefined],
             ] as [string, string | undefined][]).map(([key, val]) =>
               val ? (
-                <div key={key} style={{ display: 'flex', gap: 12, fontSize: 13 }}>
-                  <span style={{ color: 'var(--text-muted)', minWidth: 130 }}>{t(key)}</span>
-                  <span style={{ color: 'var(--text)', fontWeight: 500 }}>{val}</span>
+                <div key={key} className="snap-row">
+                  <span className="snap-key">{t(key)}</span>
+                  <span className="snap-val">{val}</span>
                 </div>
               ) : null
             )}
             {snapshot.materials && snapshot.materials.length > 0 && (
               <div>
-                <div style={{ color: 'var(--text-muted)', fontSize: 12, marginBottom: 6 }}>{t('editor.materials')}</div>
+                <div className="snap-mat-label">{t('editor.materials')}</div>
                 <table className="tbl">
                   <thead>
                     <tr>

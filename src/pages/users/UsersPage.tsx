@@ -79,7 +79,7 @@ export default function UsersPage() {
       title: t('users.columns.username'),
       dataIndex: 'username',
       sorter: (a, b) => a.username.localeCompare(b.username),
-      render: (v: string) => <span style={{ fontWeight: 500 }}>{v}</span>,
+      render: (v: string) => <span className="fw-500">{v}</span>,
     },
     {
       title: t('users.columns.role'),
@@ -91,7 +91,7 @@ export default function UsersPage() {
       title: t('users.columns.createdAt'),
       dataIndex: 'createdAt',
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
-      render: (v: string) => <span style={{ color: 'var(--text-soft)' }}>{formatDate(v)}</span>,
+      render: (v: string) => <span className="text-soft-cell">{formatDate(v)}</span>,
     },
     {
       title: t('users.columns.actions'),
@@ -101,13 +101,13 @@ export default function UsersPage() {
         const isSelf = String(record.id) === String(currentUser?.id);
         return (
           <Tooltip title={isSelf ? t('users.cannotDeleteSelf') : undefined}>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <div className="user-action-cell">
               <Select<Role>
                 value={record.role}
                 onChange={(role) => handleRoleChange(String(record.id), role)}
                 disabled={isSelf}
                 size="small"
-                style={{ width: 110 }}
+                className="role-select"
                 options={[
                   { label: t('users.roles.admin'), value: 'admin' },
                   { label: t('users.roles.auditor'), value: 'auditor' },
@@ -137,7 +137,7 @@ export default function UsersPage() {
         </div>
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="card card-flush">
         <Table<User>
           rowKey="id"
           columns={columns}

@@ -6,7 +6,6 @@ import {
   DatePicker, Modal, App,
 } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { getProducts, createProduct, deleteProduct } from '@/api/products';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { Product, CreateProductForm } from '@/types';
@@ -109,9 +108,9 @@ export default function ProductListPage() {
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (name: string) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="tbl-name-cell">
           <div className="prod-swatch" />
-          <span style={{ fontWeight: 500 }}>{name}</span>
+          <span>{name}</span>
         </div>
       ),
     },
@@ -119,7 +118,7 @@ export default function ProductListPage() {
       title: t('products.columns.brand'),
       dataIndex: 'brand',
       sorter: (a, b) => a.brand.localeCompare(b.brand),
-      render: (v: string) => <span style={{ color: 'var(--text-soft)' }}>{v}</span>,
+      render: (v: string) => <span className="text-soft-cell">{v}</span>,
     },
     {
       title: t('products.columns.category'),
@@ -130,7 +129,7 @@ export default function ProductListPage() {
     {
       title: t('products.columns.country'),
       dataIndex: 'country',
-      render: (v: string) => <span style={{ color: 'var(--text-muted)' }}>{v}</span>,
+      render: (v: string) => <span className="text-muted-cell">{v}</span>,
     },
     {
       title: t('products.columns.date'),
@@ -153,7 +152,7 @@ export default function ProductListPage() {
       key: 'actions',
       width: 120,
       render: (_, record) => (
-        <div style={{ display: 'flex', gap: 4 }} onClick={(e) => e.stopPropagation()}>
+        <div className="cell-actions" onClick={(e) => e.stopPropagation()}>
           <button
             className="btn btn-ghost btn-icon btn-sm"
             onClick={() => navigate(`/products/${record.id}`)}
@@ -198,9 +197,9 @@ export default function ProductListPage() {
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-        <div className="search-input" style={{ width: '50%' }}>
-          <IconSearch size={14} className="search-icon" />
+      <div className="filter-row">
+        <div className="search-input search-half">
+          <IconSearch size={14} />
           <input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -209,7 +208,7 @@ export default function ProductListPage() {
         </div>
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="card card-flush">
         <Table<Product>
           rowKey="id"
           columns={columns}
@@ -227,7 +226,6 @@ export default function ProductListPage() {
             showTotal: (n) => `${n} ${t('products.title').toLowerCase()}`,
           }}
           onChange={handleTableChange}
-          style={{ cursor: 'pointer' }}
         />
       </div>
 
@@ -249,7 +247,7 @@ export default function ProductListPage() {
         onClose={() => { setDrawerOpen(false); form.resetFields(); }}
         width={480}
         footer={
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <div className="drawer-footer">
             <Button onClick={() => { setDrawerOpen(false); form.resetFields(); }}>
               {t('common.cancel')}
             </Button>
@@ -270,10 +268,7 @@ export default function ProductListPage() {
             label={t('editor.fields.name')}
             rules={[{ required: true, message: t('common.required') }]}
           >
-            <Input
-              prefix={<UserOutlined style={{ opacity: 0 }} />}
-              placeholder={t('editor.fields.name')}
-            />
+            <Input placeholder={t('editor.fields.name')} />
           </Form.Item>
 
           <Form.Item
@@ -308,7 +303,7 @@ export default function ProductListPage() {
             label={t('editor.fields.date')}
             rules={[{ required: true, message: t('common.required') }]}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker className="w-full" />
           </Form.Item>
         </Form>
       </Drawer>

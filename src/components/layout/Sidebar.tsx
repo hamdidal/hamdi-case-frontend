@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -39,7 +38,6 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
   const role = user?.role ?? 'auditor';
 
   const iconOnly = collapsed && !isMobile;
-  const width = iconOnly ? 64 : 240;
 
   const sections: NavSection[] = [
     {
@@ -77,45 +75,18 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
     if (isMobile) onMobileClose();
   };
 
-  const sidebarStyle: CSSProperties = isMobile
-    ? {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        height: '100vh',
-        width: 240,
-        zIndex: 100,
-        background: 'var(--sidebar-bg)',
-        color: 'var(--sidebar-fg)',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRight: '1px solid var(--sidebar-border)',
-        transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
-        transition: 'transform 0.18s ease',
-      }
-    : {
-        width,
-        flexShrink: 0,
-        height: '100%',
-        background: 'var(--sidebar-bg)',
-        color: 'var(--sidebar-fg)',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRight: '1px solid var(--sidebar-border)',
-        transition: 'width 0.18s ease',
-        overflow: 'hidden',
-      };
+  const sidebarClass = isMobile
+    ? `sidebar${mobileOpen ? '' : ' closed'}`
+    : `sidebar${iconOnly ? ' collapsed' : ''}`;
 
   return (
-    <aside style={sidebarStyle}>
+    <aside className={sidebarClass}>
       <div className="side-brand">
         <div className="side-brand-mark" />
-        {!iconOnly && (
-          <div className="side-brand-text">
-            Kobe
-            <small>DPP Paneli</small>
-          </div>
-        )}
+        <div className="side-brand-text">
+          Kobe
+          <small>DPP Paneli</small>
+        </div>
       </div>
 
       <nav className="side-nav">
@@ -123,9 +94,7 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
           if (sec.adminOnly && role !== 'admin') return null;
           return (
             <div key={sec.group}>
-              {!iconOnly && (
-                <div className="side-section-label">{sec.group}</div>
-              )}
+              <div className="side-section-label">{sec.group}</div>
               {sec.items.map((item) => {
                 if (item.adminOnly && role !== 'admin') return null;
                 const active = isActive(item.to);
@@ -135,11 +104,10 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
                     className="side-item"
                     data-active={active}
                     title={iconOnly ? item.label : undefined}
-                    style={iconOnly ? { justifyContent: 'center', padding: '10px 0' } : undefined}
                     onClick={() => handleNav(item.to)}
                   >
                     {item.icon}
-                    {!iconOnly && <span className="side-label">{item.label}</span>}
+                    <span className="side-label">{item.label}</span>
                   </div>
                 );
               })}
@@ -148,18 +116,16 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
         })}
       </nav>
 
-      <div className="side-foot" style={iconOnly ? { padding: '12px 8px' } : undefined}>
+      <div className="side-foot">
         <div className="side-foot-avatar">
           {getInitials(user?.username ?? 'user')}
         </div>
-        {!iconOnly && (
-          <div className="side-foot-info">
-            <span className="side-foot-name">{user?.username ?? '—'}</span>
-            <span className="side-foot-role">
-              <RoleBadge role={role as Role} />
-            </span>
-          </div>
-        )}
+        <div className="side-foot-info">
+          <span className="side-foot-name">{user?.username ?? '—'}</span>
+          <span className="side-foot-role">
+            <RoleBadge role={role as Role} />
+          </span>
+        </div>
       </div>
     </aside>
   );

@@ -77,12 +77,12 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: 20 }}>
+      <div className="card card-mb">
         <div className="card-head">
           <span className="card-title">{t('settings.profile.title')}</span>
           <span className="card-sub">{t('settings.profile.description')}</span>
         </div>
-        <div className="card-body" style={{ maxWidth: 400 }}>
+        <div className="card-body card-body-narrow">
           <Form
             form={profileForm}
             layout="vertical"
@@ -100,7 +100,7 @@ export default function SettingsPage() {
             >
               <Input />
             </Form.Item>
-            <Form.Item style={{ marginBottom: 0 }}>
+            <Form.Item className="mb-16">
               <Button type="primary" htmlType="submit" loading={savingProfile}>
                 {t('common.save')}
               </Button>
@@ -109,12 +109,12 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: 20 }}>
+      <div className="card card-mb">
         <div className="card-head">
           <span className="card-title">{t('settings.security.title')}</span>
           <span className="card-sub">{t('settings.security.description')}</span>
         </div>
-        <div className="card-body" style={{ maxWidth: 400 }}>
+        <div className="card-body card-body-narrow">
           <Form
             form={passwordForm}
             layout="vertical"
@@ -156,7 +156,7 @@ export default function SettingsPage() {
             >
               <Input.Password autoComplete="new-password" />
             </Form.Item>
-            <Form.Item style={{ marginBottom: 0 }}>
+            <Form.Item className="mb-16">
               <Button type="primary" htmlType="submit" loading={savingPassword}>
                 {t('common.save')}
               </Button>
@@ -170,11 +170,9 @@ export default function SettingsPage() {
           <span className="card-title">{t('settings.preferences.title')}</span>
           <span className="card-sub">{t('settings.preferences.description')}</span>
         </div>
-        <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 400 }}>
+        <div className="card-body pref-col">
           <div>
-            <div style={{ fontSize: 13, color: 'var(--text-soft)', marginBottom: 8 }}>
-              {t('settings.preferences.defaultTheme')}
-            </div>
+            <div className="pref-label">{t('settings.preferences.defaultTheme')}</div>
             <Segmented
               value={theme}
               onChange={handleThemeChange}
@@ -185,9 +183,7 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--text-soft)', marginBottom: 8 }}>
-              {t('settings.preferences.defaultLanguage')}
-            </div>
+            <div className="pref-label">{t('settings.preferences.defaultLanguage')}</div>
             <Segmented
               value={language}
               onChange={handleLanguageChange}

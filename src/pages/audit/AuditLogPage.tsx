@@ -29,7 +29,7 @@ function renderVal(v: unknown): string {
 function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
   const { t } = useTranslation();
   if (!changes || Object.keys(changes).length === 0) {
-    return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
+    return <span className="muted fs-13">{t('audit.noChanges')}</span>;
   }
 
   if ('before' in changes || 'after' in changes) {
@@ -39,7 +39,7 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     const diffKeys = allKeys.filter((key) => before?.[key] !== after?.[key]);
 
     if (diffKeys.length === 0) {
-      return <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('audit.noChanges')}</span>;
+      return <span className="muted fs-13">{t('audit.noChanges')}</span>;
     }
 
     return (
@@ -141,18 +141,18 @@ export default function AuditLogPage() {
       dataIndex: 'timestamp',
       width: 180,
       render: (v: string) => (
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>{formatDateTime(v)}</span>
+        <span className="time-mono">{formatDateTime(v)}</span>
       ),
     },
     {
       title: t('audit.columns.user'),
       dataIndex: 'username',
       render: (v: string) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="audit-user-cell">
           <div className="user-avatar user-avatar-sm">
             {v[0]?.toUpperCase() ?? 'U'}
           </div>
-          <span style={{ fontWeight: 500 }}>{v}</span>
+          <span className="fw-500">{v}</span>
         </div>
       ),
     },
@@ -170,7 +170,7 @@ export default function AuditLogPage() {
       title: t('audit.columns.entity'),
       dataIndex: 'entityName',
       render: (v: string | undefined) => (
-        <span style={{ color: 'var(--text-soft)' }}>{v ?? '—'}</span>
+        <span className="text-soft-cell">{v ?? '—'}</span>
       ),
     },
   ];
@@ -190,7 +190,7 @@ export default function AuditLogPage() {
           placeholder={t('audit.allActions')}
           value={filterAction}
           onChange={(v) => setFilterAction(v)}
-          style={{ width: 160, flexShrink: 0 }}
+          className="filter-bar-select"
           options={[
             { label: t('audit.actions.create'), value: 'create' },
             { label: t('audit.actions.update'), value: 'update' },
@@ -202,19 +202,19 @@ export default function AuditLogPage() {
           placeholder={t('audit.filterByUser')}
           value={filterUsername}
           onChange={(e) => setFilterUsername(e.target.value)}
-          style={{ flex: '1 1 160px', minWidth: 120 }}
+          className="filter-bar-input"
           allowClear
         />
         <RangePicker
           value={filterRange}
           onChange={(v) => setFilterRange(v as RangeValue)}
-          style={{ flex: '2 1 260px', minWidth: 200 }}
+          className="filter-bar-picker"
         />
-        <Button type="primary" onClick={handleSearch} style={{ flexShrink: 0 }}>{t('common.filter')}</Button>
-        <Button onClick={handleClear} style={{ flexShrink: 0 }}>{t('common.cancel')}</Button>
+        <Button type="primary" onClick={handleSearch} className="filter-bar-btn">{t('common.filter')}</Button>
+        <Button onClick={handleClear} className="filter-bar-btn">{t('common.cancel')}</Button>
       </div>
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="card card-flush">
         <Table<AuditLog>
           rowKey="id"
           columns={columns}

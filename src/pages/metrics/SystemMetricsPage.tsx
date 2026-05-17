@@ -24,10 +24,10 @@ interface MetricValues {
 
 function GaugeCard({ label, value, loading }: { label: string; value: number; loading: boolean }) {
   return (
-    <div className="card" style={{ padding: 20, textAlign: 'center' }}>
-      <div className="stat-label" style={{ marginBottom: 16 }}>{label}</div>
+    <div className="card gauge-card-inner">
+      <div className="stat-label mb-16">{label}</div>
       {loading ? (
-        <div className="skeleton" style={{ width: 120, height: 120, borderRadius: '50%', margin: '0 auto' }} />
+        <div className="skeleton skeleton-gauge" />
       ) : (
         <Progress
           type="circle"
@@ -36,7 +36,7 @@ function GaugeCard({ label, value, loading }: { label: string; value: number; lo
           size={120}
         />
       )}
-      <div style={{ fontSize: 13, color: 'var(--text-soft)', marginTop: 10 }}>
+      <div className="gauge-percent">
         {loading ? '—' : `${value.toFixed(1)}%`}
       </div>
     </div>
@@ -58,8 +58,8 @@ interface NetTooltipProps {
 function NetTooltip({ active, payload, label }: NetTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card" style={{ padding: '8px 12px', fontSize: 12 }}>
-      <div style={{ color: 'var(--text-soft)', marginBottom: 4 }}>{label}</div>
+    <div className="card chart-tt-sm">
+      <div className="chart-tt-lbl">{label}</div>
       {payload.map((p, i) => (
         <div key={i} style={{ color: p.color ?? 'var(--text)' }}>
           {p.name}: {formatBytesPerSecond(p.value ?? 0)}
@@ -131,30 +131,30 @@ export default function SystemMetricsPage() {
           <p className="page-subtitle">{t('metrics.subtitle')}</p>
         </div>
         {lastUpdate && (
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          <div className="metric-update">
             {t('common.lastUpdated')}: {lastUpdate}
           </div>
         )}
       </div>
 
       {error && (
-        <Alert type="warning" title={error} showIcon style={{ marginBottom: 20 }} />
+        <Alert type="warning" title={error} showIcon className="mb-20" />
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+      <div className="gauge-grid">
         <GaugeCard label={t('metrics.cpu')} value={metrics.cpu} loading={loading} />
         <GaugeCard label={t('metrics.ram')} value={metrics.ram} loading={loading} />
         <GaugeCard label={t('metrics.disk')} value={metrics.disk} loading={loading} />
       </div>
 
-      <div className="card" style={{ marginTop: 20 }}>
+      <div className="card card-mt">
         <div className="card-head">
           <span className="card-title">{t('metrics.network')}</span>
           <span className="card-sub">{t('metrics.autoRefresh')}</span>
         </div>
-        <div className="card-body" style={{ height: 240 }}>
+        <div className="card-body chart-h-240">
           {loading ? (
-            <div className="skeleton" style={{ height: '100%', borderRadius: 8 }} />
+            <div className="skeleton skeleton-chart-fill" />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={networkHistory} margin={{ top: 4, right: 4, left: 10, bottom: 4 }}>

@@ -8,9 +8,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Suspense
       fallback={
-        <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
-          Loading…
-        </div>
+        <div className="suspense-fallback">Loading…</div>
       }
     >
       <App />

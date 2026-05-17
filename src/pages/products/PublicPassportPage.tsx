@@ -17,24 +17,18 @@ const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL as string;
 
 function CareItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-      <span style={{ color: 'var(--text-muted)', marginTop: 1, flexShrink: 0 }}>{icon}</span>
+    <div className="pub-care-item">
+      <span className="pub-care-icon">{icon}</span>
       <div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
-          {label}
-        </div>
-        <div style={{ fontSize: 14, color: 'var(--text)' }}>{value}</div>
+        <div className="pub-care-lbl">{label}</div>
+        <div className="pub-care-val">{value}</div>
       </div>
     </div>
   );
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 16 }}>
-      {children}
-    </div>
-  );
+  return <div className="section-heading">{children}</div>;
 }
 
 export default function PublicPassportPage() {
@@ -59,10 +53,10 @@ export default function PublicPassportPage() {
 
   if (loading) {
     return (
-      <div style={{ display: 'grid', placeItems: 'center', height: '100vh', background: 'var(--bg-app)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <div className="skeleton" style={{ width: 48, height: 48, borderRadius: '50%' }} />
-          <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>{t('common.loading')}</div>
+      <div className="pub-loading">
+        <div className="pub-loading-inner">
+          <div className="skeleton skeleton-loading" />
+          <div className="pub-loading-text">{t('common.loading')}</div>
         </div>
       </div>
     );
@@ -70,13 +64,11 @@ export default function PublicPassportPage() {
 
   if (notFound || !product) {
     return (
-      <div style={{ display: 'grid', placeItems: 'center', height: '100vh', background: 'var(--bg-app)' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 48, color: 'var(--text-muted)', marginBottom: 12 }}>404</div>
-          <h2 style={{ color: 'var(--text)' }}>{t('public.notFound')}</h2>
-          <a href="/" style={{ color: 'var(--brand-600)', textDecoration: 'none', fontSize: 14 }}>
-            {t('errors.goHome')}
-          </a>
+      <div className="pub-404">
+        <div>
+          <div className="pub-404-code">404</div>
+          <h2 className="pub-404-title">{t('public.notFound')}</h2>
+          <a href="/" className="pub-404-link">{t('errors.goHome')}</a>
         </div>
       </div>
     );
@@ -84,71 +76,52 @@ export default function PublicPassportPage() {
 
   return (
     <ConfigProvider theme={lightTheme}>
-      <div style={{ minHeight: '100vh', background: 'var(--bg-app)', fontFamily: 'var(--font-ui)' }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '16px 24px',
-          borderBottom: '1px solid var(--border)',
-          background: 'var(--bg-surface)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 30,
-              height: 30,
-              borderRadius: 8,
-              background: 'linear-gradient(135deg, #52B788 0%, #2D6A4F 100%)',
-              flexShrink: 0,
-            }} />
+      <div className="pub-shell">
+        <div className="pub-header">
+          <div className="pub-brand-block">
+            <div className="pub-brand-mark" />
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>Kobe</div>
-              <div style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>DPP</div>
+              <div className="pub-brand-name">Kobe</div>
+              <div className="pub-brand-label">DPP</div>
             </div>
           </div>
           <LanguageSwitcher />
         </div>
 
-        <div style={{ maxWidth: 680, margin: '0 auto' }}>
-          <div style={{ padding: '40px 32px 32px', borderBottom: '1px solid var(--border)' }}>
-            <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--text)', margin: '0 0 12px' }}>
-              {product.name}
-            </h1>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div className="pub-content">
+          <div className="pub-title-wrap">
+            <h1 className="pub-product-title">{product.name}</h1>
+            <div className="pub-tags">
               <span className="tag brand">{product.brand}</span>
               <span className="tag">{capitalize(product.category)}</span>
             </div>
           </div>
 
-          <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <IconGlobe size={16} style={{ color: 'var(--text-muted)', marginTop: 2, flexShrink: 0 }} />
+          <div className="pub-info-wrap">
+            <div className="pub-info-grid">
+              <div className="pub-info-item">
+                <span className="pub-info-icon"><IconGlobe size={16} /></span>
                 <div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
-                    {t('public.country')}
-                  </div>
-                  <div style={{ fontSize: 14, color: 'var(--text)' }}>{product.country}</div>
+                  <div className="pub-meta-lbl">{t('public.country')}</div>
+                  <div className="pub-meta-val">{product.country}</div>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
-                  {t('public.date')}
-                </div>
-                <div style={{ fontSize: 14, color: 'var(--text)' }}>{formatDate(product.productionDate)}</div>
+                <div className="pub-meta-lbl">{t('public.date')}</div>
+                <div className="pub-meta-val">{formatDate(product.productionDate)}</div>
               </div>
             </div>
           </div>
 
-          <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
+          <div className="pub-mat-wrap">
             <SectionHeading>{t('public.materials')}</SectionHeading>
             <div className="tbl-wrap">
               <table className="tbl">
                 <thead>
                   <tr>
                     <th>{t('editor.material.name')}</th>
-                    <th style={{ width: 120 }}>{t('editor.material.percentage')}</th>
-                    <th style={{ width: 100 }}>{t('editor.material.recycled')}</th>
+                    <th className="col-w-120">{t('editor.material.percentage')}</th>
+                    <th className="col-w-100">{t('editor.material.recycled')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -158,9 +131,9 @@ export default function PublicPassportPage() {
                       <td>{m.percentage}%</td>
                       <td>
                         {m.recycled ? (
-                          <IconRecycle size={14} style={{ color: 'var(--semantic-success)' }} />
+                          <IconRecycle size={14} className="text-success" />
                         ) : (
-                          <span style={{ color: 'var(--text-muted)' }}>—</span>
+                          <span className="muted">—</span>
                         )}
                       </td>
                     </tr>
@@ -171,9 +144,9 @@ export default function PublicPassportPage() {
           </div>
 
           {care && (
-            <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)' }}>
+            <div className="pub-care-wrap">
               <SectionHeading>{t('public.care')}</SectionHeading>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
+              <div className="pub-care-grid">
                 {care.washTemperature && (
                   <CareItem
                     icon={<IconWash size={15} />}
@@ -199,35 +172,23 @@ export default function PublicPassportPage() {
                   value={care.bleaching ? t('common.yes') : t('common.no')}
                 />
                 {care.notes && (
-                  <div style={{ gridColumn: '1 / -1', color: 'var(--text-soft)', fontSize: 13 }}>
-                    {care.notes}
-                  </div>
+                  <div className="pub-care-notes">{care.notes}</div>
                 )}
               </div>
             </div>
           )}
 
-          <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border)', textAlign: 'center' }}>
-            <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-              <div style={{
-                background: '#fff',
-                padding: 16,
-                borderRadius: 12,
-                border: '1px solid var(--border)',
-                lineHeight: 0,
-              }}>
+          <div className="pub-qr-wrap">
+            <div className="pub-qr-inner">
+              <div className="pub-qr-box">
                 <QRCodeSVG value={publicUrl} size={180} />
               </div>
-              <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, maxWidth: 300 }}>
-                {t('public.qrTitle')}
-              </p>
+              <p className="pub-qr-hint">{t('public.qrTitle')}</p>
             </div>
           </div>
 
-          <div style={{ padding: '20px 32px', textAlign: 'center', borderTop: '1px solid var(--border)' }}>
-            <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>
-              {t('public.poweredBy')}
-            </p>
+          <div className="pub-footer">
+            <p className="pub-footer-text">{t('public.poweredBy')}</p>
           </div>
         </div>
       </div>

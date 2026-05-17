@@ -68,7 +68,7 @@ function StatCard({ label, value, icon, loading }: StatCardProps) {
       <div className="stat-icon">{icon}</div>
       <div className="stat-label">{label}</div>
       {loading ? (
-        <div className="skeleton" style={{ height: 28, width: 64, borderRadius: 4 }} />
+        <div className="skeleton skeleton-stat-val" />
       ) : (
         <div className="stat-value">{value}</div>
       )}
@@ -85,9 +85,9 @@ interface ChartTooltipProps {
 function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card" style={{ padding: '8px 12px', fontSize: 13, minWidth: 80 }}>
-      <div style={{ color: 'var(--text-soft)', marginBottom: 2 }}>{label}</div>
-      <div style={{ color: 'var(--text)', fontWeight: 600 }}>{payload[0]?.value}</div>
+    <div className="card chart-tt-sm">
+      <div className="chart-tt-lbl">{label}</div>
+      <div className="chart-tt-val">{payload[0]?.value}</div>
     </div>
   );
 }
@@ -101,16 +101,16 @@ function PieTooltip({ active, payload }: PieTooltipProps) {
   if (!active || !payload?.length) return null;
   const { name, value, percent } = payload[0];
   return (
-    <div className="card" style={{ padding: '8px 14px', fontSize: 13, minWidth: 140 }}>
-      <div style={{ color: 'var(--text)', fontWeight: 600, marginBottom: 4 }}>{name}</div>
-      <div style={{ color: 'var(--text-soft)', marginBottom: 2 }}>{value} units</div>
-      <div style={{ color: 'var(--text-muted)', fontSize: 11 }}>{Math.round((percent ?? 0) * 100)}%</div>
+    <div className="card pie-tt">
+      <div className="pie-tt-name">{name}</div>
+      <div className="pie-tt-count">{value} units</div>
+      <div className="pie-tt-pct">{Math.round((percent ?? 0) * 100)}%</div>
     </div>
   );
 }
 
 function ChartSkeleton() {
-  return <div className="skeleton" style={{ height: 400, width: '100%', borderRadius: 8 }} />;
+  return <div className="skeleton chart-h-400" />;
 }
 
 export default function DashboardPage() {
@@ -143,7 +143,7 @@ export default function DashboardPage() {
       </div>
 
       {error && (
-        <Alert type="error" title={error} showIcon style={{ marginBottom: 20 }} />
+        <Alert type="error" title={error} showIcon className="mb-16" />
       )}
 
       <div className="stat-grid">
@@ -174,120 +174,120 @@ export default function DashboardPage() {
       </div>
 
       {!loading && products.length === 0 ? (
-        <Empty style={{ padding: '60px 0' }} />
+        <Empty className="mt-20" />
       ) : (
-      <div className="dash-charts">
-        <div className="card">
-          <div className="card-head">
-            <span className="card-title">{t('dashboard.byCategory')}</span>
+        <div className="dash-charts">
+          <div className="card">
+            <div className="card-head">
+              <span className="card-title">{t('dashboard.byCategory')}</span>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <ChartSkeleton />
+              ) : (
+                <div className="chart-h-400">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                      <YAxis
+                        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                        allowDecimals={false}
+                        domain={[0, (dataMax: number) => Math.ceil(dataMax * 2)]}
+                      />
+                      <Tooltip content={<ChartTooltip />} />
+                      <Bar dataKey="count" fill="#2D6A4F" activeBar={{ fill: '#40916C' }} radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="card-body">
-            {loading ? (
-              <ChartSkeleton />
-            ) : (
-              <div style={{ height: 400 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={byCategory && byCategory.length > 0 ? byCategory : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
-                  <YAxis
-                    tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-                    allowDecimals={false}
-                    domain={[0, (dataMax: number) => Math.ceil(dataMax * 2)]}
-                  />
-                  <Tooltip content={<ChartTooltip />} />
-                  <Bar dataKey="count" fill="#2D6A4F" activeBar={{ fill: '#40916C' }} radius={[4, 4, 0, 0]} />
-                </BarChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-          </div>
-        </div>
 
-        <div className="card">
-          <div className="card-head">
-            <span className="card-title">{t('dashboard.byMaterial')}</span>
+          <div className="card">
+            <div className="card-head">
+              <span className="card-title">{t('dashboard.byMaterial')}</span>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <ChartSkeleton />
+              ) : (
+                <div className="chart-h-400">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+                      <Pie
+                        data={byMaterial.length > 0 ? byMaterial : []}
+                        cx="50%"
+                        cy="42%"
+                        innerRadius={70}
+                        outerRadius={120}
+                        dataKey="value"
+                        nameKey="name"
+                        label={false}
+                      >
+                        {byMaterial.map((_, i) => (
+                          <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<PieTooltip />} />
+                      <Legend
+                        layout="horizontal"
+                        align="center"
+                        verticalAlign="bottom"
+                        iconSize={8}
+                        iconType="circle"
+                        wrapperStyle={{
+                          fontSize: 12,
+                          lineHeight: '2',
+                          paddingTop: 12,
+                          color: 'var(--text)',
+                        }}
+                        formatter={(value: string) =>
+                          value.length > 22 ? value.slice(0, 20) + '…' : value
+                        }
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="card-body">
-            {loading ? (
-              <ChartSkeleton />
-            ) : (
-              <div style={{ height: 400 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
-                  <Pie
-                    data={byMaterial && byMaterial.length > 0 ? byMaterial : []}
-                    cx="50%"
-                    cy="42%"
-                    innerRadius={70}
-                    outerRadius={120}
-                    dataKey="value"
-                    nameKey="name"
-                    label={false}
-                  >
-                    {byMaterial.map((_, i) => (
-                      <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<PieTooltip />} />
-                  <Legend
-                    layout="horizontal"
-                    align="center"
-                    verticalAlign="bottom"
-                    iconSize={8}
-                    iconType="circle"
-                    wrapperStyle={{
-                      fontSize: 12,
-                      lineHeight: '2',
-                      paddingTop: 12,
-                      color: 'var(--text)',
-                    }}
-                    formatter={(value: string) =>
-                      value.length > 22 ? value.slice(0, 20) + '…' : value
-                    }
-                  />
-                </PieChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-          </div>
-        </div>
 
-        <div className="card">
-          <div className="card-head">
-            <span className="card-title">{t('dashboard.byMonth')}</span>
-          </div>
-          <div className="card-body">
-            {loading ? (
-              <ChartSkeleton />
-            ) : (
-              <div style={{ height: 400 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={byMonth && byMonth.length > 0 ? byMonth : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
-                  <defs>
-                    <linearGradient id="dashGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2D6A4F" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="#2D6A4F" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} allowDecimals={false} />
-                  <Tooltip content={<ChartTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="count"
-                    stroke="#2D6A4F"
-                    strokeWidth={2}
-                    fill="url(#dashGradient)"
-                  />
-                </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            )}
+          <div className="card">
+            <div className="card-head">
+              <span className="card-title">{t('dashboard.byMonth')}</span>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <ChartSkeleton />
+              ) : (
+                <div className="chart-h-400">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={byMonth.length > 0 ? byMonth : []} margin={{ top: 4, right: 4, left: -20, bottom: 4 }}>
+                      <defs>
+                        <linearGradient id="dashGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#2D6A4F" stopOpacity={0.15} />
+                          <stop offset="95%" stopColor="#2D6A4F" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
+                      <YAxis tick={{ fontSize: 11, fill: 'var(--text-muted)' }} allowDecimals={false} />
+                      <Tooltip content={<ChartTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke="#2D6A4F"
+                        strokeWidth={2}
+                        fill="url(#dashGradient)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       )}
     </div>
   );

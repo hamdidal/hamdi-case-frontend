@@ -19,9 +19,12 @@ function AuthPoster() {
   const rest = words.join(' ');
   return (
     <div className="auth-poster">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div className="side-brand-mark" style={{ width: 32, height: 32 }} />
-        <div style={{ fontWeight: 600, fontSize: 15, color: '#fff' }}>Kobe</div>
+      <div className="side-brand">
+        <div className="side-brand-mark" />
+        <div className="side-brand-text">
+          Kobe
+          <small>DPP MANAGEMENT</small>
+        </div>
       </div>
       <div className="poster-mark">
         {rest} <em>{lastWord}</em>
@@ -67,7 +70,7 @@ export default function RegisterPage() {
               type="error"
               message={error}
               showIcon
-              style={{ marginBottom: 20 }}
+              className="auth-alert"
             />
           )}
 
@@ -86,7 +89,7 @@ export default function RegisterPage() {
               ]}
             >
               <Input
-                prefix={<UserOutlined style={{ color: 'var(--text-muted)' }} />}
+                prefix={<UserOutlined />}
                 placeholder={t('auth.usernamePlaceholder', 'Kullanıcı adı')}
                 size="large"
                 autoComplete="username"
@@ -103,7 +106,7 @@ export default function RegisterPage() {
               ]}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: 'var(--text-muted)' }} />}
+                prefix={<LockOutlined />}
                 placeholder={t('auth.passwordPlaceholder', 'Şifre')}
                 size="large"
                 autoComplete="new-password"
@@ -127,14 +130,14 @@ export default function RegisterPage() {
               ]}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: 'var(--text-muted)' }} />}
+                prefix={<LockOutlined />}
                 placeholder={t('auth.confirmPasswordPlaceholder', 'Şifreyi tekrar girin')}
                 size="large"
                 autoComplete="new-password"
               />
             </Form.Item>
 
-            <Form.Item style={{ marginBottom: 16 }}>
+            <Form.Item className="form-item-mb">
               <Button
                 type="primary"
                 htmlType="submit"
@@ -147,12 +150,9 @@ export default function RegisterPage() {
             </Form.Item>
           </Form>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 8 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('auth.toSignin')}</span>
-            <a
-              onClick={() => navigate('/login')}
-              style={{ cursor: 'pointer', color: 'var(--brand-600)', fontWeight: 500, fontSize: 13 }}
-            >
+          <div className="auth-alt-row">
+            <span>{t('auth.toSignin')}</span>
+            <a className="auth-link" onClick={() => navigate('/login')}>
               {t('auth.signinCta')}
             </a>
           </div>
