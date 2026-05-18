@@ -7,10 +7,7 @@ export interface ConfirmOptions {
   content?: ReactNode;
   okText?: string;
   cancelText?: string;
-  /** 'danger' renders a red OK button (deletes). 'warning' is neutral (discards). */
   type?: 'danger' | 'warning';
-  /** Async callback passed directly to Antd onOk — the modal's OK button shows a
-   *  native loading spinner while the promise is in-flight and closes on resolve. */
   onConfirm: () => Promise<void>;
 }
 
@@ -34,8 +31,6 @@ export function useConfirm(): ShowConfirm {
         okText,
         cancelText,
         okButtonProps: type === 'danger' ? { danger: true } : undefined,
-        // Antd treats a Promise returned from onOk as a loading signal:
-        // the OK button spins until it resolves, preventing double-submits.
         onOk: onConfirm,
         autoFocusButton: type === 'danger' ? 'cancel' : 'ok',
       });

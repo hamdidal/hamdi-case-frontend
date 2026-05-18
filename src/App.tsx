@@ -25,10 +25,7 @@ const PageLoader = () => (
 );
 
 function GlobalSpinner() {
-  // Selector computes a boolean — re-renders only on false↔true transitions,
-  // not on every counter increment/decrement.
   const isLoading = useLoadingStore((s) => s.activeRequests > 0);
-  // delay prevents flickering for sub-200ms requests
   return <Spin fullscreen spinning={isLoading} delay={200} />;
 }
 

@@ -96,7 +96,6 @@ export default function ProductDetailPage() {
 
   const handleSave = () => {
     if (!id || !product) return;
-    // Validate first so the user sees inline field errors before the confirm dialog.
     void form.validateFields()
       .then((values) => {
         showConfirm({
@@ -133,7 +132,7 @@ export default function ProductDetailPage() {
           },
         });
       })
-      .catch(() => {}); // Antd already highlights invalid fields inline
+      .catch(() => {});
   };
 
   const handleCancel = () => {
