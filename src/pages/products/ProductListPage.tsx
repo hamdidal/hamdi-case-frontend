@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -18,7 +18,7 @@ export default function ProductListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { message } = App.useApp();
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -67,12 +67,12 @@ export default function ProductListPage() {
     }, 300);
   };
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
     setPageSize(newSize);
     setPage(newPage);
-  };
+  }, [pageSize]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -106,7 +106,7 @@ export default function ProductListPage() {
     }
   };
 
-  const columns: TableColumnsType<Product> = [
+  const columns = useMemo<TableColumnsType<Product>>(() => [
     {
       title: t('products.columns.name'),
       dataIndex: 'name',
@@ -185,7 +185,7 @@ export default function ProductListPage() {
         </div>
       ),
     },
-  ];
+  ], [isAdmin, navigate, t, setDeleteId]);
 
   return (
     <div className="page">

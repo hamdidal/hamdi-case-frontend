@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Empty } from 'antd';
@@ -128,10 +128,10 @@ export default function DashboardPage() {
   }, [t]);
 
   const locale = i18n.language === 'tr' ? 'tr-TR' : 'en-US';
-  const stats = computeStats(products);
-  const byCategory = computeByCategory(products);
-  const byMaterial = computeByMaterial(products);
-  const byMonth = computeByMonth(products, locale);
+  const stats = useMemo(() => computeStats(products), [products]);
+  const byCategory = useMemo(() => computeByCategory(products), [products]);
+  const byMaterial = useMemo(() => computeByMaterial(products), [products]);
+  const byMonth = useMemo(() => computeByMonth(products, locale), [products, locale]);
 
   return (
     <div className="page">

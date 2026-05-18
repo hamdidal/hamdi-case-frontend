@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Table, Select, Input, Button, DatePicker, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
@@ -139,34 +139,32 @@ export default function AuditLogPage() {
     fetchLogsRef.current?.(page, appliedFilters, pageSize);
   }, [page, pageSize, appliedFilters]);
 
-  const buildFilters = (): AuditLogFilters => ({
-    action: filterAction,
-    username: filterUsername || undefined,
-    dateFrom: filterRange?.[0]?.toISOString(),
-    dateTo: filterRange?.[1]?.toISOString(),
-  });
-
-  const handleSearch = () => {
-    setAppliedFilters(buildFilters());
+  const handleSearch = useCallback(() => {
+    setAppliedFilters({
+      action: filterAction,
+      username: filterUsername || undefined,
+      dateFrom: filterRange?.[0]?.toISOString(),
+      dateTo: filterRange?.[1]?.toISOString(),
+    });
     setPage(1);
-  };
+  }, [filterAction, filterUsername, filterRange]);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setFilterAction(undefined);
     setFilterUsername('');
     setFilterRange(null);
     setAppliedFilters({});
     setPage(1);
-  };
+  }, []);
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
     setPageSize(newSize);
     setPage(newPage);
-  };
+  }, [pageSize]);
 
-  const columns: TableColumnsType<AuditLog> = [
+  const columns = useMemo<TableColumnsType<AuditLog>>(() => [
     {
       title: t('audit.columns.time'),
       dataIndex: 'timestamp',
@@ -204,7 +202,7 @@ export default function AuditLogPage() {
         <span className="text-soft-cell">{v ?? '—'}</span>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <div className="page">

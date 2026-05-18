@@ -2,7 +2,8 @@ import { useThemeStore } from '@/store/useThemeStore';
 import { IconSun, IconMoon } from './icons';
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useThemeStore();
+  const theme = useThemeStore((s) => s.theme);
+  const toggleTheme = useThemeStore((s) => s.toggleTheme);
 
   return (
     <span

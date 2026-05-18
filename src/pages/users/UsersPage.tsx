@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Table, Select, Modal, Tooltip, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
@@ -12,7 +12,7 @@ import { formatDate } from '@/utils/formatDate';
 export default function UsersPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const { user: currentUser } = useAuthStore();
+  const currentUser = useAuthStore((s) => s.user);
 
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
@@ -36,14 +36,14 @@ export default function UsersPage() {
     fetchUsers(page, pageSize);
   }, [fetchUsers, page, pageSize]);
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     const newSize = pagination.pageSize ?? pageSize;
     const newPage = newSize !== pageSize ? 1 : (pagination.current ?? 1);
     setPage(newPage);
     setPageSize(newSize);
-  };
+  }, [pageSize]);
 
-  const handleRoleChange = async (id: string, role: Role) => {
+  const handleRoleChange = useCallback(async (id: string, role: Role) => {
     try {
       await updateUserRole(id, role);
       void message.success(t('users.updateSuccess'));
@@ -51,9 +51,9 @@ export default function UsersPage() {
     } catch {
       void message.error(t('common.error'));
     }
-  };
+  }, [fetchUsers, page, pageSize, message, t]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     try {
       await deleteUser(id);
       void message.success(t('users.deleteSuccess'));
@@ -61,9 +61,9 @@ export default function UsersPage() {
     } catch {
       void message.error(t('common.error'));
     }
-  };
+  }, [fetchUsers, page, pageSize, message, t]);
 
-  const columns: TableColumnsType<User> = [
+  const columns = useMemo<TableColumnsType<User>>(() => [
     {
       title: '',
       key: 'avatar',
@@ -125,7 +125,7 @@ export default function UsersPage() {
         );
       },
     },
-  ];
+  ], [currentUser, t, handleRoleChange, handleDelete]);
 
   return (
     <div className="page">

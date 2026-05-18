@@ -20,8 +20,13 @@ interface PasswordForm {
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const { user, setAuth, token } = useAuthStore();
-  const { theme, language, setTheme, setLanguage } = useThemeStore();
+  const user = useAuthStore((s) => s.user);
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const token = useAuthStore((s) => s.token);
+  const theme = useThemeStore((s) => s.theme);
+  const language = useThemeStore((s) => s.language);
+  const setTheme = useThemeStore((s) => s.setTheme);
+  const setLanguage = useThemeStore((s) => s.setLanguage);
 
   const [profileForm] = Form.useForm<ProfileForm>();
   const [passwordForm] = Form.useForm<PasswordForm>();

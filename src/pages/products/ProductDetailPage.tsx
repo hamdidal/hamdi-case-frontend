@@ -26,7 +26,7 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
 
   const [product, setProduct] = useState<Product | null>(null);

@@ -4,7 +4,8 @@ import type { Language } from '@/store/useThemeStore';
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
-  const { language, setLanguage } = useThemeStore();
+  const language = useThemeStore((s) => s.language);
+  const setLanguage = useThemeStore((s) => s.setLanguage);
 
   const switchTo = (lang: Language) => {
     setLanguage(lang);

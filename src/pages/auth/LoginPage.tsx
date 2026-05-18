@@ -18,7 +18,7 @@ interface LoginFormValues {
 export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
+  const setAuth = useAuthStore((s) => s.setAuth);
   const [form] = Form.useForm<LoginFormValues>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

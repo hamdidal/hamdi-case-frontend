@@ -30,7 +30,8 @@ function useBreadcrumbs(): string[] {
 export function Header({ onToggle }: HeaderProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, clearAuth } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const clearAuth = useAuthStore((s) => s.clearAuth);
   const crumbs = useBreadcrumbs();
   const isAdmin = user?.role === 'admin';
 

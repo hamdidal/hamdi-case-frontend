@@ -24,7 +24,7 @@ const PageLoader = () => (
 );
 
 export default function App() {
-  const { theme } = useThemeStore();
+  const theme = useThemeStore((s) => s.theme);
   const activeTheme = theme === 'dark' ? darkTheme : lightTheme;
 
   useEffect(() => {

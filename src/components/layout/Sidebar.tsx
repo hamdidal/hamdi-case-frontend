@@ -34,7 +34,7 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const role = user?.role ?? 'auditor';
 
   const iconOnly = collapsed && !isMobile;
