@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Spin } from 'antd';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -40,7 +41,9 @@ export function AppLayout() {
       <div className="app-main">
         <Header onToggle={handleToggle} />
         <div className="app-content">
-          <Outlet />
+          <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}><Spin size="large" /></div>}>
+            <Outlet />
+          </Suspense>
         </div>
       </div>
     </div>
