@@ -18,6 +18,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      '/api/metrics-proxy': {
+        target: process.env.VITE_METRICS_TARGET ?? 'http://localhost:8081',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/metrics-proxy/, '/api/v1'),
+      },
       '/api': {
         target: process.env.VITE_API_TARGET ?? 'http://localhost:8080',
         changeOrigin: true,
