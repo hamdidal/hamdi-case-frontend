@@ -30,7 +30,6 @@ export default function UsersPage() {
       })
       .catch(() => void message.error(t('common.error')))
       .finally(() => setLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message, t]);
 
   useEffect(() => {

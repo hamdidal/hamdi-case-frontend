@@ -1,11 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Table, Select, Input, Button, DatePicker, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
 import type { Dayjs } from 'dayjs';
 import { getAuditLogs } from '@/api/auditLogs';
-import type { AuditLog, AuditAction, AuditLogFilters, AuditChanges } from '@/types';
+import type { AuditLog, AuditAction, AuditLogFilters, AuditChanges, AuditChangesSnapshot, FieldChange } from '@/types';
 import { formatDateTime } from '@/utils/formatDate';
+import { formatAuditKey } from '@/utils/formatters';
 
 const { RangePicker } = DatePicker;
 
@@ -32,11 +33,37 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     return <span className="muted fs-13">{t('audit.noChanges')}</span>;
   }
 
+  const snap = changes as AuditChangesSnapshot;
+
+  if (snap.diff && snap.diff.length > 0) {
+    return (
+      <div className="diff">
+        {snap.diff.map((entry: FieldChange) => (
+          <div className="diff-line" key={entry.field}>
+            <span className="diff-key">{formatAuditKey(entry.field, t)}</span>
+            {entry.before !== null && entry.before !== undefined && (
+              <span className="diff-old">{renderVal(entry.before)}</span>
+            )}
+            {entry.before !== null && entry.before !== undefined &&
+             entry.after !== null && entry.after !== undefined && (
+              <span className="diff-arr">→</span>
+            )}
+            {entry.after !== null && entry.after !== undefined && (
+              <span className="diff-new">{renderVal(entry.after)}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   if ('before' in changes || 'after' in changes) {
-    const before = changes.before as Record<string, unknown> | undefined;
-    const after = changes.after as Record<string, unknown> | undefined;
+    const before = snap.before;
+    const after = snap.after;
     const allKeys = Array.from(new Set([...Object.keys(before ?? {}), ...Object.keys(after ?? {})]));
-    const diffKeys = allKeys.filter((key) => before?.[key] !== after?.[key]);
+    const diffKeys = allKeys.filter(
+      (key) => JSON.stringify(before?.[key]) !== JSON.stringify(after?.[key]),
+    );
 
     if (diffKeys.length === 0) {
       return <span className="muted fs-13">{t('audit.noChanges')}</span>;
@@ -49,7 +76,7 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
           const aVal = after?.[key];
           return (
             <div className="diff-line" key={key}>
-              <span className="diff-key">{key}</span>
+              <span className="diff-key">{formatAuditKey(key, t)}</span>
               {bVal !== undefined && <span className="diff-old">{renderVal(bVal)}</span>}
               {bVal !== undefined && aVal !== undefined && <span className="diff-arr">→</span>}
               {aVal !== undefined && <span className="diff-new">{renderVal(aVal)}</span>}
@@ -64,7 +91,7 @@ function DiffViewer({ changes }: { changes: AuditChanges | undefined }) {
     <div className="diff">
       {Object.entries(changes).map(([field, val]) => (
         <div className="diff-line" key={field}>
-          <span className="diff-key">{field}</span>
+          <span className="diff-key">{formatAuditKey(field, t)}</span>
           <span className="diff-new">{renderVal(val)}</span>
         </div>
       ))}
@@ -86,6 +113,8 @@ export default function AuditLogPage() {
   const [filterUsername, setFilterUsername] = useState('');
   const [filterRange, setFilterRange] = useState<RangeValue>(null);
 
+  const [appliedFilters, setAppliedFilters] = useState<AuditLogFilters>({});
+
   const fetchLogs = useCallback(async (pg: number, filters: AuditLogFilters, lim: number) => {
     setLoading(true);
     try {
@@ -103,6 +132,13 @@ export default function AuditLogPage() {
     }
   }, [message, t]);
 
+  const fetchLogsRef = useRef<typeof fetchLogs | undefined>(undefined);
+  fetchLogsRef.current = fetchLogs;
+
+  useEffect(() => {
+    fetchLogsRef.current?.(page, appliedFilters, pageSize);
+  }, [page, pageSize, appliedFilters]);
+
   const buildFilters = (): AuditLogFilters => ({
     action: filterAction,
     username: filterUsername || undefined,
@@ -110,22 +146,17 @@ export default function AuditLogPage() {
     dateTo: filterRange?.[1]?.toISOString(),
   });
 
-  useEffect(() => {
-    void fetchLogs(page, buildFilters(), pageSize);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize]);
-
   const handleSearch = () => {
+    setAppliedFilters(buildFilters());
     setPage(1);
-    void fetchLogs(1, buildFilters(), pageSize);
   };
 
   const handleClear = () => {
     setFilterAction(undefined);
     setFilterUsername('');
     setFilterRange(null);
+    setAppliedFilters({});
     setPage(1);
-    void fetchLogs(1, {}, pageSize);
   };
 
   const handleTableChange = (pagination: TablePaginationConfig) => {

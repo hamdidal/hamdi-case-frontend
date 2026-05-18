@@ -55,9 +55,16 @@ export interface ProductVersion {
   snapshot: Partial<Product>;
 }
 
+export interface FieldChange {
+  field: string;
+  before: unknown;
+  after: unknown;
+}
+
 export interface AuditChangesSnapshot {
   before?: Record<string, unknown>;
   after?: Record<string, unknown>;
+  diff?: FieldChange[];
 }
 
 export type AuditChanges = AuditChangesSnapshot | Record<string, unknown>;

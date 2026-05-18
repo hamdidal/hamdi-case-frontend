@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -36,7 +36,9 @@ export default function ProductListPage() {
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchProducts = useCallback(async (pg: number, q: string, lim: number) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const fetchProducts = async (pg: number, q: string, lim: number) => {
     setLoading(true);
     try {
       const res = await getProducts({ page: pg, limit: lim, search: q || undefined });
@@ -47,19 +49,21 @@ export default function ProductListPage() {
     } finally {
       setLoading(false);
     }
-  }, [message, t]);
+  };
+
+  const fetchRef = useRef<typeof fetchProducts | undefined>(undefined);
+  fetchRef.current = fetchProducts;
 
   useEffect(() => {
-    void fetchProducts(page, search, pageSize);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchProducts, page, pageSize]);
+    fetchRef.current?.(page, search, pageSize);
+  }, [page, pageSize, refreshKey]);
 
   const handleSearchChange = (val: string) => {
     setSearch(val);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
       setPage(1);
-      void fetchProducts(1, val, pageSize);
+      setRefreshKey((k) => k + 1);
     }, 300);
   };
 
@@ -74,7 +78,7 @@ export default function ProductListPage() {
     try {
       await deleteProduct(id);
       void message.success(t('products.deleteSuccess'));
-      void fetchProducts(page, search, pageSize);
+      setRefreshKey((k) => k + 1);
     } catch {
       void message.error(t('common.error'));
     }
@@ -94,7 +98,7 @@ export default function ProductListPage() {
       setDrawerOpen(false);
       form.resetFields();
       setPage(1);
-      void fetchProducts(1, search, pageSize);
+      setRefreshKey((k) => k + 1);
     } catch {
       void message.error(t('common.error'));
     } finally {

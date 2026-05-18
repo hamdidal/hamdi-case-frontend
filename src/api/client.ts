@@ -3,7 +3,7 @@ import axios from 'axios';
 const AUTH_STORAGE_KEY = 'dpp-auth';
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL as string,
+  baseURL: (import.meta.env.VITE_API_BASE_URL as string) || 'http://3.120.228.32:8080/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },

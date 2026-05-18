@@ -67,9 +67,16 @@
       "usernameRequired": "Username is required",
       "passwordRequired": "Password is required",
       "passwordMin": "Password must be at least 8 characters",
+      "passwordUppercase": "At least one uppercase letter",
+      "passwordNumber": "At least one number",
+      "passwordSpecial": "At least one special character",
       "passwordMismatch": "Passwords do not match",
-      "confirmRequired": "Password confirmation is required"
-    }
+      "confirmRequired": "Password confirmation is required",
+      "passwordRequirementsTitle": "Password requirements"
+    },
+    "usernamePlaceholder": "Username",
+    "passwordPlaceholder": "Password",
+    "confirmPasswordPlaceholder": "Confirm password"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -216,7 +223,24 @@
     "filterByUser": "Filter by user",
     "allActions": "All actions",
     "expandChanges": "Show changes",
-    "noChanges": "No change record"
+    "noChanges": "No change record",
+    "fields": {
+      "name": "Name",
+      "brand": "Brand",
+      "category": "Category",
+      "country": "Country",
+      "productionDate": "Production Date",
+      "status": "Status",
+      "materials": "Materials",
+      "percentage": "Percentage",
+      "recycled": "Recycled",
+      "care": "Care",
+      "washTemperature": "Wash Temperature",
+      "ironing": "Ironing",
+      "dryClean": "Dry Clean",
+      "bleaching": "Bleaching",
+      "notes": "Notes"
+    }
   },
   "settings": {
     "title": "Settings",

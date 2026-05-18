@@ -79,7 +79,6 @@ async function fetchNetworkValues(): Promise<{ netIn: number; netOut: number }> 
     ]);
     return { netIn: netIn.data.value, netOut: netOut.data.value };
   } catch {
-    // eth0 not found — retry without device filter
     const [netIn, netOut] = await Promise.all([
       queryMetric('rate(node_network_receive_bytes_total[5m])'),
       queryMetric('rate(node_network_transmit_bytes_total[5m])'),
@@ -143,7 +142,6 @@ export default function SystemMetricsPage() {
       fetchAllRef.current?.();
     }, 15000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

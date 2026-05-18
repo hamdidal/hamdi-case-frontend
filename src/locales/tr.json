@@ -67,9 +67,16 @@
       "usernameRequired": "Kullanıcı adı zorunludur",
       "passwordRequired": "Şifre zorunludur",
       "passwordMin": "Şifre en az 8 karakter olmalıdır",
+      "passwordUppercase": "En az bir büyük harf",
+      "passwordNumber": "En az bir rakam",
+      "passwordSpecial": "En az bir özel karakter",
       "passwordMismatch": "Şifreler eşleşmiyor",
-      "confirmRequired": "Şifre onayı zorunludur"
-    }
+      "confirmRequired": "Şifre onayı zorunludur",
+      "passwordRequirementsTitle": "Şifre gereksinimleri"
+    },
+    "usernamePlaceholder": "Kullanıcı adı",
+    "passwordPlaceholder": "Şifre",
+    "confirmPasswordPlaceholder": "Şifreyi tekrar girin"
   },
   "dashboard": {
     "title": "Anasayfa",
@@ -216,7 +223,24 @@
     "filterByUser": "Kullanıcıya göre filtrele",
     "allActions": "Tüm işlemler",
     "expandChanges": "Değişiklikleri göster",
-    "noChanges": "Değişiklik kaydı yok"
+    "noChanges": "Değişiklik kaydı yok",
+    "fields": {
+      "name": "Ad",
+      "brand": "Marka",
+      "category": "Kategori",
+      "country": "Ülke",
+      "productionDate": "Üretim Tarihi",
+      "status": "Durum",
+      "materials": "Malzemeler",
+      "percentage": "Yüzde",
+      "recycled": "Geri Dönüştürülmüş",
+      "care": "Bakım",
+      "washTemperature": "Yıkama Sıcaklığı",
+      "ironing": "Ütüleme",
+      "dryClean": "Kuru Temizleme",
+      "bleaching": "Ağartma",
+      "notes": "Notlar"
+    }
   },
   "settings": {
     "title": "Ayarlar",

@@ -728,6 +728,29 @@ input, select, textarea { font: inherit; color: inherit; }
 .auth-alert { margin-bottom: 20px; }
 .form-item-mb { margin-bottom: 16px; }
 
+.password-requirements {
+  margin: -8px 0 16px;
+  padding: 12px 14px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pw-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  transition: color .15s;
+}
+.pw-rule--met  { color: var(--semantic-success); }
+.pw-rule--unmet { color: var(--text-muted); }
+.pw-rule-icon { font-size: 13px; flex-shrink: 0; }
+.pw-rule-icon--met  { color: var(--semantic-success); }
+.pw-rule-icon--unmet { color: var(--text-faint); }
+
 /* ========== Dashboard charts ========== */
 .chart-h-400 { height: 400px; }
 .chart-h-260 { height: 260px; min-height: 280px; }

@@ -131,7 +131,7 @@ export default function PublicPassportPage() {
                       <td>{m.percentage}%</td>
                       <td>
                         {m.recycled ? (
-                          <IconRecycle size={14} className="text-success" />
+                          <IconRecycle className="text-success" />
                         ) : (
                           <span className="muted">—</span>
                         )}
