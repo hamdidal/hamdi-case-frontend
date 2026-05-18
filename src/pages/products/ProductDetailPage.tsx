@@ -16,15 +16,18 @@ import type { Product, Material, ProductVersion, ProductEditForm } from '@/types
 import { PRODUCT_CATEGORIES, WASH_OPTIONS, IRON_OPTIONS } from '@/utils/constants';
 import {
   IconChevronRight, IconTrash, IconDownload,
-  IconHistory, IconCopy,
+  IconHistory, IconCopy, IconCheck,
 } from '@/components/common/icons';
 import { formatDate, formatDateTime } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
+import { CountrySelect } from '@/components/common/CountrySelect';
+import { resolveCountryCode, codeToName } from '@/utils/countries';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('tr') ? 'tr' : 'en';
   const { message } = App.useApp();
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
@@ -34,6 +37,8 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const [versionsOpen, setVersionsOpen] = useState(false);
   const [versions, setVersions] = useState<ProductVersion[]>([]);
@@ -64,7 +69,7 @@ export default function ProductDetailPage() {
       name: product.name,
       brand: product.brand,
       category: product.category,
-      country: product.country,
+      country: resolveCountryCode(product.country, lang) ?? product.country,
       productionDate: dayjs(product.productionDate),
       washTemperature: product.careInstructions?.washTemperature,
       ironing: product.careInstructions?.ironing,
@@ -87,7 +92,7 @@ export default function ProductDetailPage() {
         name: values.name,
         brand: values.brand,
         category: values.category,
-        country: values.country,
+        country: codeToName(values.country, 'en') || values.country,
         productionDate: values.productionDate.format('YYYY-MM-DD'),
         status: product.status,
         materials,
@@ -127,8 +132,24 @@ export default function ProductDetailPage() {
   const handleCopyLink = () => {
     if (!product) return;
     const publicUrl = `${import.meta.env.VITE_PUBLIC_BASE_URL as string}/p/${product.uuid}`;
-    void navigator.clipboard.writeText(publicUrl);
-    void message.success(t('common.copyLink'));
+    const onSuccess = () => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1500);
+    };
+    if (navigator.clipboard) {
+      void navigator.clipboard.writeText(publicUrl).then(onSuccess);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = publicUrl;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      onSuccess();
+    }
   };
 
   const handleOpenVersions = useCallback(async () => {
@@ -146,11 +167,11 @@ export default function ProductDetailPage() {
   }, [id, message, t]);
 
   const handleVersionClick = async (v: ProductVersion) => {
-    if (!id) return;
+    if (!id || !v.version_number) return;
     try {
-      const res = await getProductVersion(id, v.versionNumber);
+      const res = await getProductVersion(id, v.version_number);
       setSnapshot(res.data.snapshot);
-      setSnapshotTitle(`v${v.versionNumber} — ${v.createdBy}`);
+      setSnapshotTitle(`v${v.version_number} — ${v.created_by_username}`);
       setSnapshotOpen(true);
     } catch {
       void message.error(t('common.error'));
@@ -246,7 +267,7 @@ export default function ProductDetailPage() {
                     label={t('editor.fields.country')}
                     rules={[{ required: true, message: t('common.required') }]}
                   >
-                    <Input />
+                    <CountrySelect disabled={!isAdmin} />
                   </Form.Item>
 
                   <Form.Item
@@ -416,7 +437,9 @@ export default function ProductDetailPage() {
               <p className="qr-hint">{t('editor.qrHint')}</p>
 
               <button className="btn btn-full" onClick={handleCopyLink}>
-                <IconCopy size={14} />
+                {linkCopied
+                  ? <IconCheck size={14} style={{ color: 'var(--brand-600, #2D6A4F)' }} />
+                  : <IconCopy size={14} />}
                 {t('editor.copyLink')}
               </button>
 
@@ -452,16 +475,16 @@ export default function ProductDetailPage() {
           <div className="ver-list">
             {versions.map((v) => (
               <div
-                key={v.versionNumber}
+                key={v.id}
                 className="ver-item"
                 onClick={() => handleVersionClick(v)}
               >
                 <div>
                   <div className="ver-title">
-                    {t('editor.versionLabel', { number: v.versionNumber })}
+                    {t('editor.versionLabel', { number: v.version_number })}
                   </div>
                   <div className="ver-meta">
-                    {t('editor.versionBy', { user: v.createdBy })} · {formatDateTime(v.createdAt)}
+                    {t('editor.versionBy', { user: v.created_by_username })} · {formatDateTime(v.created_at)}
                   </div>
                 </div>
                 <IconChevronRight size={14} className="muted" />

@@ -13,6 +13,8 @@ import {
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 import { AppImage } from '@/components/common/AppImage';
+import { CountryLabel } from '@/components/common/CountryLabel';
+import { resolveCountryCode } from '@/utils/countries';
 
 const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL as string;
 
@@ -34,7 +36,8 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 export default function PublicPassportPage() {
   const { uuid } = useParams<{ uuid: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('tr') ? 'tr' : 'en';
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -104,7 +107,14 @@ export default function PublicPassportPage() {
                 <span className="pub-info-icon"><IconGlobe size={16} /></span>
                 <div>
                   <div className="pub-meta-lbl">{t('public.country')}</div>
-                  <div className="pub-meta-val">{product.country}</div>
+                  <div className="pub-meta-val">
+                    {(() => {
+                      const code = resolveCountryCode(product.country, lang);
+                      return code
+                        ? <CountryLabel code={code} />
+                        : product.country;
+                    })()}
+                  </div>
                 </div>
               </div>
               <div>

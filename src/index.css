@@ -193,6 +193,8 @@ input, select, textarea { font: inherit; color: inherit; }
 .crumbs { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px; white-space: nowrap; min-width: 0; flex: 0 1 auto; }
 .crumbs .crumb-sep { color: var(--text-faint); flex: none; }
 .crumbs .crumb-current { color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+.crumbs .crumb-link { color: var(--text-muted); cursor: pointer; transition: color 0.15s; }
+.crumbs .crumb-link:hover { color: var(--text); }
 .crumbs > * { flex: none; }
 .crumbs > .crumb-current { flex: 0 1 auto; min-width: 0; }
 .header-spacer { flex: 1; }
@@ -882,3 +884,33 @@ input, select, textarea { font: inherit; color: inherit; }
 .col-w-100 { width: 100px; }
 .col-w-120 { width: 120px; }
 .role-select { width: 110px; }
+
+/* ========== Country flag display ========== */
+.country-option,
+.country-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.country-flag {
+  font-size: 1.15em;
+  line-height: 1;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ========== Recharts: disable focus outlines on chart elements ========== */
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible {
+  outline: none !important;
+}
+
+/* ========== Recharts: unify legend text color ========== */
+.recharts-legend-item-text,
+.recharts-default-legend .recharts-legend-item-text {
+  color: var(--text) !important;
+  fill: var(--text) !important;
+}
+.recharts-legend-wrapper {
+  color: var(--text) !important;
+}

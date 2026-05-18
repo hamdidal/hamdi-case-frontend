@@ -13,18 +13,26 @@ interface HeaderProps {
   onToggle: () => void;
 }
 
-function useBreadcrumbs(): string[] {
+interface Crumb {
+  label: string;
+  path: string;
+}
+
+function useBreadcrumbs(): Crumb[] {
   const location = useLocation();
   const { t } = useTranslation();
 
   const path = location.pathname;
-  if (path.startsWith('/products/')) return [t('nav.products'), t('editor.title')];
-  if (path.startsWith('/products'))  return [t('nav.products')];
-  if (path.startsWith('/dashboard')) return [t('nav.dashboard')];
-  if (path.startsWith('/metrics'))   return [t('nav.metrics')];
-  if (path.startsWith('/users'))     return [t('nav.users')];
-  if (path.startsWith('/audit'))     return [t('nav.audit')];
-  if (path.startsWith('/settings'))  return [t('nav.settings')];
+  if (path.startsWith('/products/')) return [
+    { label: t('nav.products'), path: '/products' },
+    { label: t('editor.title'), path: location.pathname },
+  ];
+  if (path.startsWith('/products'))  return [{ label: t('nav.products'),  path: '/products' }];
+  if (path.startsWith('/dashboard')) return [{ label: t('nav.dashboard'), path: '/dashboard' }];
+  if (path.startsWith('/metrics'))   return [{ label: t('nav.metrics'),   path: '/metrics' }];
+  if (path.startsWith('/users'))     return [{ label: t('nav.users'),     path: '/users' }];
+  if (path.startsWith('/audit'))     return [{ label: t('nav.audit'),     path: '/audit' }];
+  if (path.startsWith('/settings'))  return [{ label: t('nav.settings'),  path: '/settings' }];
   return [];
 }
 
@@ -69,12 +77,25 @@ export function Header({ onToggle }: HeaderProps) {
       </span>
 
       <div className="crumbs">
-        {crumbs.map((crumb, i) => (
-          <span key={i} className="crumb-fragment">
-            {i > 0 && <IconChevronRight size={13} className="crumb-sep" />}
-            <span className={i === crumbs.length - 1 ? 'crumb-current' : ''}>{crumb}</span>
-          </span>
-        ))}
+        {crumbs.map((crumb, i) => {
+          const isLast = i === crumbs.length - 1;
+          return (
+            <span key={i} className="crumb-fragment">
+              {i > 0 && <IconChevronRight size={13} className="crumb-sep" />}
+              {isLast ? (
+                <span className="crumb-current">{crumb.label}</span>
+              ) : (
+                <span
+                  className="crumb-link"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate(crumb.path)}
+                >
+                  {crumb.label}
+                </span>
+              )}
+            </span>
+          );
+        })}
       </div>
 
       <div className="header-spacer" />

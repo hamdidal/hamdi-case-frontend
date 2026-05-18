@@ -14,9 +14,13 @@ import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/
 import { AppImage } from '@/components/common/AppImage';
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
+import { CountrySelect } from '@/components/common/CountrySelect';
+import { CountryLabel } from '@/components/common/CountryLabel';
+import { resolveCountryCode, codeToName } from '@/utils/countries';
 
 export default function ProductListPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('tr') ? 'tr' : 'en';
   const navigate = useNavigate();
   const { message } = App.useApp();
   const user = useAuthStore((s) => s.user);
@@ -92,7 +96,7 @@ export default function ProductListPage() {
         name: values.name,
         brand: values.brand,
         category: values.category,
-        country: values.country,
+        country: codeToName(values.country, 'en') || values.country,
         productionDate: values.productionDate.format('YYYY-MM-DD'),
       });
       void message.success(t('products.createSuccess'));
@@ -134,7 +138,12 @@ export default function ProductListPage() {
     {
       title: t('products.columns.country'),
       dataIndex: 'country',
-      render: (v: string) => <span className="text-muted-cell">{v}</span>,
+      render: (v: string) => {
+        const code = resolveCountryCode(v, lang);
+        return code
+          ? <CountryLabel code={code} className="text-muted-cell" />
+          : <span className="text-muted-cell">{v}</span>;
+      },
     },
     {
       title: t('products.columns.date'),
@@ -300,7 +309,7 @@ export default function ProductListPage() {
             label={t('editor.fields.country')}
             rules={[{ required: true, message: t('common.required') }]}
           >
-            <Input placeholder={t('editor.fields.country')} />
+            <CountrySelect />
           </Form.Item>
 
           <Form.Item

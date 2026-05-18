@@ -41,7 +41,8 @@
     "notifications": "Bildirimler",
     "quickSearch": "Hızlı ara…",
     "confirmDeletion": "Silme Onayı",
-    "deleteWarning": "Bu öğeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    "deleteWarning": "Bu öğeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "selectCountry": "Ülke seçin"
   },
   "auth": {
     "signin": "Giriş Yap",
@@ -274,7 +275,7 @@
     "accessDeniedDesc": "Bu sayfayı görüntülemek için admin rolü gerekir.",
     "goHome": "Anasayfaya dön",
     "notFound": "Sayfa bulunamadı",
-    "serverError": "Sunucu hatası", 
-    "required":"Bu alan zorunludur"
+    "serverError": "Sunucu hatası",
+    "required": "Bu alan zorunludur"
   }
 }

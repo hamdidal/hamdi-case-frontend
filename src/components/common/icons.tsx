@@ -16,6 +16,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   CopyOutlined,
+  CheckOutlined,
   DownloadOutlined,
   HistoryOutlined,
   GlobalOutlined,
@@ -52,6 +53,7 @@ export const IconMenu        = makeIcon(MenuOutlined);
 export const IconPencil      = makeIcon(EditOutlined);
 export const IconTrash       = makeIcon(DeleteOutlined);
 export const IconCopy        = makeIcon(CopyOutlined);
+export const IconCheck       = makeIcon(CheckOutlined);
 export const IconDownload    = makeIcon(DownloadOutlined);
 export const IconHistory     = makeIcon(HistoryOutlined);
 export const IconGlobe       = makeIcon(GlobalOutlined);

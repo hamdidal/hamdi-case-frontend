@@ -41,7 +41,8 @@
     "notifications": "Notifications",
     "quickSearch": "Quick search…",
     "confirmDeletion": "Confirm Deletion",
-    "deleteWarning": "Are you sure you want to delete this item? This action cannot be undone."
+    "deleteWarning": "Are you sure you want to delete this item? This action cannot be undone.",
+    "selectCountry": "Select a country"
   },
   "auth": {
     "signin": "Sign In",
@@ -275,6 +276,6 @@
     "goHome": "Go to dashboard",
     "notFound": "Page not found",
     "serverError": "Server error",
-    "required":"This field is required"
+    "required": "This field is required"
   }
 }

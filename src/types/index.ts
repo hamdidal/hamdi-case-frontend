@@ -49,9 +49,10 @@ export interface Product {
 }
 
 export interface ProductVersion {
-  versionNumber: number;
-  createdAt: string;
-  createdBy: string;
+  id: string;
+  version_number: number;
+  created_at: string;
+  created_by_username: string;
   snapshot: Partial<Product>;
 }
 
