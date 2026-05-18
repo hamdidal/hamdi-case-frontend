@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider, App as AntApp, Spin } from 'antd';
 import { useThemeStore } from '@/store/useThemeStore';
+import { useLoadingStore } from '@/store/useLoadingStore';
 import { lightTheme, darkTheme } from '@/theme';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PrivateRoute } from '@/components/layout/PrivateRoute';
@@ -23,6 +24,14 @@ const PageLoader = () => (
   </div>
 );
 
+function GlobalSpinner() {
+  // Selector computes a boolean — re-renders only on false↔true transitions,
+  // not on every counter increment/decrement.
+  const isLoading = useLoadingStore((s) => s.activeRequests > 0);
+  // delay prevents flickering for sub-200ms requests
+  return <Spin fullscreen spinning={isLoading} delay={200} />;
+}
+
 export default function App() {
   const theme = useThemeStore((s) => s.theme);
   const activeTheme = theme === 'dark' ? darkTheme : lightTheme;
@@ -34,6 +43,7 @@ export default function App() {
   return (
     <ConfigProvider theme={activeTheme} componentSize="large">
       <AntApp>
+        <GlobalSpinner />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
           <Routes>

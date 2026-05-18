@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { attachLoadingInterceptors } from './interceptors';
 
 const AUTH_STORAGE_KEY = 'dpp-auth';
 
@@ -8,6 +9,8 @@ const client = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+attachLoadingInterceptors(client);
 
 client.interceptors.request.use((config) => {
   const raw = localStorage.getItem(AUTH_STORAGE_KEY) ?? sessionStorage.getItem(AUTH_STORAGE_KEY);

@@ -93,6 +93,20 @@ export default function PublicPassportPage() {
         </div>
 
         <div className="pub-content">
+          <div className="pub-hero">
+            <div className="pub-hero-img-wrap">
+              <AppImage variant="product" alt={product.name} className="pub-hero-img" />
+            </div>
+            <div className="pub-qr-wrap pub-qr-wrap--hero">
+              <div className="pub-qr-inner">
+                <div className="pub-qr-box">
+                  <QRCodeSVG value={publicUrl} size={120} />
+                </div>
+                <p className="pub-qr-hint">{t('public.qrTitle')}</p>
+              </div>
+            </div>
+          </div>
+
           <div className="pub-title-wrap">
             <h1 className="pub-product-title">{product.name}</h1>
             <div className="pub-tags">
@@ -188,15 +202,6 @@ export default function PublicPassportPage() {
               </div>
             </div>
           )}
-
-          <div className="pub-qr-wrap">
-            <div className="pub-qr-inner">
-              <div className="pub-qr-box">
-                <QRCodeSVG value={publicUrl} size={180} />
-              </div>
-              <p className="pub-qr-hint">{t('public.qrTitle')}</p>
-            </div>
-          </div>
 
           <div className="pub-footer">
             <p className="pub-footer-text">{t('public.poweredBy')}</p>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { MetricResult } from '@/types';
+import { attachLoadingInterceptors } from './interceptors';
 
 const AUTH_STORAGE_KEY = 'dpp-auth';
 
@@ -12,6 +13,8 @@ const metricsClient = axios.create({
   baseURL: (import.meta.env.VITE_METRICS_BASE_URL as string) || '/api/metrics-proxy',
   headers: { 'Content-Type': 'application/json' },
 });
+
+attachLoadingInterceptors(metricsClient);
 
 metricsClient.interceptors.request.use((config) => {
   const raw = localStorage.getItem(AUTH_STORAGE_KEY);
