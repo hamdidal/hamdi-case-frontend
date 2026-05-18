@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Progress, Alert } from 'antd';
+import { Progress, Alert, Spin } from 'antd';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
@@ -37,7 +37,7 @@ function GaugeCard({ label, value, loading }: { label: string; value: number; lo
         />
       )}
       <div className="gauge-percent">
-        {loading ? '—' : `${value.toFixed(1)}%`}
+        {loading ? '—' : `${(value ?? 0).toFixed(1)}%`}
       </div>
     </div>
   );
@@ -71,6 +71,25 @@ function NetTooltip({ active, payload, label }: NetTooltipProps) {
 
 const INIT: MetricValues = { cpu: 0, ram: 0, disk: 0, netIn: 0, netOut: 0 };
 
+async function fetchNetworkValues(): Promise<{ netIn: number; netOut: number }> {
+  try {
+    const [netIn, netOut] = await Promise.all([
+      queryMetric(PROMQL.networkIn),
+      queryMetric(PROMQL.networkOut),
+    ]);
+    return { netIn: netIn.data.value, netOut: netOut.data.value };
+  } catch {
+    // eth0 not found — retry without device filter
+    const [netIn, netOut] = await Promise.all([
+      queryMetric('rate(node_network_receive_bytes_total[5m])'),
+      queryMetric('rate(node_network_transmit_bytes_total[5m])'),
+    ]);
+    return { netIn: netIn.data.value, netOut: netOut.data.value };
+  }
+}
+
+function padTwo(n: number) { return String(n).padStart(2, '0'); }
+
 export default function SystemMetricsPage() {
   const { t } = useTranslation();
   const [metrics, setMetrics] = useState<MetricValues>(INIT);
@@ -80,33 +99,32 @@ export default function SystemMetricsPage() {
   const [networkHistory, setNetworkHistory] = useState<NetPoint[]>([]);
   const historyRef = useRef<NetPoint[]>([]);
 
-  const fetchAll = useCallback(async () => {
+  const fetchAllRef = useRef<(() => Promise<void>) | undefined>(undefined);
+
+  const fetchAll = async () => {
     try {
-      const [cpu, ram, disk, netIn, netOut] = await Promise.all([
+      const [cpu, ram, disk, net] = await Promise.all([
         queryMetric(PROMQL.cpu),
         queryMetric(PROMQL.ram),
         queryMetric(PROMQL.disk),
-        queryMetric(PROMQL.networkIn),
-        queryMetric(PROMQL.networkOut),
+        fetchNetworkValues(),
       ]);
 
       setMetrics({
-        cpu: cpu.data.value,
-        ram: ram.data.value,
-        disk: disk.data.value,
-        netIn: netIn.data.value,
-        netOut: netOut.data.value,
+        cpu: cpu.data.value ?? 0,
+        ram: ram.data.value ?? 0,
+        disk: disk.data.value ?? 0,
+        netIn: net.netIn ?? 0,
+        netOut: net.netOut ?? 0,
       });
 
       const now = new Date();
-      const timeLabel = now.toLocaleTimeString('tr-TR', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-      });
+      const timeLabel = `${padTwo(now.getHours())}:${padTwo(now.getMinutes())}:${padTwo(now.getSeconds())}`;
 
       setLastUpdate(timeLabel);
       setError(null);
 
-      const point: NetPoint = { time: timeLabel, netIn: netIn.data.value, netOut: netOut.data.value };
+      const point: NetPoint = { time: timeLabel, netIn: net.netIn ?? 0, netOut: net.netOut ?? 0 };
       const updated = [...historyRef.current, point].slice(-20);
       historyRef.current = updated;
       setNetworkHistory([...updated]);
@@ -115,13 +133,26 @@ export default function SystemMetricsPage() {
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  };
+
+  fetchAllRef.current = fetchAll;
 
   useEffect(() => {
-    void fetchAll();
-    const interval = setInterval(() => void fetchAll(), 15000);
+    fetchAllRef.current?.();
+    const interval = setInterval(() => {
+      fetchAllRef.current?.();
+    }, 15000);
     return () => clearInterval(interval);
-  }, [fetchAll]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -138,13 +169,13 @@ export default function SystemMetricsPage() {
       </div>
 
       {error && (
-        <Alert type="warning" title={error} showIcon className="mb-20" />
+        <Alert type="error" title={error} showIcon className="mb-20" />
       )}
 
       <div className="gauge-grid">
-        <GaugeCard label={t('metrics.cpu')} value={metrics.cpu} loading={loading} />
-        <GaugeCard label={t('metrics.ram')} value={metrics.ram} loading={loading} />
-        <GaugeCard label={t('metrics.disk')} value={metrics.disk} loading={loading} />
+        <GaugeCard label={t('metrics.cpu')} value={metrics.cpu} loading={false} />
+        <GaugeCard label={t('metrics.ram')} value={metrics.ram} loading={false} />
+        <GaugeCard label={t('metrics.disk')} value={metrics.disk} loading={false} />
       </div>
 
       <div className="card card-mt">
@@ -153,8 +184,10 @@ export default function SystemMetricsPage() {
           <span className="card-sub">{t('metrics.autoRefresh')}</span>
         </div>
         <div className="card-body chart-h-240">
-          {loading ? (
-            <div className="skeleton skeleton-chart-fill" />
+          {networkHistory.length === 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+              <Spin size="large" />
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={networkHistory} margin={{ top: 4, right: 4, left: 10, bottom: 4 }}>
