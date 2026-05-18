@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Form, Input, Select, DatePicker, Switch,
@@ -11,6 +11,7 @@ import {
   getProduct, updateProduct,
   getProductVersions, getProductVersion,
 } from '@/api/products';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { Product, Material, ProductVersion, ProductEditForm } from '@/types';
 import { PRODUCT_CATEGORIES, WASH_OPTIONS, IRON_OPTIONS } from '@/utils/constants';
@@ -22,20 +23,26 @@ import { formatDate, formatDateTime } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 import { CountrySelect } from '@/components/common/CountrySelect';
 import { resolveCountryCode, codeToName } from '@/utils/countries';
+import { AppImage } from '@/components/common/AppImage';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('tr') ? 'tr' : 'en';
   const { message } = App.useApp();
+  const showConfirm = useConfirm();
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
+
+  const [isEditing, setIsEditing] = useState(
+    () => (location.state as { mode?: string } | null)?.mode === 'edit',
+  );
 
   const [product, setProduct] = useState<Product | null>(null);
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const [linkCopied, setLinkCopied] = useState(false);
@@ -49,6 +56,8 @@ export default function ProductDetailPage() {
   const [snapshotTitle, setSnapshotTitle] = useState('');
 
   const [form] = Form.useForm<ProductEditForm>();
+  const originalProduct = useRef<typeof product>(null);
+  const originalMaterials = useRef<Material[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -58,6 +67,8 @@ export default function ProductDetailPage() {
         const p = res.data;
         setProduct(p);
         setMaterials(p.materials ?? []);
+        originalProduct.current = p;
+        originalMaterials.current = p.materials ?? [];
       })
       .catch(() => setFetchError(t('common.error')))
       .finally(() => setLoading(false));
@@ -83,34 +94,99 @@ export default function ProductDetailPage() {
     ? `${import.meta.env.VITE_PUBLIC_BASE_URL as string}/p/${product.uuid}`
     : '';
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!id || !product) return;
-    try {
-      const values = await form.validateFields();
-      setSaving(true);
-      await updateProduct(id, {
-        name: values.name,
-        brand: values.brand,
-        category: values.category,
-        country: codeToName(values.country, 'en') || values.country,
-        productionDate: values.productionDate.format('YYYY-MM-DD'),
-        status: product.status,
-        materials,
-        careInstructions: {
-          washTemperature: values.washTemperature,
-          ironing: values.ironing,
-          dryClean: values.dryClean ?? false,
-          bleaching: values.bleaching ?? false,
-          notes: values.notes,
-        },
-      });
-      void message.success(t('products.updateSuccess'));
-    } catch {
-      void message.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
+    // Validate first so the user sees inline field errors before the confirm dialog.
+    void form.validateFields()
+      .then((values) => {
+        showConfirm({
+          title: t('common.confirmSave'),
+          content: t('products.saveConfirm'),
+          okText: t('common.save'),
+          cancelText: t('common.cancel'),
+          onConfirm: async () => {
+            try {
+              const updatedProduct = await updateProduct(id, {
+                name: values.name,
+                brand: values.brand,
+                category: values.category,
+                country: codeToName(values.country, 'en') || values.country,
+                productionDate: values.productionDate.format('YYYY-MM-DD'),
+                status: product.status,
+                materials,
+                careInstructions: {
+                  washTemperature: values.washTemperature,
+                  ironing: values.ironing,
+                  dryClean: values.dryClean ?? false,
+                  bleaching: values.bleaching ?? false,
+                  notes: values.notes,
+                },
+              });
+              setProduct(updatedProduct.data);
+              originalProduct.current = updatedProduct.data;
+              originalMaterials.current = [...materials];
+              setIsEditing(false);
+              void message.success(t('products.updateSuccess'));
+            } catch {
+              void message.error(t('common.error'));
+            }
+          },
+        });
+      })
+      .catch(() => {}); // Antd already highlights invalid fields inline
   };
+
+  const handleCancel = () => {
+    const p = originalProduct.current;
+    if (p) {
+      form.setFieldsValue({
+        name: p.name,
+        brand: p.brand,
+        category: p.category,
+        country: resolveCountryCode(p.country, lang) ?? p.country,
+        productionDate: dayjs(p.productionDate),
+        washTemperature: p.careInstructions?.washTemperature,
+        ironing: p.careInstructions?.ironing,
+        dryClean: p.careInstructions?.dryClean ?? false,
+        bleaching: p.careInstructions?.bleaching ?? false,
+        notes: p.careInstructions?.notes,
+      });
+    }
+    setMaterials([...originalMaterials.current]);
+    setIsEditing(false);
+  };
+
+  const isFormDirty = useCallback(
+    () => form.isFieldsTouched() || JSON.stringify(materials) !== JSON.stringify(originalMaterials.current),
+    [form, materials],
+  );
+
+  const handleCancelEditing = useCallback(() => {
+    if (!isFormDirty()) { handleCancel(); return; }
+    showConfirm({
+      type: 'warning',
+      title: t('common.discardChanges'),
+      content: t('common.discardChangesContent'),
+      okText: t('common.discard'),
+      cancelText: t('common.keepEditing'),
+      onConfirm: async () => { handleCancel(); },
+    });
+  }, [isFormDirty, showConfirm, t]);
+
+  const handleBack = useCallback(() => {
+    if (isEditing && isFormDirty()) {
+      showConfirm({
+        type: 'warning',
+        title: t('common.discardChanges'),
+        content: t('common.discardChangesContent'),
+        okText: t('common.discard'),
+        cancelText: t('common.keepEditing'),
+        onConfirm: async () => { navigate(-1); },
+      });
+    } else {
+      navigate(-1);
+    }
+  }, [isEditing, isFormDirty, showConfirm, navigate, t]);
 
   const handlePDFDownload = async () => {
     if (!product) return;
@@ -218,7 +294,7 @@ export default function ProductDetailPage() {
         <div className="page-head-left">
           <button
             className="btn btn-ghost btn-icon flex-none"
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
           >
             <IconChevronRight size={16} className="icon-flip-h" />
           </button>
@@ -227,10 +303,33 @@ export default function ProductDetailPage() {
             <p className="page-subtitle">{t('editor.title')}</p>
           </div>
         </div>
+        {isAdmin && (
+          <div className="page-head-actions">
+            {isEditing ? (
+              <>
+                <Button onClick={handleCancelEditing}>{t('common.cancel')}</Button>
+                <Button type="primary" onClick={handleSave}>
+                  {t('common.save')}
+                </Button>
+              </>
+            ) : (
+              <Button type="primary" onClick={() => setIsEditing(true)}>
+                {t('common.edit')}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="editor-grid">
-        <Form form={form} layout="vertical" requiredMark={false} disabled={!isAdmin}>
+        <Form
+          form={form}
+          layout="vertical"
+          requiredMark={false}
+          disabled={!isEditing}
+          variant={isEditing ? 'outlined' : 'borderless'}
+          className={!isEditing ? 'form-view-mode' : undefined}
+        >
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.basicInfo')}</span>
@@ -267,7 +366,7 @@ export default function ProductDetailPage() {
                     label={t('editor.fields.country')}
                     rules={[{ required: true, message: t('common.required') }]}
                   >
-                    <CountrySelect disabled={!isAdmin} />
+                    <CountrySelect />
                   </Form.Item>
 
                   <Form.Item
@@ -299,7 +398,7 @@ export default function ProductDetailPage() {
                     <th>{t('editor.material.name')}</th>
                     <th className="col-w-120">{t('editor.material.percentage')}</th>
                     <th className="col-w-100">{t('editor.material.recycled')}</th>
-                    {isAdmin && <th className="col-w-48" />}
+                    {isEditing && <th className="col-w-48" />}
                   </tr>
                 </thead>
                 <tbody>
@@ -309,7 +408,7 @@ export default function ProductDetailPage() {
                         <Input
                           value={mat.name}
                           onChange={(e) => updateMaterial(i, { name: e.target.value })}
-                          disabled={!isAdmin}
+                          disabled={!isEditing}
                           variant="borderless"
                           placeholder={t('editor.material.name')}
                         />
@@ -320,7 +419,7 @@ export default function ProductDetailPage() {
                           max={100}
                           value={mat.percentage}
                           onChange={(val) => updateMaterial(i, { percentage: val ?? 0 })}
-                          disabled={!isAdmin}
+                          disabled={!isEditing}
                           variant="borderless"
                           className="w-full"
                           suffix="%"
@@ -330,10 +429,10 @@ export default function ProductDetailPage() {
                         <Checkbox
                           checked={mat.recycled}
                           onChange={(e) => updateMaterial(i, { recycled: e.target.checked })}
-                          disabled={!isAdmin}
+                          disabled={!isEditing}
                         />
                       </td>
-                      {isAdmin && (
+                      {isEditing && (
                         <td>
                           <button
                             className="btn btn-danger btn-icon btn-sm"
@@ -347,7 +446,7 @@ export default function ProductDetailPage() {
                   ))}
                   {materials.length === 0 && (
                     <tr>
-                      <td colSpan={isAdmin ? 4 : 3} className="tbl-empty-cell">
+                      <td colSpan={isEditing ? 4 : 3} className="tbl-empty-cell">
                         {t('common.empty')}
                       </td>
                     </tr>
@@ -355,7 +454,7 @@ export default function ProductDetailPage() {
                 </tbody>
               </table>
             </div>
-            {isAdmin && (
+            {isEditing && (
               <div className="mat-add-row">
                 <button className="btn btn-ghost btn-sm" onClick={addMaterial}>
                   + {t('editor.material.addRow')}
@@ -385,11 +484,11 @@ export default function ProductDetailPage() {
                   </Form.Item>
 
                   <Form.Item name="dryClean" label={t('editor.careFields.dryClean')} valuePropName="checked">
-                    <Switch disabled={!isAdmin} />
+                    <Switch />
                   </Form.Item>
 
                   <Form.Item name="bleaching" label={t('editor.careFields.bleach')} valuePropName="checked">
-                    <Switch disabled={!isAdmin} />
+                    <Switch />
                   </Form.Item>
 
                   <Form.Item
@@ -406,20 +505,16 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {isAdmin && (
-            <Button
-              type="primary"
-              block
-              loading={saving}
-              onClick={handleSave}
-              className="mt-16"
-            >
-              {t('common.save')}
-            </Button>
-          )}
         </Form>
 
         <div className="sidebar-col">
+                    <div className="card prod-img-card">
+            <AppImage
+              variant="product"
+              alt={product.name}
+              className="prod-sidebar-img"
+            />
+          </div>
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.publicPassport')}</span>

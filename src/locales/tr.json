@@ -42,7 +42,13 @@
     "quickSearch": "Hızlı ara…",
     "confirmDeletion": "Silme Onayı",
     "deleteWarning": "Bu öğeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-    "selectCountry": "Ülke seçin"
+    "selectCountry": "Ülke seçin",
+    "discardChanges": "Değişiklikleri At",
+    "discardChangesContent": "Kaydedilmemiş değişiklikleriniz var. Devam ederseniz tüm düzenlemeler kaybolacak.",
+    "discard": "Değişiklikleri At",
+    "keepEditing": "Düzenlemeye Devam Et",
+    "confirmSave": "Değişiklikleri Kaydet",
+    "confirmCreate": "Oluşturmayı Onayla"
   },
   "auth": {
     "signin": "Giriş Yap",
@@ -112,6 +118,8 @@
       "draft": "Taslak"
     },
     "deleteConfirm": "Bu ürünü silmek istediğinize emin misiniz?",
+    "saveConfirm": "Bu üründe yaptığınız değişiklikleri kaydetmek istediğinizden emin misiniz?",
+    "createConfirm": "Bu ürünü oluşturmak istediğinizden emin misiniz?",
     "deleteSuccess": "Ürün başarıyla silindi",
     "createSuccess": "Ürün başarıyla oluşturuldu",
     "updateSuccess": "Ürün başarıyla güncellendi"
@@ -199,6 +207,8 @@
     },
     "changeRole": "Rolü değiştir",
     "deleteConfirm": "Bu kullanıcıyı silmek istediğinize emin misiniz?",
+    "roleChangeTitle": "Kullanıcı Rolünü Değiştir",
+    "roleChangeConfirm": "Bu kullanıcının rolünü değiştirmek istediğinizden emin misiniz? Değişiklik hemen geçerli olacaktır.",
     "cannotDeleteSelf": "Kendi hesabınızı silemezsiniz",
     "cannotDemoteSelf": "Kendi rolünüzü düşüremezsiniz",
     "updateSuccess": "Kullanıcı rolü güncellendi",
@@ -250,7 +260,9 @@
       "description": "Hesap bilgilerinizi güncelleyin",
       "username": "Kullanıcı adı",
       "email": "E-posta",
-      "saveSuccess": "Profil güncellendi"
+      "saveSuccess": "Profil güncellendi",
+      "saveTitle": "Profili Güncelle",
+      "saveConfirm": "Profil bilgilerinizi güncellemek istediğinizden emin misiniz?"
     },
     "security": {
       "title": "Güvenlik",
@@ -258,7 +270,9 @@
       "currentPassword": "Mevcut şifre",
       "newPassword": "Yeni şifre",
       "confirmPassword": "Yeni şifre (tekrar)",
-      "saveSuccess": "Şifre güncellendi"
+      "saveSuccess": "Şifre güncellendi",
+      "saveTitle": "Şifreyi Değiştir",
+      "saveConfirm": "Şifrenizi değiştirmek istediğinizden emin misiniz?"
     },
     "preferences": {
       "title": "Tercihler",

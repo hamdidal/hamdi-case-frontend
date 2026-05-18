@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Table, Select, Modal, Tooltip, App } from 'antd';
+import { Table, Select, Tooltip, App } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
 import { getUsers, updateUserRole, deleteUser } from '@/api/users';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useAuthStore } from '@/store/useAuthStore';
 import { RoleBadge } from '@/components/common/RoleBadge';
 import { IconTrash } from '@/components/common/icons';
@@ -13,6 +14,7 @@ import { formatDate } from '@/utils/formatDate';
 export default function UsersPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
+  const showConfirm = useConfirm();
   const currentUser = useAuthStore((s) => s.user);
 
   const [users, setUsers] = useState<User[]>([]);
@@ -20,8 +22,6 @@ export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(true);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-
   const fetchUsers = useCallback((pg: number, lim: number) => {
     setLoading(true);
     getUsers({ page: pg, limit: lim })
@@ -102,7 +102,14 @@ export default function UsersPage() {
             <div className="user-action-cell">
               <Select<Role>
                 value={record.role}
-                onChange={(role) => handleRoleChange(String(record.id), role)}
+                onChange={(role) => showConfirm({
+                  type: 'warning',
+                  title: t('users.roleChangeTitle'),
+                  content: t('users.roleChangeConfirm'),
+                  okText: t('common.confirm'),
+                  cancelText: t('common.cancel'),
+                  onConfirm: () => handleRoleChange(String(record.id), role),
+                })}
                 disabled={isSelf}
                 size="small"
                 className="role-select"
@@ -115,7 +122,14 @@ export default function UsersPage() {
                 className="btn btn-danger btn-icon btn-sm"
                 disabled={isSelf}
                 title={t('common.delete')}
-                onClick={() => !isSelf && setDeleteId(String(record.id))}
+                onClick={() => !isSelf && showConfirm({
+                  type: 'danger',
+                  title: t('common.confirmDeletion'),
+                  content: t('users.deleteConfirm'),
+                  okText: t('common.delete'),
+                  cancelText: t('common.cancel'),
+                  onConfirm: () => handleDelete(String(record.id)),
+                })}
               >
                 <IconTrash size={13} />
               </button>
@@ -124,7 +138,7 @@ export default function UsersPage() {
         );
       },
     },
-  ], [currentUser, t, handleRoleChange, handleDelete]);
+  ], [currentUser, t, handleRoleChange, handleDelete, showConfirm]);
 
   return (
     <div className="page">
@@ -154,17 +168,6 @@ export default function UsersPage() {
         />
       </div>
 
-      <Modal
-        open={deleteId !== null}
-        title={t('common.confirmDeletion')}
-        okText={t('common.delete')}
-        okButtonProps={{ danger: true }}
-        cancelText={t('common.cancel')}
-        onOk={async () => { if (deleteId !== null) { await handleDelete(deleteId); } setDeleteId(null); }}
-        onCancel={() => setDeleteId(null)}
-      >
-        <p>{t('common.deleteWarning')}</p>
-      </Modal>
     </div>
   );
 }

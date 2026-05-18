@@ -42,7 +42,13 @@
     "quickSearch": "Quick search…",
     "confirmDeletion": "Confirm Deletion",
     "deleteWarning": "Are you sure you want to delete this item? This action cannot be undone.",
-    "selectCountry": "Select a country"
+    "selectCountry": "Select a country",
+    "discardChanges": "Discard Changes",
+    "discardChangesContent": "You have unsaved changes. If you continue, all edits will be lost.",
+    "discard": "Discard",
+    "keepEditing": "Keep Editing",
+    "confirmSave": "Save Changes",
+    "confirmCreate": "Confirm Creation"
   },
   "auth": {
     "signin": "Sign In",
@@ -112,6 +118,8 @@
       "draft": "Draft"
     },
     "deleteConfirm": "Are you sure you want to delete this product?",
+    "saveConfirm": "Are you sure you want to save your changes to this product?",
+    "createConfirm": "Are you sure you want to create this product?",
     "deleteSuccess": "Product deleted successfully",
     "createSuccess": "Product created successfully",
     "updateSuccess": "Product updated successfully"
@@ -199,6 +207,8 @@
     },
     "changeRole": "Change role",
     "deleteConfirm": "Are you sure you want to delete this user?",
+    "roleChangeTitle": "Change User Role",
+    "roleChangeConfirm": "Are you sure you want to change this user's role? The change will take effect immediately.",
     "cannotDeleteSelf": "You cannot delete your own account",
     "cannotDemoteSelf": "You cannot demote your own role",
     "updateSuccess": "User role updated",
@@ -250,7 +260,9 @@
       "description": "Update your account information",
       "username": "Username",
       "email": "Email",
-      "saveSuccess": "Profile updated"
+      "saveSuccess": "Profile updated",
+      "saveTitle": "Update Profile",
+      "saveConfirm": "Are you sure you want to update your profile details?"
     },
     "security": {
       "title": "Security",
@@ -258,7 +270,9 @@
       "currentPassword": "Current password",
       "newPassword": "New password",
       "confirmPassword": "Confirm new password",
-      "saveSuccess": "Password updated"
+      "saveSuccess": "Password updated",
+      "saveTitle": "Change Password",
+      "saveConfirm": "Are you sure you want to change your password?"
     },
     "preferences": {
       "title": "Preferences",

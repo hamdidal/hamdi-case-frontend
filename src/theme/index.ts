@@ -72,6 +72,9 @@ export const lightTheme: ThemeConfig = {
       contentBg: '#FFFFFF',
       headerBg:  '#FFFFFF',
     },
+    Message: {
+      contentPadding: '12px 20px',
+    },
   },
 };
 
@@ -103,6 +106,10 @@ export const darkTheme: ThemeConfig = {
     Modal: {
       contentBg: '#162A22',
       headerBg:  '#162A22',
+    },
+    Message: {
+      contentPadding: '12px 20px',
+      contentBg: '#1E3A2F',
     },
   },
 };

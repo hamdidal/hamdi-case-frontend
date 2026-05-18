@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Table, Input, Select, Button, Drawer, Form,
-  DatePicker, Modal, App,
+  DatePicker, App,
 } from 'antd';
 import type { TableColumnsType, TablePaginationConfig } from 'antd';
 import { getProducts, createProduct, deleteProduct } from '@/api/products';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { Product, CreateProductForm } from '@/types';
 import { PRODUCT_CATEGORIES } from '@/utils/constants';
@@ -23,6 +24,7 @@ export default function ProductListPage() {
   const lang = i18n.language.startsWith('tr') ? 'tr' : 'en';
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const showConfirm = useConfirm();
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === 'admin';
 
@@ -34,9 +36,7 @@ export default function ProductListPage() {
   const [search, setSearch] = useState('');
   const [pageSize, setPageSize] = useState(20);
 
-  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
   const [form] = Form.useForm<CreateProductForm>();
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -79,7 +79,7 @@ export default function ProductListPage() {
     setPage(newPage);
   }, [pageSize]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
     try {
       await deleteProduct(id);
       void message.success(t('products.deleteSuccess'));
@@ -87,10 +87,9 @@ export default function ProductListPage() {
     } catch {
       void message.error(t('common.error'));
     }
-  };
+  }, [message, t]);
 
-  const handleCreate = async (values: CreateProductForm) => {
-    setCreating(true);
+  const handleCreate = useCallback(async (values: CreateProductForm) => {
     try {
       await createProduct({
         name: values.name,
@@ -106,10 +105,8 @@ export default function ProductListPage() {
       setRefreshKey((k) => k + 1);
     } catch {
       void message.error(t('common.error'));
-    } finally {
-      setCreating(false);
     }
-  };
+  }, [form, message, t]);
 
   const columns = useMemo<TableColumnsType<Product>>(() => [
     {
@@ -169,7 +166,7 @@ export default function ProductListPage() {
         <div className="cell-actions" onClick={(e) => e.stopPropagation()}>
           <button
             className="btn btn-ghost btn-icon btn-sm"
-            onClick={() => navigate(`/products/${record.id}`)}
+            onClick={() => navigate(`/products/${record.id}`, { state: { mode: 'view' } })}
             title={t('common.viewAll')}
           >
             <IconEye size={14} />
@@ -177,7 +174,7 @@ export default function ProductListPage() {
           {isAdmin && (
             <button
               className="btn btn-ghost btn-icon btn-sm"
-              onClick={() => navigate(`/products/${record.id}`)}
+              onClick={() => navigate(`/products/${record.id}`, { state: { mode: 'edit' } })}
               title={t('common.edit')}
             >
               <IconPencil size={14} />
@@ -187,7 +184,14 @@ export default function ProductListPage() {
             <button
               className="btn btn-danger btn-icon btn-sm"
               title={t('common.delete')}
-              onClick={() => setDeleteId(record.id)}
+              onClick={() => showConfirm({
+                type: 'danger',
+                title: t('common.confirmDeletion'),
+                content: t('products.deleteConfirm'),
+                okText: t('common.delete'),
+                cancelText: t('common.cancel'),
+                onConfirm: () => handleDelete(record.id),
+              })}
             >
               <IconTrash size={14} />
             </button>
@@ -195,7 +199,7 @@ export default function ProductListPage() {
         </div>
       ),
     },
-  ], [isAdmin, navigate, t, setDeleteId]);
+  ], [isAdmin, navigate, t, showConfirm, handleDelete]);
 
   return (
     <div className="page">
@@ -229,7 +233,7 @@ export default function ProductListPage() {
           dataSource={products}
           loading={loading}
           scroll={{ x: 'max-content' }}
-          onRow={(record) => ({ onClick: () => navigate(`/products/${record.id}`), style: { cursor: 'pointer' } })}
+          onRow={(record) => ({ onClick: () => navigate(`/products/${record.id}`, { state: { mode: 'view' } }), style: { cursor: 'pointer' } })}
           rowClassName={() => 'tbl-row-clickable'}
           pagination={{
             current: page,
@@ -243,18 +247,6 @@ export default function ProductListPage() {
         />
       </div>
 
-      <Modal
-        open={deleteId !== null}
-        title={t('common.confirmDeletion')}
-        okText={t('common.delete')}
-        okButtonProps={{ danger: true }}
-        cancelText={t('common.cancel')}
-        onOk={async () => { if (deleteId !== null) { await handleDelete(deleteId); } setDeleteId(null); }}
-        onCancel={() => setDeleteId(null)}
-      >
-        <p>{t('common.deleteWarning')}</p>
-      </Modal>
-
       <Drawer
         title={t('products.addNew')}
         open={drawerOpen}
@@ -265,7 +257,22 @@ export default function ProductListPage() {
             <Button onClick={() => { setDrawerOpen(false); form.resetFields(); }}>
               {t('common.cancel')}
             </Button>
-            <Button type="primary" loading={creating} onClick={() => form.submit()}>
+            <Button
+              type="primary"
+              onClick={() =>
+                void form.validateFields()
+                  .then((values) =>
+                    showConfirm({
+                      title: t('common.confirmCreate'),
+                      content: t('products.createConfirm'),
+                      okText: t('common.save'),
+                      cancelText: t('common.cancel'),
+                      onConfirm: () => handleCreate(values),
+                    })
+                  )
+                  .catch(() => {})
+              }
+            >
               {t('common.save')}
             </Button>
           </div>
@@ -274,7 +281,6 @@ export default function ProductListPage() {
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleCreate}
           requiredMark={false}
         >
           <Form.Item

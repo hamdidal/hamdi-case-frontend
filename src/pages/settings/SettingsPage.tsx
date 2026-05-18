@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, Input, Button, Segmented, App } from 'antd';
 import i18n from 'i18next';
 import { updateUserProfile, changeUserPassword } from '@/api/users';
+import { useConfirm } from '@/hooks/useConfirm';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useThemeStore } from '@/store/useThemeStore';
 import type { Theme, Language } from '@/store/useThemeStore';
@@ -20,6 +20,7 @@ interface PasswordForm {
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
+  const showConfirm = useConfirm();
   const user = useAuthStore((s) => s.user);
   const setAuth = useAuthStore((s) => s.setAuth);
   const token = useAuthStore((s) => s.token);
@@ -31,26 +32,20 @@ export default function SettingsPage() {
 
   const [profileForm] = Form.useForm<ProfileForm>();
   const [passwordForm] = Form.useForm<PasswordForm>();
-  const [savingProfile, setSavingProfile] = useState(false);
-  const [savingPassword, setSavingPassword] = useState(false);
 
   const handleSaveProfile = async (values: ProfileForm) => {
     if (!user) return;
-    setSavingProfile(true);
     try {
       const res = await updateUserProfile({ username: values.username });
       setAuth(token!, res.data, remember);
       void message.success(t('settings.profile.saveSuccess'));
     } catch {
       void message.error(t('common.error'));
-    } finally {
-      setSavingProfile(false);
     }
   };
 
   const handleSavePassword = async (values: PasswordForm) => {
     if (!user) return;
-    setSavingPassword(true);
     try {
       await changeUserPassword({
         current_password: values.currentPassword,
@@ -60,8 +55,6 @@ export default function SettingsPage() {
       void message.success(t('settings.security.saveSuccess'));
     } catch {
       void message.error(t('common.error'));
-    } finally {
-      setSavingPassword(false);
     }
   };
 
@@ -92,7 +85,6 @@ export default function SettingsPage() {
           <Form
             form={profileForm}
             layout="vertical"
-            onFinish={handleSaveProfile}
             initialValues={{ username: user?.username ?? '' }}
             requiredMark={false}
           >
@@ -107,7 +99,22 @@ export default function SettingsPage() {
               <Input />
             </Form.Item>
             <Form.Item className="mb-16">
-              <Button type="primary" htmlType="submit" loading={savingProfile}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  void profileForm.validateFields()
+                    .then((values) =>
+                      showConfirm({
+                        title: t('settings.profile.saveTitle'),
+                        content: t('settings.profile.saveConfirm'),
+                        okText: t('common.save'),
+                        cancelText: t('common.cancel'),
+                        onConfirm: () => handleSaveProfile(values),
+                      })
+                    )
+                    .catch(() => {})
+                }
+              >
                 {t('common.save')}
               </Button>
             </Form.Item>
@@ -124,7 +131,6 @@ export default function SettingsPage() {
           <Form
             form={passwordForm}
             layout="vertical"
-            onFinish={handleSavePassword}
             requiredMark={false}
           >
             <Form.Item
@@ -163,7 +169,22 @@ export default function SettingsPage() {
               <Input.Password autoComplete="new-password" />
             </Form.Item>
             <Form.Item className="mb-16">
-              <Button type="primary" htmlType="submit" loading={savingPassword}>
+              <Button
+                type="primary"
+                onClick={() =>
+                  void passwordForm.validateFields()
+                    .then((values) =>
+                      showConfirm({
+                        title: t('settings.security.saveTitle'),
+                        content: t('settings.security.saveConfirm'),
+                        okText: t('common.save'),
+                        cancelText: t('common.cancel'),
+                        onConfirm: () => handleSavePassword(values),
+                      })
+                    )
+                    .catch(() => {})
+                }
+              >
                 {t('common.save')}
               </Button>
             </Form.Item>
