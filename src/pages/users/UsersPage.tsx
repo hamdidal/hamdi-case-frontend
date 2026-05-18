@@ -6,6 +6,7 @@ import { getUsers, updateUserRole, deleteUser } from '@/api/users';
 import { useAuthStore } from '@/store/useAuthStore';
 import { RoleBadge } from '@/components/common/RoleBadge';
 import { IconTrash } from '@/components/common/icons';
+import { AppImage } from '@/components/common/AppImage';
 import type { User, Role } from '@/types';
 import { formatDate } from '@/utils/formatDate';
 
@@ -69,9 +70,7 @@ export default function UsersPage() {
       key: 'avatar',
       width: 52,
       render: (_, record) => (
-        <div className="user-avatar user-avatar-md">
-          {record.username[0]?.toUpperCase() ?? 'U'}
-        </div>
+        <AppImage variant="user" className="user-avatar user-avatar-md" alt={record.username} />
       ),
     },
     {

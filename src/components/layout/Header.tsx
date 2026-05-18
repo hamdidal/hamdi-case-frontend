@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { IconMenu, IconChevronRight } from '@/components/common/icons';
+import { AppImage } from '@/components/common/AppImage';
 
 interface HeaderProps {
   onToggle: () => void;
@@ -34,9 +35,6 @@ export function Header({ onToggle }: HeaderProps) {
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const crumbs = useBreadcrumbs();
   const isAdmin = user?.role === 'admin';
-
-  const getInitials = (name: string) =>
-    name.split('.').map((p) => p[0]?.toUpperCase() ?? '').join('').slice(0, 2);
 
   const dropdownItems: MenuProps['items'] = [
     ...(isAdmin ? [
@@ -91,9 +89,7 @@ export function Header({ onToggle }: HeaderProps) {
         placement="bottomRight"
       >
         <div className="header-user">
-          <div className="header-user-avatar">
-            {getInitials(user?.username ?? 'U')}
-          </div>
+          <AppImage variant="user" className="header-user-avatar" alt={user?.username ?? ''} />
           <span className="header-username">
             {user?.username?.split('.')[0] ?? 'User'}
           </span>

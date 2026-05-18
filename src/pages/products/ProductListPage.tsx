@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import type { Product, CreateProductForm } from '@/types';
 import { PRODUCT_CATEGORIES } from '@/utils/constants';
 import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/icons';
+import { AppImage } from '@/components/common/AppImage';
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 
@@ -113,7 +114,7 @@ export default function ProductListPage() {
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (name: string) => (
         <div className="tbl-name-cell">
-          <div className="prod-swatch" />
+          <AppImage variant="product" className="prod-swatch" alt={name} />
           <span>{name}</span>
         </div>
       ),

@@ -6,6 +6,7 @@ import type { Dayjs } from 'dayjs';
 import { getAuditLogs } from '@/api/auditLogs';
 import type { AuditLog, AuditAction, AuditLogFilters, AuditChanges, AuditChangesSnapshot, FieldChange } from '@/types';
 import { formatDateTime } from '@/utils/formatDate';
+import { AppImage } from '@/components/common/AppImage';
 import { formatAuditKey } from '@/utils/formatters';
 
 const { RangePicker } = DatePicker;
@@ -178,9 +179,7 @@ export default function AuditLogPage() {
       dataIndex: 'username',
       render: (v: string) => (
         <div className="audit-user-cell">
-          <div className="user-avatar user-avatar-sm">
-            {v[0]?.toUpperCase() ?? 'U'}
-          </div>
+          <AppImage variant="user" className="user-avatar user-avatar-sm" alt={v} />
           <span className="fw-500">{v}</span>
         </div>
       ),

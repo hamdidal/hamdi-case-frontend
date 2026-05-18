@@ -68,9 +68,6 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
   const isActive = (to: string) =>
     location.pathname === to || (to !== '/dashboard' && location.pathname.startsWith(to + '/'));
 
-  const getInitials = (name: string) =>
-    name.split('.').map((p) => p[0]?.toUpperCase() ?? '').join('').slice(0, 2);
-
   const handleNav = (to: string) => {
     navigate(to);
     if (isMobile) onMobileClose();
@@ -118,9 +115,7 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
       </nav>
 
       <div className="side-foot">
-        <div className="side-foot-avatar">
-          {getInitials(user?.username ?? 'user')}
-        </div>
+        <AppImage variant="user" className="side-foot-avatar" alt={user?.username ?? ''} />
         <div className="side-foot-info">
           <span className="side-foot-name">{user?.username ?? '—'}</span>
           <span className="side-foot-role">
