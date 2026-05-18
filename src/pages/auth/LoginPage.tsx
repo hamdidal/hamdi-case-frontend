@@ -31,7 +31,7 @@ export default function LoginPage() {
       const { token } = res.data;
       const rawUser = res.data.user as User | null | undefined;
       const user: User = rawUser ?? ({ ...decodeJwt(token), username: values.username } as User);
-      setAuth(token, user);
+      setAuth(token, user, values.remember);
       navigate('/dashboard', { replace: true });
     } catch {
       setError(t('auth.invalidCredentials'));

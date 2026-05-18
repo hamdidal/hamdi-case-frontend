@@ -53,22 +53,26 @@ export default function ProductDetailPage() {
         const p = res.data;
         setProduct(p);
         setMaterials(p.materials ?? []);
-        form.setFieldsValue({
-          name: p.name,
-          brand: p.brand,
-          category: p.category,
-          country: p.country,
-          productionDate: dayjs(p.productionDate),
-          washTemperature: p.careInstructions?.washTemperature,
-          ironing: p.careInstructions?.ironing,
-          dryClean: p.careInstructions?.dryClean ?? false,
-          bleaching: p.careInstructions?.bleaching ?? false,
-          notes: p.careInstructions?.notes,
-        });
       })
       .catch(() => setFetchError(t('common.error')))
       .finally(() => setLoading(false));
-  }, [id, form, t]);
+  }, [id, t]);
+
+  useEffect(() => {
+    if (!product || loading) return;
+    form.setFieldsValue({
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      country: product.country,
+      productionDate: dayjs(product.productionDate),
+      washTemperature: product.careInstructions?.washTemperature,
+      ironing: product.careInstructions?.ironing,
+      dryClean: product.careInstructions?.dryClean ?? false,
+      bleaching: product.careInstructions?.bleaching ?? false,
+      notes: product.careInstructions?.notes,
+    });
+  }, [product, loading, form]);
 
   const publicUrl = product
     ? `${import.meta.env.VITE_PUBLIC_BASE_URL as string}/p/${product.uuid}`
@@ -434,7 +438,7 @@ export default function ProductDetailPage() {
         title={t('editor.versionHistory')}
         open={versionsOpen}
         onClose={() => setVersionsOpen(false)}
-        width={480}
+        size={480}
       >
         {versionsLoading ? (
           <div className="ver-loading">

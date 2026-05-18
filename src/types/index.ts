@@ -5,7 +5,7 @@ export type ProductStatus = 'draft' | 'published';
 export type AuditAction = 'create' | 'update' | 'delete' | 'login';
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email?: string;
   role: Role;

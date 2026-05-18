@@ -10,7 +10,7 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+  const raw = localStorage.getItem(AUTH_STORAGE_KEY) ?? sessionStorage.getItem(AUTH_STORAGE_KEY);
   if (raw) {
     try {
       const parsed = JSON.parse(raw) as { state?: { token?: string | null } };
@@ -18,8 +18,7 @@ client.interceptors.request.use((config) => {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch {
-    }
+    } catch {}
   }
   return config;
 });
@@ -32,6 +31,7 @@ client.interceptors.response.use(
       const currentPath = window.location.pathname;
       if (currentPath !== '/login' && currentPath !== '/register') {
         localStorage.removeItem(AUTH_STORAGE_KEY);
+        sessionStorage.removeItem(AUTH_STORAGE_KEY);
         window.location.href = '/login';
       }
     }

@@ -23,6 +23,7 @@ export default function SettingsPage() {
   const user = useAuthStore((s) => s.user);
   const setAuth = useAuthStore((s) => s.setAuth);
   const token = useAuthStore((s) => s.token);
+  const remember = useAuthStore((s) => s.remember);
   const theme = useThemeStore((s) => s.theme);
   const language = useThemeStore((s) => s.language);
   const setTheme = useThemeStore((s) => s.setTheme);
@@ -37,8 +38,8 @@ export default function SettingsPage() {
     if (!user) return;
     setSavingProfile(true);
     try {
-      const res = await updateUserProfile(user.id, { username: values.username });
-      setAuth(token!, res.data);
+      const res = await updateUserProfile({ username: values.username });
+      setAuth(token!, res.data, remember);
       void message.success(t('settings.profile.saveSuccess'));
     } catch {
       void message.error(t('common.error'));
@@ -51,7 +52,7 @@ export default function SettingsPage() {
     if (!user) return;
     setSavingPassword(true);
     try {
-      await changeUserPassword(user.id, {
+      await changeUserPassword({
         current_password: values.currentPassword,
         new_password: values.newPassword,
       });
