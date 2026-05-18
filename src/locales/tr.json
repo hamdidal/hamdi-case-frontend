@@ -250,6 +250,7 @@
     "accessDeniedDesc": "Bu sayfayı görüntülemek için admin rolü gerekir.",
     "goHome": "Anasayfaya dön",
     "notFound": "Sayfa bulunamadı",
-    "serverError": "Sunucu hatası"
+    "serverError": "Sunucu hatası", 
+    "required":"Bu alan zorunludur"
   }
 }

@@ -83,14 +83,13 @@ export default function LoginPage() {
           <h1 className="auth-title">{t('auth.welcome')}</h1>
           <p className="auth-sub">{t('auth.welcomeSub', 'Pasaport panelinize erişmek için giriş yapın')}</p>
           
-          {error && (
-            <Alert
-              type="error"
-              title={error}
-              showIcon
-              className="auth-alert"
-            />
-          )}
+          <Alert
+            type="error"
+            title={error ?? ''}
+            showIcon
+            className="auth-alert"
+            style={error ? undefined : { display: 'none' }}
+          />
 
           <Form
             form={form}

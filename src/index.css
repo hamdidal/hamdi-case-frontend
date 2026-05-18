@@ -407,7 +407,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 @media (max-width: 880px) { .auth-wrap { grid-template-columns: 1fr; } .auth-poster { display: none; } }
 .auth-poster {
-  background: var(--brand-700); color: #fff; padding: 48px;
+  background: var(--brand-700); color: #fff; padding: 24px;
   display: flex; flex-direction: column; justify-content: space-between;
   position: relative; overflow: hidden;
   background-image:

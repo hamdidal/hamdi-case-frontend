@@ -250,6 +250,7 @@
     "accessDeniedDesc": "You need the admin role to view this page.",
     "goHome": "Go to dashboard",
     "notFound": "Page not found",
-    "serverError": "Server error"
+    "serverError": "Server error",
+    "required":"This field is required"
   }
 }

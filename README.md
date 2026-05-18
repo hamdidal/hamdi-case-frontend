@@ -32,8 +32,8 @@ Copy `.env.example` to `.env` and fill in your values.
 
 | Variable | Required | Description |
 |---|---|---|
-| `VITE_API_BASE_URL` | ✅ | Backend API base URL — e.g. `http://51.102.69.153:8080/api/v1` |
-| `VITE_PUBLIC_BASE_URL` | ✅ | Public base URL used for QR code deep links — e.g. `http://51.102.69.153:3001` |
+| `VITE_API_BASE_URL` | ✅ | Backend API base URL — e.g. `http://3.120.228.32:8080/api/v1` |
+| `VITE_PUBLIC_BASE_URL` | ✅ | Public base URL used for QR code deep links — e.g. `http://3.120.228.32:3001` |
 
 ## Local Development
 

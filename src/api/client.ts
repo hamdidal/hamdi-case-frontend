@@ -29,8 +29,11 @@ client.interceptors.response.use(
   (error: unknown) => {
     const status = (error as { response?: { status?: number } }).response?.status;
     if (status === 401) {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-      window.location.href = '/login';
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/register') {
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   },
