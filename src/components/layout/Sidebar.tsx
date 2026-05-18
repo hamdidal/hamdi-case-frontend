@@ -8,6 +8,7 @@ import {
 } from '@/components/common/icons';
 import type { Role } from '@/types';
 import type { ReactNode } from 'react';
+import { AppImage } from '@/components/common/AppImage';
 
 export interface SidebarProps {
   collapsed: boolean;
@@ -82,7 +83,7 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
   return (
     <aside className={sidebarClass}>
       <div className="side-brand">
-        <div className="side-brand-mark" />
+          <AppImage variant="app-icon" height={30} width={30} alt="Kobe DPP" />
         <div className="side-brand-text">
           Kobe
           <small>DPP Paneli</small>

@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppImage } from '@/components/common/AppImage';
+
 
 export function AuthPoster() {
   const { t } = useTranslation();
@@ -10,7 +12,7 @@ export function AuthPoster() {
   return (
     <div className="auth-poster">
       <div className="side-brand">
-        <div className="side-brand-mark" />
+          <AppImage variant="app-icon" height={30} width={30} alt="Kobe DPP" />
         <div className="side-brand-text">
           Kobe
           <small>DPP MANAGEMENT</small>

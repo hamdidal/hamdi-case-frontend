@@ -219,7 +219,7 @@ export default function ProductListPage() {
           dataSource={products}
           loading={loading}
           scroll={{ x: 'max-content' }}
-          onRow={(record) => ({ onClick: () => navigate(`/products/${record.id}`) })}
+          onRow={(record) => ({ onClick: () => navigate(`/products/${record.id}`), style: { cursor: 'pointer' } })}
           rowClassName={() => 'tbl-row-clickable'}
           pagination={{
             current: page,
@@ -249,7 +249,7 @@ export default function ProductListPage() {
         title={t('products.addNew')}
         open={drawerOpen}
         onClose={() => { setDrawerOpen(false); form.resetFields(); }}
-        width={480}
+        size={480}
         footer={
           <div className="drawer-footer">
             <Button onClick={() => { setDrawerOpen(false); form.resetFields(); }}>

@@ -12,6 +12,7 @@ import {
 } from '@/components/common/icons';
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
+import { AppImage } from '@/components/common/AppImage';
 
 const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE_URL as string;
 
@@ -79,7 +80,7 @@ export default function PublicPassportPage() {
       <div className="pub-shell">
         <div className="pub-header">
           <div className="pub-brand-block">
-            <div className="pub-brand-mark" />
+          <AppImage variant="app-icon" height={30} width={30} alt="Kobe DPP" />
             <div>
               <div className="pub-brand-name">Kobe</div>
               <div className="pub-brand-label">DPP</div>

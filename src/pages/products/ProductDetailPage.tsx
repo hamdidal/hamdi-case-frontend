@@ -205,13 +205,12 @@ export default function ProductDetailPage() {
       </div>
 
       <div className="editor-grid">
-        <div>
+        <Form form={form} layout="vertical" requiredMark={false} disabled={!isAdmin}>
           <div className="card">
             <div className="card-head">
               <span className="card-title">{t('editor.basicInfo')}</span>
             </div>
             <div className="card-body">
-              <Form form={form} layout="vertical" requiredMark={false} disabled={!isAdmin}>
                 <div className="editor-form-grid">
                   <Form.Item
                     name="name"
@@ -254,7 +253,6 @@ export default function ProductDetailPage() {
                     <DatePicker className="w-full" />
                   </Form.Item>
                 </div>
-              </Form>
             </div>
           </div>
 
@@ -346,7 +344,6 @@ export default function ProductDetailPage() {
               <span className="card-title">{t('editor.care')}</span>
             </div>
             <div className="card-body">
-              <Form form={form} layout="vertical" requiredMark={false} disabled={!isAdmin}>
                 <div className="editor-form-grid">
                   <Form.Item name="washTemperature" label={t('editor.careFields.wash')}>
                     <Select
@@ -381,7 +378,6 @@ export default function ProductDetailPage() {
                     />
                   </Form.Item>
                 </div>
-              </Form>
             </div>
           </div>
 
@@ -396,7 +392,7 @@ export default function ProductDetailPage() {
               {t('common.save')}
             </Button>
           )}
-        </div>
+        </Form>
 
         <div className="sidebar-col">
           <div className="card">
