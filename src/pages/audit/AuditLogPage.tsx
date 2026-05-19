@@ -7,6 +7,7 @@ import { getAuditLogs } from '@/api/auditLogs';
 import type { AuditLog, AuditAction, AuditLogFilters, AuditChanges, AuditChangesSnapshot, FieldChange } from '@/types';
 import { formatDateTime } from '@/utils/formatDate';
 import { AppImage } from '@/components/common/AppImage';
+import { TruncatedText } from '@/components/common/TruncatedText';
 import { formatAuditKey } from '@/utils/formatters';
 
 const { RangePicker } = DatePicker;
@@ -180,7 +181,7 @@ export default function AuditLogPage() {
       render: (v: string) => (
         <div className="audit-user-cell">
           <AppImage variant="user" className="user-avatar user-avatar-sm" alt={v} />
-          <span className="fw-500">{v}</span>
+          <TruncatedText text={v} maxWidth={140} className="fw-500" />
         </div>
       ),
     },
@@ -197,9 +198,10 @@ export default function AuditLogPage() {
     {
       title: t('audit.columns.entity'),
       dataIndex: 'entityName',
-      render: (v: string | undefined) => (
-        <span className="text-soft-cell">{v ?? '—'}</span>
-      ),
+      render: (v: string | undefined) =>
+        v
+          ? <TruncatedText text={v} maxWidth={200} className="text-soft-cell" />
+          : <span className="text-soft-cell">—</span>,
     },
   ], [t]);
 

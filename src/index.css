@@ -721,7 +721,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .suspense-fallback { display: grid; place-items: center; height: 100vh; }
 
 /* ========== Header ========== */
-.header-username { font-size: 13px; font-weight: 500; color: var(--text); }
+.header-username { font-size: 13px; font-weight: 500; color: var(--text); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .crumb-fragment { display: contents; }
 
 /* ========== Auth page ========== */

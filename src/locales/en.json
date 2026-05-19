@@ -72,8 +72,11 @@
     "registerSuccess": "Account created successfully. You can now sign in.",
     "validation": {
       "usernameRequired": "Username is required",
+      "usernameMin": "Username must be at least 3 characters",
+      "usernameMax": "Username must be at most 24 characters",
       "passwordRequired": "Password is required",
       "passwordMin": "Password must be at least 8 characters",
+      "passwordMax": "Password must be at most 72 characters",
       "passwordUppercase": "At least one uppercase letter",
       "passwordNumber": "At least one number",
       "passwordSpecial": "At least one special character",
@@ -290,6 +293,7 @@
     "goHome": "Go to dashboard",
     "notFound": "Page not found",
     "serverError": "Server error",
-    "required": "This field is required"
+    "required": "This field is required",
+    "maxLength": "Must be {{max}} characters or fewer"
   }
 }

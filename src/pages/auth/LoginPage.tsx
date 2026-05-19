@@ -63,7 +63,10 @@ export default function LoginPage() {
         <Form.Item
           name="username"
           label={t('auth.username')}
-          rules={[{ required: true, message: t('errors.required') }]}
+          rules={[
+            { required: true, message: t('errors.required') },
+            { max: 24, message: t('auth.validation.usernameMax') },
+          ]}
         >
           <Input
             prefix={<UserOutlined />}
@@ -71,19 +74,24 @@ export default function LoginPage() {
             size="large"
             autoComplete="username"
             autoFocus
+            maxLength={24}
           />
         </Form.Item>
 
         <Form.Item
           name="password"
           label={t('auth.password')}
-          rules={[{ required: true, message: t('errors.required') }]}
+          rules={[
+            { required: true, message: t('errors.required') },
+            { max: 72, message: t('auth.validation.passwordMax') },
+          ]}
         >
           <Input.Password
             prefix={<LockOutlined />}
             placeholder={t('auth.passwordPlaceholder', 'Şifre')}
             size="large"
             autoComplete="current-password"
+            maxLength={72}
           />
         </Form.Item>
 

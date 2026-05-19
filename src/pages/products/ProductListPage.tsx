@@ -13,6 +13,7 @@ import type { Product, CreateProductForm } from '@/types';
 import { PRODUCT_CATEGORIES } from '@/utils/constants';
 import { IconEye, IconPencil, IconTrash, IconSearch } from '@/components/common/icons';
 import { AppImage } from '@/components/common/AppImage';
+import { TruncatedText } from '@/components/common/TruncatedText';
 import { formatDate } from '@/utils/formatDate';
 import { capitalize } from '@/utils/formatters';
 import { CountrySelect } from '@/components/common/CountrySelect';
@@ -116,7 +117,7 @@ export default function ProductListPage() {
       render: (name: string) => (
         <div className="tbl-name-cell">
           <AppImage variant="product" className="prod-swatch" alt={name} />
-          <span>{name}</span>
+          <TruncatedText text={name} maxWidth={240} />
         </div>
       ),
     },
@@ -124,7 +125,7 @@ export default function ProductListPage() {
       title: t('products.columns.brand'),
       dataIndex: 'brand',
       sorter: (a, b) => a.brand.localeCompare(b.brand),
-      render: (v: string) => <span className="text-soft-cell">{v}</span>,
+      render: (v: string) => <TruncatedText text={v} maxWidth={160} className="text-soft-cell" />,
     },
     {
       title: t('products.columns.category'),
@@ -222,6 +223,7 @@ export default function ProductListPage() {
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder={t('products.searchPlaceholder')}
+            maxLength={255}
           />
         </div>
       </div>
@@ -286,17 +288,23 @@ export default function ProductListPage() {
           <Form.Item
             name="name"
             label={t('editor.fields.name')}
-            rules={[{ required: true, message: t('common.required') }]}
+            rules={[
+              { required: true, message: t('common.required') },
+              { max: 200, message: t('errors.maxLength', { max: 200 }) },
+            ]}
           >
-            <Input placeholder={t('editor.fields.name')} />
+            <Input placeholder={t('editor.fields.name')} maxLength={200} />
           </Form.Item>
 
           <Form.Item
             name="brand"
             label={t('editor.fields.brand')}
-            rules={[{ required: true, message: t('common.required') }]}
+            rules={[
+              { required: true, message: t('common.required') },
+              { max: 255, message: t('errors.maxLength', { max: 255 }) },
+            ]}
           >
-            <Input placeholder={t('editor.fields.brand')} />
+            <Input placeholder={t('editor.fields.brand')} maxLength={255} />
           </Form.Item>
 
           <Form.Item

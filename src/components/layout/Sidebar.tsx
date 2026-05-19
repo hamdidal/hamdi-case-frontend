@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Tooltip } from 'antd';
 import { useAuthStore } from '@/store/useAuthStore';
 import { RoleBadge } from '@/components/common/RoleBadge';
 import {
@@ -117,7 +118,9 @@ export function Sidebar({ collapsed, isMobile, mobileOpen, onMobileClose }: Side
       <div className="side-foot">
         <AppImage variant="user" className="side-foot-avatar" alt={user?.username ?? ''} />
         <div className="side-foot-info">
-          <span className="side-foot-name">{user?.username ?? '—'}</span>
+          <Tooltip title={user?.username} placement="right" mouseEnterDelay={0.4}>
+            <span className="side-foot-name">{user?.username ?? '—'}</span>
+          </Tooltip>
           <span className="side-foot-role">
             <RoleBadge role={role as Role} />
           </span>

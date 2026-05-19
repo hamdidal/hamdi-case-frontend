@@ -338,18 +338,24 @@ export default function ProductDetailPage() {
                   <Form.Item
                     name="name"
                     label={t('editor.fields.name')}
-                    rules={[{ required: true, message: t('common.required') }]}
+                    rules={[
+                      { required: true, message: t('common.required') },
+                      { max: 200, message: t('errors.maxLength', { max: 200 }) },
+                    ]}
                     className="span-full"
                   >
-                    <Input />
+                    <Input maxLength={200} />
                   </Form.Item>
 
                   <Form.Item
                     name="brand"
                     label={t('editor.fields.brand')}
-                    rules={[{ required: true, message: t('common.required') }]}
+                    rules={[
+                      { required: true, message: t('common.required') },
+                      { max: 255, message: t('errors.maxLength', { max: 255 }) },
+                    ]}
                   >
-                    <Input />
+                    <Input maxLength={255} />
                   </Form.Item>
 
                   <Form.Item
@@ -410,6 +416,7 @@ export default function ProductDetailPage() {
                           disabled={!isEditing}
                           variant="borderless"
                           placeholder={t('editor.material.name')}
+                          maxLength={255}
                         />
                       </td>
                       <td>
@@ -494,10 +501,13 @@ export default function ProductDetailPage() {
                     name="notes"
                     label={t('editor.careFields.notes')}
                     className="span-full"
+                    rules={[{ max: 1000, message: t('errors.maxLength', { max: 1000 }) }]}
                   >
                     <Input.TextArea
                       rows={3}
                       placeholder={t('editor.careFields.notesPlaceholder')}
+                      maxLength={1000}
+                      showCount
                     />
                   </Form.Item>
                 </div>

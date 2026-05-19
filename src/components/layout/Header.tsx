@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Dropdown } from 'antd';
+import { Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -111,9 +111,11 @@ export function Header({ onToggle }: HeaderProps) {
       >
         <div className="header-user">
           <AppImage variant="user" className="header-user-avatar" alt={user?.username ?? ''} />
-          <span className="header-username">
-            {user?.username?.split('.')[0] ?? 'User'}
-          </span>
+          <Tooltip title={user?.username} mouseEnterDelay={0.4}>
+            <span className="header-username">
+              {user?.username?.split('.')[0] ?? 'User'}
+            </span>
+          </Tooltip>
         </div>
       </Dropdown>
     </div>

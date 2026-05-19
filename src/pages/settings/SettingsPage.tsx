@@ -94,9 +94,10 @@ export default function SettingsPage() {
               rules={[
                 { required: true, message: t('common.required') },
                 { min: 3, message: t('auth.validation.usernameMin', 'En az 3 karakter') },
+                { max: 24, message: t('auth.validation.usernameMax') },
               ]}
             >
-              <Input />
+              <Input maxLength={24} />
             </Form.Item>
             <Form.Item className="mb-16">
               <Button
@@ -136,9 +137,12 @@ export default function SettingsPage() {
             <Form.Item
               name="currentPassword"
               label={t('settings.security.currentPassword')}
-              rules={[{ required: true, message: t('common.required') }]}
+              rules={[
+                { required: true, message: t('common.required') },
+                { max: 72, message: t('auth.validation.passwordMax') },
+              ]}
             >
-              <Input.Password autoComplete="current-password" />
+              <Input.Password autoComplete="current-password" maxLength={72} />
             </Form.Item>
             <Form.Item
               name="newPassword"
@@ -146,9 +150,10 @@ export default function SettingsPage() {
               rules={[
                 { required: true, message: t('common.required') },
                 { min: 6, message: t('auth.validation.passwordMin', 'En az 6 karakter') },
+                { max: 72, message: t('auth.validation.passwordMax') },
               ]}
             >
-              <Input.Password autoComplete="new-password" />
+              <Input.Password autoComplete="new-password" maxLength={72} />
             </Form.Item>
             <Form.Item
               name="confirmPassword"
@@ -156,6 +161,7 @@ export default function SettingsPage() {
               dependencies={['newPassword']}
               rules={[
                 { required: true, message: t('common.required') },
+                { max: 72, message: t('auth.validation.passwordMax') },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue('newPassword') === value) {
@@ -166,7 +172,7 @@ export default function SettingsPage() {
                 }),
               ]}
             >
-              <Input.Password autoComplete="new-password" />
+              <Input.Password autoComplete="new-password" maxLength={72} />
             </Form.Item>
             <Form.Item className="mb-16">
               <Button

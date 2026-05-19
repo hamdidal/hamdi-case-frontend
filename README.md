@@ -125,7 +125,7 @@ Build and run a production image (nginx serving the static bundle):
 
 ```bash
 docker build -t kobe-frontend .
-docker run -p 3001:80 kobe-frontend
+docker run -p 3000:80 kobe-frontend
 ```
 
 The image uses a two-stage build — Node 20 Alpine for the build, nginx Alpine for serving. The nginx config handles SPA routing (`try_files … /index.html`) and enables gzip compression.
@@ -142,9 +142,9 @@ The image uses a two-stage build — Node 20 Alpine for the build, nginx Alpine 
 
 | Service | Port |
 |---|---|
-| Frontend (Docker) | 3001 |
+| Frontend (Docker) | 3000 |
 | Backend API | 8080 |
-| Grafana | 3000 |
+| Grafana | 3100 |
 
 ## Pages & Routes
 

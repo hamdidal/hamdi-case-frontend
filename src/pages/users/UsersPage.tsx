@@ -8,6 +8,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { RoleBadge } from '@/components/common/RoleBadge';
 import { IconTrash } from '@/components/common/icons';
 import { AppImage } from '@/components/common/AppImage';
+import { TruncatedText } from '@/components/common/TruncatedText';
 import type { User, Role } from '@/types';
 import { formatDate } from '@/utils/formatDate';
 
@@ -77,7 +78,7 @@ export default function UsersPage() {
       title: t('users.columns.username'),
       dataIndex: 'username',
       sorter: (a, b) => a.username.localeCompare(b.username),
-      render: (v: string) => <span className="fw-500">{v}</span>,
+      render: (v: string) => <TruncatedText text={v} maxWidth={160} className="fw-500" />,
     },
     {
       title: t('users.columns.role'),

@@ -29,6 +29,7 @@ export default function RegisterPage() {
 
   const passwordRules: PasswordRule[] = [
     { key: 'min', label: t('auth.validation.passwordMin'), test: (v) => v.length >= 8 },
+    { key: 'max', label: t('auth.validation.passwordMax'), test: (v) => v.length <= 72 },
     { key: 'upper', label: t('auth.validation.passwordUppercase'), test: (v) => /[A-Z]/.test(v) },
     { key: 'number', label: t('auth.validation.passwordNumber'), test: (v) => /[0-9]/.test(v) },
     { key: 'special', label: t('auth.validation.passwordSpecial'), test: (v) => /[^A-Za-z0-9]/.test(v) },
@@ -74,6 +75,7 @@ export default function RegisterPage() {
           rules={[
             { required: true, message: t('errors.required') },
             { min: 3, message: t('auth.validation.usernameMin', 'En az 3 karakter olmalıdır') },
+            { max: 24, message: t('auth.validation.usernameMax') },
           ]}
         >
           <Input
@@ -82,6 +84,7 @@ export default function RegisterPage() {
             size="large"
             autoComplete="username"
             autoFocus
+            maxLength={24}
           />
         </Form.Item>
 
@@ -106,6 +109,7 @@ export default function RegisterPage() {
             placeholder={t('auth.passwordPlaceholder')}
             size="large"
             autoComplete="new-password"
+            maxLength={72}
             onChange={(e) => setPasswordValue(e.target.value)}
           />
         </Form.Item>
@@ -149,6 +153,7 @@ export default function RegisterPage() {
             placeholder={t('auth.confirmPasswordPlaceholder')}
             size="large"
             autoComplete="new-password"
+            maxLength={72}
           />
         </Form.Item>
 
